@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Docker &amp; Kubernetes Course — From Zero to Production</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #2496ed;
+    --accent-2: #326ce5;
+    --accent-soft: #e3f2ff;
+    --border: #d0d7de;
+    --code-bg: #1e1e1e;
+    --code-fg: #e6e6e6;
+    --inline-code-bg: #eef2f5;
+    --inline-code-fg: #d6336c;
+    --table-head: #f6f8fa;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9c74f;
+    --tip-bg: #e3fcec;
+    --tip-border: #2da44e;
+    --warn-bg: #ffeef0;
+    --warn-border: #cf222e;
+    --info-bg: #ddf4ff;
+    --info-border: #0969da;
+    --sidebar-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+  aside.sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    font-size: 0.9em;
+  }
+  aside.sidebar h2 {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 24px 0 8px;
+    padding: 0;
+    border: none;
+  }
+  aside.sidebar h2:first-of-type { margin-top: 0; }
+  aside.sidebar a {
+    display: block;
+    padding: 4px 8px;
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    line-height: 1.35;
+  }
+  aside.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+  aside.sidebar .brand {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  aside.sidebar .brand-sub {
+    font-size: 0.8em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  main {
+    max-width: 920px;
+    padding: 48px 48px 96px;
+  }
+  header.title {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  header.title h1 {
+    margin: 0 0 8px 0;
+    font-size: 2.2em;
+    line-height: 1.2;
+  }
+  header.title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.05em;
+  }
+  .module-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .module-tag.k8s { background: var(--accent-2); }
+  .module-tag.project { background: #6f42c1; }
+  h2 {
+    margin-top: 64px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 1.6em;
+  }
+  h3 {
+    margin-top: 36px;
+    font-size: 1.25em;
+  }
+  h4 {
+    margin-top: 24px;
+    font-size: 1.05em;
+    color: var(--accent);
+  }
+  p, li { font-size: 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--inline-code-bg);
+    color: var(--inline-code-fg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.5;
+    font-size: 0.88em;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 0.92em;
+  }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--table-head); font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .callout {
+    border-left: 4px solid var(--callout-border);
+    background: var(--callout-bg);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .callout.tip { border-color: var(--tip-border); background: var(--tip-bg); }
+  .callout.warn { border-color: var(--warn-border); background: var(--warn-bg); }
+  .callout.info { border-color: var(--info-border); background: var(--info-bg); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  pre.diagram {
+    background: #f6f8fa; color: #24292f;
+    border: 1px solid var(--border); font-size: 0.82em;
+  }
+  details {
+    background: #f6f8fa; border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 16px; margin: 12px 0;
+  }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+  .exercise {
+    background: #f0f9ff; border: 1px solid #b6e0fe;
+    border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+  }
+  .exercise h4 { margin-top: 0; color: var(--accent); }
+  .qa {
+    margin: 12px 0; padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #f6f8fa; border-radius: 4px;
+  }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .glossary dt { font-weight: 700; color: var(--accent); margin-top: 14px; }
+  .glossary dd { margin: 4px 0 0 0; padding-left: 16px; }
+  .project-section {
+    background: linear-gradient(180deg, #f9f5ff 0%, #ffffff 100%);
+    border-left: 4px solid #6f42c1;
+    padding: 20px 28px; margin: 24px 0; border-radius: 6px;
+  }
+  .part-divider {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: white; padding: 28px 32px; border-radius: 12px;
+    margin: 64px 0 32px; text-align: center;
+  }
+  .part-divider h2 {
+    color: white; border: none; margin: 0; font-size: 1.8em;
+  }
+  .part-divider p { margin: 8px 0 0 0; opacity: 0.9; font-size: 1.05em; }
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 24px 80px; max-width: none; }
+  }
+  @media print {
+    aside.sidebar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { max-width: none; padding: 0; }
+    pre, .callout, details, .exercise, .qa, .project-section, .part-divider { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+<!-- VS Code-style syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/vs2015.min.css">
+<style>
+  /* Keep our pre layout; hljs only colorizes tokens */
+  pre code.hljs { padding: 0; background: transparent; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+      hljs.configure({ cssSelector: 'pre code', ignoreUnescapedHTML: true });
+      hljs.highlightAll();
+    }
+  });
+</script>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">Docker &amp; Kubernetes</div>
+  <div class="brand-sub">The Complete Course</div>
+
+  <h2>Part A: Docker — Foundations</h2>
+  <a href="#m1">1. What &amp; Why of Docker</a>
+  <a href="#m2">2. Containers vs VMs</a>
+  <a href="#m3">3. Mental Model</a>
+  <a href="#m4">4. Core Vocabulary</a>
+  <a href="#m5">5. Architecture</a>
+
+  <h2>Docker — Images &amp; Containers</h2>
+  <a href="#m6">6. Images Deep Dive</a>
+  <a href="#m7">7. Containers Deep Dive</a>
+  <a href="#m8">8. Dockerfile Reference</a>
+  <a href="#m9">9. Multi-Stage Builds</a>
+  <a href="#m10">10. Registries</a>
+
+  <h2>Docker — Networking &amp; Storage</h2>
+  <a href="#m11">11. Networking</a>
+  <a href="#m12">12. Volumes &amp; Bind Mounts</a>
+  <a href="#m13">13. Env Vars &amp; Secrets</a>
+
+  <h2>Docker — Multi-Container</h2>
+  <a href="#m14">14. Docker Compose</a>
+  <a href="#m15">15. Health &amp; Dependencies</a>
+
+  <h2>Docker — Operations</h2>
+  <a href="#m16">16. Logs &amp; Monitoring</a>
+  <a href="#m17">17. Security</a>
+  <a href="#m18">18. Image Optimization</a>
+  <a href="#m19">19. Common Mistakes</a>
+  <a href="#m20">20. CLI Reference</a>
+
+  <h2>Part B: Kubernetes — Foundations</h2>
+  <a href="#m21">21. What &amp; Why of K8s</a>
+  <a href="#m22">22. K8s vs Alternatives</a>
+  <a href="#m23">23. Architecture</a>
+  <a href="#m24">24. Core Vocabulary</a>
+
+  <h2>K8s — Workloads</h2>
+  <a href="#m25">25. Pods</a>
+  <a href="#m26">26. Deployments</a>
+  <a href="#m27">27. StatefulSets, Jobs, CronJobs</a>
+  <a href="#m28">28. Services</a>
+  <a href="#m29">29. Ingress</a>
+
+  <h2>K8s — Configuration</h2>
+  <a href="#m30">30. ConfigMaps &amp; Secrets</a>
+  <a href="#m31">31. Resources: Requests &amp; Limits</a>
+  <a href="#m32">32. Probes</a>
+  <a href="#m33">33. Auto-scaling</a>
+  <a href="#m34">34. Persistent Volumes</a>
+  <a href="#m35">35. RBAC &amp; Security</a>
+
+  <h2>K8s — Tools &amp; Operations</h2>
+  <a href="#m36">36. kubectl Reference</a>
+  <a href="#m37">37. Helm</a>
+  <a href="#m38">38. Local K8s</a>
+  <a href="#m39">39. Production Ops</a>
+  <a href="#m40">40. Common Mistakes</a>
+
+  <h2>Reference</h2>
+  <a href="#m41">41. Glossary</a>
+  <a href="#m42">42. Practice Exercises</a>
+  <a href="#m43">43. Interview Questions</a>
+
+  <h2>EasyAudit Project</h2>
+  <a href="#m44">44. Container Architecture</a>
+  <a href="#m45">45. Dockerizing central-backend</a>
+  <a href="#m46">46. Full-Stack Compose</a>
+  <a href="#m47">47. K8s for central-backend</a>
+  <a href="#m48">48. Production K8s Architecture</a>
+  <a href="#m49">49. Resources &amp; Roadmap</a>
+</aside>
+
+<main>
+
+<header class="title">
+  <h1>The Complete Docker &amp; Kubernetes Course</h1>
+  <p>From "What is a container?" to building images, orchestrating with Kubernetes, securing in production — ending with a concrete container &amp; K8s architecture for the EasyAudit central-backend and the rest of the stack.</p>
+</header>
+
+<div class="part-divider">
+  <h2>Part A — Docker</h2>
+  <p>Modules 1–20: containers, images, Dockerfile, Compose, networking, volumes, security, ops</p>
+</div>
+
+<!-- =========== MODULE 1 =========== -->
+<h2 id="m1"><span class="module-tag">Module 1</span><br>What &amp; Why of Docker</h2>
+
+<h3>What is Docker?</h3>
+<p><strong>Docker</strong> is a platform for packaging applications as <strong>containers</strong> — lightweight, portable, isolated processes that run anywhere a Docker (or any OCI-compliant) runtime exists.</p>
+
+<p>A container bundles your code, runtime, libraries, and OS userland into one immutable image. The kernel comes from the host. Containers start in milliseconds, share OS resources, and run identically on any machine.</p>
+
+<p>Docker, Inc. introduced the technology in 2013, but the underlying primitives (Linux namespaces, cgroups, union filesystems) existed earlier. Docker made them easy. The <strong>OCI</strong> (Open Container Initiative) now standardizes the image and runtime format — Docker is one implementation; others include containerd, CRI-O, podman.</p>
+
+<h3>Why containers won</h3>
+<ul>
+  <li><strong>"It works on my machine"</strong> dies — the same image runs everywhere.</li>
+  <li><strong>Fast startup</strong> — milliseconds vs minutes for VMs.</li>
+  <li><strong>Dense packing</strong> — 100s of containers per host vs dozens of VMs.</li>
+  <li><strong>Immutable artifacts</strong> — image hash = exact deployment.</li>
+  <li><strong>DevOps friendly</strong> — same artifact through dev, CI, prod.</li>
+  <li><strong>Microservices enabler</strong> — each service in its own image.</li>
+</ul>
+
+<h3>What problem does Docker solve?</h3>
+<p>Before containers, deploying meant: provision servers, install OS, install language runtimes, install dependencies, copy code, configure, hope. Drift between dev/staging/prod was constant. Docker eliminates that — the image carries everything.</p>
+
+<hr>
+
+<!-- =========== MODULE 2 =========== -->
+<h2 id="m2"><span class="module-tag">Module 2</span><br>Containers vs VMs</h2>
+
+<pre class="diagram">         Virtual Machines                          Containers
+
+┌─────────────────────────────────┐    ┌─────────────────────────────────┐
+│  App A    App B    App C        │    │  App A    App B    App C        │
+│  Bins/Libs Bins/Libs Bins/Libs  │    │  Bins/Libs Bins/Libs Bins/Libs  │
+│  Guest OS Guest OS Guest OS     │    │                                 │
+│  ───────  ───────  ───────      │    │  ──────────────────────────     │
+│        Hypervisor                │    │      Container Runtime          │
+│  ──────────────────────────     │    │  ──────────────────────────     │
+│        Host OS / Kernel          │    │      Host OS / Kernel           │
+│  ──────────────────────────     │    │  ──────────────────────────     │
+│         Hardware                 │    │         Hardware                │
+└─────────────────────────────────┘    └─────────────────────────────────┘
+   Each VM has full OS              Containers share host kernel
+   GBs per image, slow boot         MBs per image, ms boot
+   Strong isolation                 Process-level isolation</pre>
+
+<table>
+  <thead><tr><th>Aspect</th><th>VM</th><th>Container</th></tr></thead>
+  <tbody>
+    <tr><td>Boot time</td><td>30s–minutes</td><td>milliseconds</td></tr>
+    <tr><td>Image size</td><td>GBs</td><td>MBs</td></tr>
+    <tr><td>Density per host</td><td>10–50</td><td>100–1000+</td></tr>
+    <tr><td>Isolation</td><td>Strong (separate kernels)</td><td>Process-level (shared kernel)</td></tr>
+    <tr><td>OS flexibility</td><td>Any OS</td><td>Same kernel family as host</td></tr>
+    <tr><td>Best for</td><td>Hard isolation, multi-tenancy</td><td>App packaging, microservices</td></tr>
+  </tbody>
+</table>
+
+<p>Containers and VMs aren't mutually exclusive — production clusters often run containers <em>inside</em> VMs for layered isolation.</p>
+
+<hr>
+
+<!-- =========== MODULE 3 =========== -->
+<h2 id="m3"><span class="module-tag">Module 3</span><br>Mental Model</h2>
+
+<p>A container is just a process (or a few processes) on the host kernel, but with these views <strong>isolated</strong> from the rest of the system:</p>
+<ul>
+  <li><strong>PID namespace</strong> — sees only its own processes; PID 1 inside is your app.</li>
+  <li><strong>Mount namespace</strong> — its own root filesystem (the image).</li>
+  <li><strong>Network namespace</strong> — own interfaces, IP, ports.</li>
+  <li><strong>UTS namespace</strong> — own hostname.</li>
+  <li><strong>IPC namespace</strong> — own message queues, shared memory.</li>
+  <li><strong>User namespace</strong> — optional UID/GID remapping.</li>
+  <li><strong>Cgroups</strong> — CPU, memory, I/O resource limits.</li>
+</ul>
+
+<p>The image provides the filesystem; the kernel runs the process; namespaces and cgroups isolate it. That's the entire trick.</p>
+
+<pre class="diagram">┌─────────────────────────── Host Linux Kernel ──────────────────────────┐
+│                                                                         │
+│  ┌─ Container A ─┐  ┌─ Container B ─┐  ┌─ Container C ─┐                │
+│  │ Image: nginx  │  │ Image: redis  │  │ Image: app    │                │
+│  │ PID 1: nginx  │  │ PID 1: redis  │  │ PID 1: dotnet │                │
+│  │ Net: 172.17.. │  │ Net: 172.17.. │  │ Net: 172.17.. │                │
+│  │ FS: layered   │  │ FS: layered   │  │ FS: layered   │                │
+│  │ cgroup limits │  │ cgroup limits │  │ cgroup limits │                │
+│  └───────────────┘  └───────────────┘  └───────────────┘                │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘</pre>
+
+<hr>
+
+<!-- =========== MODULE 4 =========== -->
+<h2 id="m4"><span class="module-tag">Module 4</span><br>Core Vocabulary</h2>
+
+<dl class="glossary">
+  <dt>Image</dt><dd>An immutable, read-only template — a tarball of filesystem layers + metadata. Identified by a hash and optionally tagged (<code>nginx:1.25</code>).</dd>
+  <dt>Container</dt><dd>A running (or stopped) instance of an image. Adds a thin writable layer on top.</dd>
+  <dt>Layer</dt><dd>One filesystem diff. Layers are cached and shared between images.</dd>
+  <dt>Dockerfile</dt><dd>Text recipe describing how to build an image, line by line.</dd>
+  <dt>Registry</dt><dd>A server hosting images. Docker Hub, GHCR, ECR, GCR, ACR, Harbor.</dd>
+  <dt>Repository</dt><dd>Named collection of images in a registry — e.g., <code>nginx</code>, <code>mycorp/app</code>.</dd>
+  <dt>Tag</dt><dd>A human-friendly label on an image — <code>:1.25</code>, <code>:latest</code>. Mutable.</dd>
+  <dt>Digest</dt><dd>The image's content hash (<code>sha256:...</code>). Immutable. Pin in production.</dd>
+  <dt>Volume</dt><dd>Persistent storage, managed by Docker, lives outside the container layer.</dd>
+  <dt>Bind mount</dt><dd>Mount a host path directly into a container.</dd>
+  <dt>Network</dt><dd>Virtual network connecting containers; default is <code>bridge</code>.</dd>
+  <dt>Compose</dt><dd>Tool to define and run multi-container apps from a YAML file.</dd>
+  <dt>Daemon (dockerd)</dt><dd>Background service that builds and runs containers.</dd>
+  <dt>OCI</dt><dd>Open Container Initiative — standard for image and runtime formats.</dd>
+</dl>
+
+<hr>
+
+<!-- =========== MODULE 5 =========== -->
+<h2 id="m5"><span class="module-tag">Module 5</span><br>Architecture</h2>
+
+<pre class="diagram">┌─────────────────────────────────────────────────────────────────┐
+│                       Client (your shell)                       │
+│                       $ docker run nginx                        │
+└─────────────────────────────────┬───────────────────────────────┘
+                                  │ REST over Unix socket /
+                                  │ TCP socket
+                                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                       Docker Daemon (dockerd)                   │
+│                                                                 │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐           │
+│  │ Image store  │  │ Container    │  │  Network /   │           │
+│  │ (layers)     │  │ runtime      │  │  Volume mgr  │           │
+│  └──────────────┘  └──────┬───────┘  └──────────────┘           │
+│                           ▼                                     │
+│                      containerd                                 │
+│                           │                                     │
+│                           ▼                                     │
+│                        runc (OCI runtime)                       │
+│                           │                                     │
+│                           ▼                                     │
+└─────────────────────────────────────────────────────────────────┘
+                          Linux kernel:
+                       namespaces + cgroups
+                                │
+                                ▼
+                       running container processes</pre>
+
+<p>Layers, top to bottom:</p>
+<ol>
+  <li><strong>docker CLI</strong> — talks REST to the daemon.</li>
+  <li><strong>dockerd</strong> — orchestrates images, containers, networks, volumes.</li>
+  <li><strong>containerd</strong> — manages container lifecycles, pulls images.</li>
+  <li><strong>runc</strong> — actually creates the namespaces/cgroups and execs your process.</li>
+</ol>
+
+<p>Kubernetes uses containerd or CRI-O directly, skipping the Docker CLI/daemon — the actual containers and images are the same.</p>
+
+<hr>
+
+<!-- =========== MODULE 6 =========== -->
+<h2 id="m6"><span class="module-tag">Module 6</span><br>Images Deep Dive</h2>
+
+<h3>Layers</h3>
+<p>An image is a stack of read-only layers. Each Dockerfile instruction that changes the filesystem creates a new layer. Layers are content-addressed (sha256). Multiple images sharing a base layer use the same bytes on disk.</p>
+
+<pre class="diagram">Image: myapp:1.0
+┌──────────────────────────────────────────┐
+│  L4: COPY app.dll /app/                  │  ← thin top layer
+├──────────────────────────────────────────┤
+│  L3: RUN apt-get install -y curl         │
+├──────────────────────────────────────────┤
+│  L2: WORKDIR /app                        │  (metadata only)
+├──────────────────────────────────────────┤
+│  L1: FROM mcr.microsoft.com/dotnet/aspnet│  ← base layer (shared)
+└──────────────────────────────────────────┘</pre>
+
+<h3>Image manifest</h3>
+<p>An OCI image is a JSON manifest pointing at:</p>
+<ul>
+  <li>A config blob (entrypoint, env, exposed ports, labels, layer digests).</li>
+  <li>Layer blobs (each is a tarball, usually gzipped).</li>
+</ul>
+
+<h3>Inspecting</h3>
+<pre><code>docker images                          # list local images
+docker image inspect nginx:1.25        # full JSON
+docker history nginx:1.25              # layer-by-layer
+docker manifest inspect nginx:1.25     # multi-arch manifest</code></pre>
+
+<h3>Tags vs digests</h3>
+<p><code>nginx:1.25</code> is a moving target — it can be re-pushed. <code>nginx@sha256:abc123...</code> is immutable. In production, pin to digests for reproducibility.</p>
+
+<h3>Multi-arch images</h3>
+<p>One tag can refer to a <strong>manifest list</strong> with images for amd64, arm64, etc. The right one is selected at pull. Use <code>docker buildx build --platform linux/amd64,linux/arm64</code>.</p>
+
+<hr>
+
+<!-- =========== MODULE 7 =========== -->
+<h2 id="m7"><span class="module-tag">Module 7</span><br>Containers Deep Dive</h2>
+
+<h3>Lifecycle</h3>
+<pre class="diagram">          docker run
+   ┌──────────────────►  Created
+   │                       │ start
+   │                       ▼
+   │                    Running ◄────┐
+   │     pause             │         │
+   │  ┌────────► Paused    │ kill /  │ unpause
+   │  │            │       │ stop    │
+   │  └────────────┘       │         │
+   │                       ▼         │
+   │                    Exited       │
+   │                       │ start ──┘
+   │                       │ rm
+   │                       ▼
+   └──────────────────  Removed</pre>
+
+<h3>The thin writable layer</h3>
+<p>Each container gets a writable layer on top of the image. Changes go there; the image stays immutable. When the container is removed, the writable layer is gone — that's why state belongs in volumes.</p>
+
+<h3>PID 1 matters</h3>
+<p>The process you run as ENTRYPOINT/CMD is PID 1 inside the container. PID 1 has special responsibilities — handle signals (SIGTERM for graceful shutdown), reap zombie children. Many runtimes don't do this well; use <code>tini</code> or <code>--init</code> as a tiny init shim.</p>
+
+<h3>Restart policies</h3>
+<pre><code>docker run --restart=always nginx             # always restart
+docker run --restart=unless-stopped nginx     # restart unless I stopped it
+docker run --restart=on-failure:3 nginx       # up to 3 times on non-zero exit
+docker run --restart=no nginx                 # default: don't restart</code></pre>
+
+<h3>Resource limits</h3>
+<pre><code>docker run --cpus=1.5 --memory=512m --memory-swap=512m nginx
+docker run --pids-limit=200 nginx
+docker run --read-only nginx                  # immutable filesystem</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 8 =========== -->
+<h2 id="m8"><span class="module-tag">Module 8</span><br>Dockerfile Reference</h2>
+
+<p>Each instruction either modifies the filesystem (creates a layer) or sets metadata.</p>
+
+<table>
+  <thead><tr><th>Instruction</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>FROM</code></td><td>Base image. Required first instruction.</td></tr>
+    <tr><td><code>WORKDIR</code></td><td>Set working directory; created if missing.</td></tr>
+    <tr><td><code>COPY</code></td><td>Copy files from build context into image.</td></tr>
+    <tr><td><code>ADD</code></td><td>Like COPY but also URL fetch &amp; tar auto-extract. Prefer COPY.</td></tr>
+    <tr><td><code>RUN</code></td><td>Run a command at build time, commit result as a layer.</td></tr>
+    <tr><td><code>ENV</code></td><td>Set environment variable (persists at runtime).</td></tr>
+    <tr><td><code>ARG</code></td><td>Build-time variable (not at runtime).</td></tr>
+    <tr><td><code>EXPOSE</code></td><td>Document a port (informational, doesn't publish).</td></tr>
+    <tr><td><code>VOLUME</code></td><td>Declare a path expected to hold persistent data.</td></tr>
+    <tr><td><code>USER</code></td><td>Run subsequent commands &amp; the container as this user.</td></tr>
+    <tr><td><code>HEALTHCHECK</code></td><td>How Docker tests if container is healthy.</td></tr>
+    <tr><td><code>ENTRYPOINT</code></td><td>The fixed command for the container.</td></tr>
+    <tr><td><code>CMD</code></td><td>Default args (or default command if no ENTRYPOINT).</td></tr>
+    <tr><td><code>LABEL</code></td><td>Metadata key=value pairs.</td></tr>
+  </tbody>
+</table>
+
+<h3>Minimal example</h3>
+<pre><code>FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
+EXPOSE 3000
+USER node
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:3000/health || exit 1
+CMD ["node", "server.js"]</code></pre>
+
+<h3>ENTRYPOINT vs CMD</h3>
+<ul>
+  <li><strong>CMD only</strong>: <code>docker run img</code> uses the CMD. <code>docker run img bash</code> overrides it.</li>
+  <li><strong>ENTRYPOINT only</strong>: every <code>docker run img X</code> calls ENTRYPOINT with X as args.</li>
+  <li><strong>Both</strong>: ENTRYPOINT is fixed, CMD is default args (overridable).</li>
+</ul>
+
+<h3>Build context</h3>
+<p><code>docker build .</code> — the dot is the <strong>context</strong>: everything in that directory is sent to the daemon. Use <code>.dockerignore</code> to exclude (huge speedup):</p>
+<pre><code># .dockerignore
+.git
+node_modules
+*.log
+bin/
+obj/
+.env</code></pre>
+
+<h3>Layer caching</h3>
+<p>Docker caches each layer. If a Dockerfile line and its inputs are unchanged, the cached layer is reused. Order instructions from least-changing to most-changing for fast rebuilds:</p>
+<ul>
+  <li>1. Base image and OS deps (rarely change)</li>
+  <li>2. Language deps (manifest files)</li>
+  <li>3. Install deps</li>
+  <li>4. Copy source code (changes most)</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 9 =========== -->
+<h2 id="m9"><span class="module-tag">Module 9</span><br>Multi-Stage Builds</h2>
+
+<p>Build with one image (with compilers, SDKs), copy artifacts to a slim runtime image. Final image stays small.</p>
+
+<h3>.NET 8 example</h3>
+<pre><code># --- Stage 1: build ---
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["central-backend/AuditSoftware.csproj", "central-backend/"]
+RUN dotnet restore "central-backend/AuditSoftware.csproj"
+
+COPY . .
+WORKDIR "/src/central-backend"
+RUN dotnet publish "AuditSoftware.csproj" -c Release -o /app/publish \
+    --no-restore /p:UseAppHost=false
+
+# --- Stage 2: runtime ---
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+USER app
+ENTRYPOINT ["dotnet", "AuditSoftware.dll"]</code></pre>
+
+<p><strong>Result</strong>: build stage has the full SDK (~700 MB); runtime image has only the ASP.NET runtime (~220 MB). The final image is what ships.</p>
+
+<h3>Node example</h3>
+<pre><code>FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine AS runtime
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80</code></pre>
+
+<h3>Distroless / minimal images</h3>
+<p>For maximum slimness, use <code>gcr.io/distroless/dotnet-runtime</code>, <code>gcr.io/distroless/nodejs</code>, or Chainguard images. They contain only the runtime — no shell, no package manager, no curl. Excellent for security; harder to debug.</p>
+
+<hr>
+
+<!-- =========== MODULE 10 =========== -->
+<h2 id="m10"><span class="module-tag">Module 10</span><br>Registries</h2>
+
+<h3>Public registries</h3>
+<ul>
+  <li><strong>Docker Hub</strong> — <code>docker.io</code>. Default. Rate-limited for anonymous pulls.</li>
+  <li><strong>GitHub Container Registry</strong> — <code>ghcr.io</code>. Free for public images. Tied to GitHub auth.</li>
+  <li><strong>Microsoft Container Registry</strong> — <code>mcr.microsoft.com</code>. Hosts official .NET, SQL Server, etc.</li>
+  <li><strong>Quay.io</strong>, <strong>Google Artifact Registry</strong>, <strong>Amazon ECR</strong>, <strong>Azure ACR</strong>.</li>
+</ul>
+
+<h3>Push/pull</h3>
+<pre><code>docker tag myapp:1.0 ghcr.io/myorg/myapp:1.0
+docker login ghcr.io -u USER -p TOKEN
+docker push ghcr.io/myorg/myapp:1.0
+docker pull ghcr.io/myorg/myapp:1.0</code></pre>
+
+<h3>Private registry (self-hosted)</h3>
+<pre><code>docker run -d -p 5000:5000 --name registry registry:2
+docker tag myapp localhost:5000/myapp
+docker push localhost:5000/myapp</code></pre>
+
+<p>For real teams use <strong>Harbor</strong> (open-source, with vulnerability scanning, RBAC, replication).</p>
+
+<h3>Image signing &amp; provenance</h3>
+<ul>
+  <li><strong>Cosign</strong> — sign images with sigstore.</li>
+  <li><strong>Docker Content Trust</strong> — older signing scheme.</li>
+  <li><strong>SBOM</strong> — Software Bill of Materials, embedded with <code>docker buildx</code>.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 11 =========== -->
+<h2 id="m11"><span class="module-tag">Module 11</span><br>Networking</h2>
+
+<h3>Default network drivers</h3>
+<table>
+  <thead><tr><th>Driver</th><th>Use case</th></tr></thead>
+  <tbody>
+    <tr><td><strong>bridge</strong></td><td>Default. Containers on the same bridge talk by container name.</td></tr>
+    <tr><td><strong>host</strong></td><td>No network namespace; container shares host's network. Fastest, no isolation.</td></tr>
+    <tr><td><strong>none</strong></td><td>No network. Useful for batch jobs.</td></tr>
+    <tr><td><strong>overlay</strong></td><td>Multi-host network for Swarm/cluster.</td></tr>
+    <tr><td><strong>macvlan</strong></td><td>Container gets a real MAC on your LAN.</td></tr>
+  </tbody>
+</table>
+
+<h3>Custom bridge networks (recommended)</h3>
+<pre><code>docker network create app-net
+docker run -d --name redis --network app-net redis
+docker run -d --name api --network app-net myapi:1.0
+# Inside api container, ping redis works by name
+# (Default bridge does NOT support DNS by name — always create your own.)</code></pre>
+
+<h3>Port publishing</h3>
+<pre><code>docker run -p 8080:80 nginx        # host:container
+docker run -p 127.0.0.1:8080:80 nginx   # bind only to localhost
+docker run -P nginx                # publish all EXPOSED ports randomly</code></pre>
+
+<h3>Inter-container DNS</h3>
+<p>On user-defined bridge networks, Docker has an embedded DNS at <code>127.0.0.11</code>. Container names resolve to IPs automatically — no need to know IPs.</p>
+
+<h3>Inspecting</h3>
+<pre><code>docker network ls
+docker network inspect app-net
+docker port api</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 12 =========== -->
+<h2 id="m12"><span class="module-tag">Module 12</span><br>Volumes &amp; Bind Mounts</h2>
+
+<h3>Three persistence options</h3>
+<table>
+  <thead><tr><th>Type</th><th>Where stored</th><th>When to use</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Volume</strong></td><td>Docker-managed (<code>/var/lib/docker/volumes</code>)</td><td>Persistent app data. Default choice.</td></tr>
+    <tr><td><strong>Bind mount</strong></td><td>Specific host path</td><td>Dev: live reload code. Or shared host configs.</td></tr>
+    <tr><td><strong>tmpfs</strong></td><td>RAM only</td><td>Secrets, scratch, never written to disk.</td></tr>
+  </tbody>
+</table>
+
+<h3>Volumes</h3>
+<pre><code>docker volume create pgdata
+docker run -d -v pgdata:/var/lib/postgresql/data postgres
+docker volume ls
+docker volume inspect pgdata
+docker volume rm pgdata
+docker volume prune              # remove unused</code></pre>
+
+<h3>Bind mounts (dev workflow)</h3>
+<pre><code>docker run -v "$(pwd):/app" -w /app node:20 npm test
+# Code on host is visible inside container; ideal for dev hot reload.</code></pre>
+
+<h3>tmpfs</h3>
+<pre><code>docker run --tmpfs /run --tmpfs /tmp:size=100m nginx</code></pre>
+
+<h3>Backup/restore a volume</h3>
+<pre><code># Backup
+docker run --rm -v pgdata:/data -v "$(pwd):/backup" alpine \
+  tar czf /backup/pgdata.tgz -C /data .
+
+# Restore
+docker run --rm -v pgdata:/data -v "$(pwd):/backup" alpine \
+  tar xzf /backup/pgdata.tgz -C /data</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 13 =========== -->
+<h2 id="m13"><span class="module-tag">Module 13</span><br>Env Vars &amp; Secrets</h2>
+
+<h3>Setting env vars</h3>
+<pre><code>docker run -e DB_HOST=db -e DB_USER=admin myapp           # individual
+docker run --env-file .env myapp                          # from file</code></pre>
+
+<h3>What's wrong with env vars for secrets?</h3>
+<ul>
+  <li>Visible in <code>docker inspect</code>.</li>
+  <li>Often leak to logs.</li>
+  <li>Show in <code>/proc/PID/environ</code>.</li>
+</ul>
+
+<h3>Better: Docker secrets (Swarm) / mounted files</h3>
+<p>Treat secrets as files mounted into the container, not env vars:</p>
+<pre><code># Read secret in your app from a path:
+cat /run/secrets/db_password</code></pre>
+
+<p>In compose with Swarm:</p>
+<pre><code>services:
+  api:
+    image: myapi
+    secrets: [ db_password ]
+secrets:
+  db_password:
+    file: ./db_password.txt</code></pre>
+
+<p>For Kubernetes, use <strong>Secrets</strong> (Module 30) — same idea, mounted as files or env.</p>
+
+<hr>
+
+<!-- =========== MODULE 14 =========== -->
+<h2 id="m14"><span class="module-tag">Module 14</span><br>Docker Compose</h2>
+
+<p><strong>Docker Compose</strong> declares a multi-container application in a single YAML file. One command brings it up.</p>
+
+<h3>Basic compose.yml</h3>
+<pre><code>version: '3.8'
+services:
+  web:
+    build: ./web                       # build from Dockerfile
+    image: myorg/web:1.0
+    ports: [ "8080:8080" ]
+    environment:
+      DB_HOST: db
+      DB_USER: app
+      DB_PASS_FILE: /run/secrets/db_pass
+    secrets: [ db_pass ]
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_pass
+      POSTGRES_USER: app
+    volumes: [ pgdata:/var/lib/postgresql/data ]
+    secrets: [ db_pass ]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app"]
+      interval: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+
+secrets:
+  db_pass:
+    file: ./db_pass.txt</code></pre>
+
+<h3>Daily commands</h3>
+<pre><code>docker compose up -d              # build + run in background
+docker compose ps                 # status
+docker compose logs -f web        # tail logs
+docker compose exec web sh        # shell into web container
+docker compose stop               # stop containers
+docker compose down               # stop + remove containers, network
+docker compose down -v            # ALSO remove volumes (destructive)
+docker compose pull               # pull updated images
+docker compose build --no-cache   # rebuild from scratch</code></pre>
+
+<h3>Profiles</h3>
+<p>Define optional services (e.g., dev tools) and only start them when asked:</p>
+<pre><code>services:
+  pgadmin:
+    image: dpage/pgadmin4
+    profiles: [ dev ]
+# Start with: docker compose --profile dev up</code></pre>
+
+<h3>Multiple compose files</h3>
+<pre><code>docker compose -f compose.yml -f compose.prod.yml up -d</code></pre>
+<p>The second file overrides/extends the first. Common pattern: <code>compose.yml</code> base, <code>compose.dev.yml</code> for dev overrides, <code>compose.prod.yml</code> for prod.</p>
+
+<hr>
+
+<!-- =========== MODULE 15 =========== -->
+<h2 id="m15"><span class="module-tag">Module 15</span><br>Health &amp; Dependencies</h2>
+
+<h3>HEALTHCHECK</h3>
+<pre><code>HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1</code></pre>
+<p>Container reports <code>healthy</code> / <code>unhealthy</code> / <code>starting</code>. <code>docker ps</code> shows it.</p>
+
+<h3>depends_on with conditions</h3>
+<pre><code>depends_on:
+  db:
+    condition: service_healthy        # waits for healthcheck
+  cache:
+    condition: service_started        # waits for start only</code></pre>
+
+<h3>Wait-for patterns</h3>
+<p>Compose <code>depends_on</code> only waits for container start, not for the app inside being ready, unless you use <code>service_healthy</code>. For complex cases, use a tiny script like <code>wait-for-it.sh</code> or <code>dockerize</code>.</p>
+
+<hr>
+
+<!-- =========== MODULE 16 =========== -->
+<h2 id="m16"><span class="module-tag">Module 16</span><br>Logs &amp; Monitoring</h2>
+
+<h3>Where do logs go?</h3>
+<p>By default, anything your app prints to stdout/stderr is captured by Docker's logging driver. Default driver is <code>json-file</code>. Available drivers: <code>json-file</code>, <code>local</code>, <code>journald</code>, <code>syslog</code>, <code>gelf</code>, <code>fluentd</code>, <code>awslogs</code>, etc.</p>
+
+<pre><code>docker logs my-container
+docker logs -f --tail 200 my-container
+docker logs --since 10m my-container
+docker logs --until 2026-05-07T10:00 my-container</code></pre>
+
+<h3>Limit log file size</h3>
+<pre><code>docker run --log-opt max-size=10m --log-opt max-file=3 myapp
+# Or globally in /etc/docker/daemon.json:
+# {
+#   "log-driver": "json-file",
+#   "log-opts": { "max-size": "10m", "max-file": "3" }
+# }</code></pre>
+
+<h3>Production logging</h3>
+<p>Stream container logs to a centralized system: Loki, Elasticsearch, Splunk, CloudWatch. In Kubernetes, a node-level agent (Fluent Bit, Promtail) tails container logs and forwards.</p>
+
+<h3>Stats</h3>
+<pre><code>docker stats                       # live CPU/mem/IO of all containers
+docker top my-container            # processes inside</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 17 =========== -->
+<h2 id="m17"><span class="module-tag">Module 17</span><br>Security</h2>
+
+<h3>Run as non-root</h3>
+<pre><code>FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# Many official images now ship a non-root 'app' user
+USER app</code></pre>
+
+<h3>Read-only root filesystem</h3>
+<pre><code>docker run --read-only --tmpfs /tmp myapp</code></pre>
+
+<h3>Drop Linux capabilities</h3>
+<pre><code>docker run --cap-drop=ALL --cap-add=NET_BIND_SERVICE myapp</code></pre>
+
+<h3>No new privileges</h3>
+<pre><code>docker run --security-opt=no-new-privileges myapp</code></pre>
+
+<h3>Limit resources</h3>
+<pre><code>docker run --pids-limit=200 --cpus=1 --memory=512m myapp</code></pre>
+
+<h3>Seccomp / AppArmor</h3>
+<p>Default seccomp profile blocks ~50 dangerous syscalls. Custom profiles: <code>--security-opt seccomp=profile.json</code>.</p>
+
+<h3>Image scanning</h3>
+<ul>
+  <li><code>docker scout cves myimage:1.0</code></li>
+  <li><strong>Trivy</strong>: <code>trivy image myimage:1.0</code></li>
+  <li><strong>Grype</strong>: <code>grype myimage:1.0</code></li>
+  <li><strong>Snyk</strong>, <strong>Anchore</strong> — commercial.</li>
+</ul>
+
+<h3>Don't ever</h3>
+<ul>
+  <li>Mount the Docker socket into a container unless you really need it (full host control).</li>
+  <li>Use <code>--privileged</code> casually.</li>
+  <li>Run as root inside containers.</li>
+  <li>Bake secrets into images.</li>
+  <li>Trust <code>:latest</code> tags in production.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 18 =========== -->
+<h2 id="m18"><span class="module-tag">Module 18</span><br>Image Optimization</h2>
+
+<h3>Why size matters</h3>
+<ul>
+  <li>Faster pulls and deploys.</li>
+  <li>Less attack surface.</li>
+  <li>Less disk on every node.</li>
+  <li>Faster scaling under load.</li>
+</ul>
+
+<h3>Techniques</h3>
+<ol>
+  <li><strong>Multi-stage builds</strong> — leave SDK behind.</li>
+  <li><strong>Slim base images</strong> — <code>alpine</code> (~5 MB), <code>-slim</code> Debian variants.</li>
+  <li><strong>Distroless</strong> — only runtime, no shell. Tiny + secure.</li>
+  <li><strong>Combine RUN commands</strong> — fewer layers:
+    <pre><code>RUN apt-get update &amp;&amp; apt-get install -y curl \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*</code></pre>
+  </li>
+  <li><strong>.dockerignore</strong> — keep build context small.</li>
+  <li><strong>Order for cache</strong> — copy dep manifests, install, then copy source.</li>
+  <li><strong>BuildKit cache mounts</strong>: <code>--mount=type=cache,target=/root/.cache</code> to persist NPM/NuGet caches between builds.</li>
+</ol>
+
+<h3>Inspect what's bloating</h3>
+<pre><code>docker history myimage:1.0
+dive myimage:1.0                  # excellent TUI, https://github.com/wagoodman/dive</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 19 =========== -->
+<h2 id="m19"><span class="module-tag">Module 19</span><br>Common Mistakes</h2>
+
+<table>
+  <thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Using <code>:latest</code> in prod</td><td>Surprising upgrades</td><td>Pin tags or digests</td></tr>
+    <tr><td>Running as root</td><td>Privilege escalation risk</td><td><code>USER appuser</code></td></tr>
+    <tr><td>Ignoring layer caching order</td><td>Slow CI builds</td><td>Deps before source</td></tr>
+    <tr><td>One image for build + runtime</td><td>Huge image, secrets in image</td><td>Multi-stage</td></tr>
+    <tr><td>Storing data in container layer</td><td>Lost on container remove</td><td>Use volumes</td></tr>
+    <tr><td>Default bridge network</td><td>No DNS by name</td><td>Create custom network</td></tr>
+    <tr><td>Long-running shell as PID 1</td><td>Signal handling broken</td><td>Use <code>tini</code> / <code>--init</code></td></tr>
+    <tr><td>Logging to file inside container</td><td>Log lost / disk fills</td><td>Log to stdout/stderr</td></tr>
+    <tr><td>No HEALTHCHECK</td><td>Sick container stays "running"</td><td>Add HEALTHCHECK</td></tr>
+    <tr><td>Mounting Docker socket</td><td>Effectively root on host</td><td>Avoid; use socket proxy if must</td></tr>
+    <tr><td>No resource limits</td><td>One container starves others</td><td><code>--memory</code>/<code>--cpus</code></td></tr>
+    <tr><td>Baking secrets into images</td><td>Visible in registry</td><td>Use secrets/env at runtime</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =========== MODULE 20 =========== -->
+<h2 id="m20"><span class="module-tag">Module 20</span><br>Docker CLI Reference</h2>
+
+<h3>Images</h3>
+<pre><code>docker pull image:tag
+docker images                     # list local
+docker rmi image:tag              # remove
+docker image prune -a             # remove ALL unused images
+docker build -t name:tag .
+docker tag src:1.0 dst:1.0
+docker push name:tag
+docker history name:tag
+docker save name:tag -o file.tar
+docker load -i file.tar</code></pre>
+
+<h3>Containers</h3>
+<pre><code>docker run [opts] image [cmd]
+docker ps                         # running
+docker ps -a                      # including stopped
+docker stop &lt;c&gt;
+docker start &lt;c&gt;
+docker restart &lt;c&gt;
+docker kill &lt;c&gt;                   # SIGKILL
+docker rm &lt;c&gt;                     # remove stopped
+docker container prune            # remove all stopped
+docker exec -it &lt;c&gt; sh
+docker logs -f &lt;c&gt;
+docker inspect &lt;c&gt;
+docker cp &lt;c&gt;:/path /local        # copy file out (or in)
+docker top &lt;c&gt;
+docker stats</code></pre>
+
+<h3>Networks &amp; volumes</h3>
+<pre><code>docker network create &lt;n&gt;
+docker network ls
+docker network inspect &lt;n&gt;
+
+docker volume create &lt;v&gt;
+docker volume ls
+docker volume inspect &lt;v&gt;
+docker volume prune</code></pre>
+
+<h3>System maintenance</h3>
+<pre><code>docker system df                  # space used by images/containers/volumes
+docker system prune               # remove unused containers, networks, images
+docker system prune -a --volumes  # nuclear (be careful!)
+docker info                       # daemon info
+docker version</code></pre>
+
+<hr>
+
+<!-- ====== PART B DIVIDER ====== -->
+<div class="part-divider">
+  <h2>Part B — Kubernetes</h2>
+  <p>Modules 21–40: pods, deployments, services, ingress, scaling, RBAC, helm, ops</p>
+</div>
+
+<!-- =========== MODULE 21 =========== -->
+<h2 id="m21"><span class="module-tag k8s">Module 21</span><br>What &amp; Why of Kubernetes</h2>
+
+<h3>What is Kubernetes?</h3>
+<p><strong>Kubernetes</strong> (K8s — 8 letters between K and s) is an open-source <strong>container orchestrator</strong>. You declare what you want (10 replicas of the API, behind a load balancer, with these env vars). Kubernetes makes it true and keeps it true — restarting failed containers, scheduling new ones if a node dies, rolling updates without downtime.</p>
+
+<p>Originally built at Google as a successor to internal systems Borg and Omega. Open-sourced in 2014, donated to the CNCF. Pronounced "koo-ber-net-ees".</p>
+
+<h3>What problem does it solve?</h3>
+<p>Docker runs containers on one host. Real systems span dozens or thousands of hosts. Without orchestration you'd manually ssh, deploy, restart, balance — at scale, impossible. K8s automates:</p>
+<ul>
+  <li><strong>Scheduling</strong> — place containers on nodes based on resources/affinity.</li>
+  <li><strong>Self-healing</strong> — replace dead containers; reschedule on dead nodes.</li>
+  <li><strong>Scaling</strong> — increase/decrease replicas, automatically based on load.</li>
+  <li><strong>Service discovery</strong> — DNS for services; internal load balancing.</li>
+  <li><strong>Rolling updates</strong> — gradual deploys with rollback.</li>
+  <li><strong>Configuration &amp; secrets</strong> — separate from images, mounted into pods.</li>
+  <li><strong>Storage orchestration</strong> — provision and attach volumes.</li>
+</ul>
+
+<h3>When you need K8s</h3>
+<ul>
+  <li>You run many services (≥5) and they evolve independently.</li>
+  <li>You need zero-downtime deploys, autoscaling, multi-region.</li>
+  <li>You have ops capacity (or you use a managed K8s — EKS, AKS, GKE).</li>
+</ul>
+
+<h3>When you don't</h3>
+<ul>
+  <li>Single backend + DB → just use a VM or a managed PaaS (Azure App Service, Heroku, Render).</li>
+  <li>Tiny team, no ops capacity → managed alternative.</li>
+  <li>Already on Docker Compose and not feeling pain — stay there longer.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 22 =========== -->
+<h2 id="m22"><span class="module-tag k8s">Module 22</span><br>K8s vs Alternatives</h2>
+
+<table>
+  <thead><tr><th>Tool</th><th>Strengths</th><th>vs Kubernetes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Docker Compose</strong></td><td>Trivial setup, single file</td><td>Single host only; no auto-scaling, no HA</td></tr>
+    <tr><td><strong>Docker Swarm</strong></td><td>Built into Docker, simpler</td><td>Effectively dead; tiny ecosystem</td></tr>
+    <tr><td><strong>Nomad (HashiCorp)</strong></td><td>Simpler than K8s, runs non-container workloads too</td><td>Smaller ecosystem; less batteries-included</td></tr>
+    <tr><td><strong>ECS (AWS)</strong></td><td>Easier than K8s; AWS-native</td><td>AWS-locked; limited to AWS primitives</td></tr>
+    <tr><td><strong>Azure Container Apps / AWS Fargate</strong></td><td>Serverless containers; no nodes to manage</td><td>Less control; higher cost at scale</td></tr>
+    <tr><td><strong>Kubernetes</strong></td><td>Industry standard, huge ecosystem, portable</td><td>Steep learning curve; ops complexity</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Distributions of Kubernetes</strong> you'll meet:</p>
+<ul>
+  <li><strong>Managed</strong>: AKS (Azure), EKS (AWS), GKE (Google), DOKS (DigitalOcean), Linode LKE.</li>
+  <li><strong>Self-hosted</strong>: kubeadm, kops, kubespray, Rancher RKE2, Talos.</li>
+  <li><strong>Local/dev</strong>: Minikube, Kind, k3d, Docker Desktop's K8s.</li>
+  <li><strong>Lightweight</strong>: K3s (Rancher), MicroK8s (Canonical).</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 23 =========== -->
+<h2 id="m23"><span class="module-tag k8s">Module 23</span><br>Architecture</h2>
+
+<pre class="diagram">┌────────────────────── Control Plane (master) ──────────────────────┐
+│                                                                    │
+│  ┌──────────────┐   ┌──────────────┐   ┌──────────────┐            │
+│  │ kube-        │   │ kube-        │   │ kube-        │            │
+│  │ apiserver    │◄─►│ scheduler    │   │ controller-  │            │
+│  └──────┬───────┘   └──────────────┘   │ manager      │            │
+│         │                               └──────────────┘            │
+│         ▼                                                          │
+│  ┌──────────────┐                                                  │
+│  │   etcd       │  (key-value store: cluster state)                │
+│  │   (Raft)     │                                                  │
+│  └──────────────┘                                                  │
+└────────────────────────────────────────────────────────────────────┘
+                          │
+                          │  watches/commands
+                          ▼
+┌──────────────────────── Worker Nodes ──────────────────────────────┐
+│  ┌────────────────────────────┐  ┌────────────────────────────┐   │
+│  │ Node 1                     │  │ Node 2                     │   │
+│  │  kubelet ─► containerd ─► pods│  kubelet ─► containerd ─► pods│   │
+│  │  kube-proxy                │  │  kube-proxy                │   │
+│  └────────────────────────────┘  └────────────────────────────┘   │
+└────────────────────────────────────────────────────────────────────┘</pre>
+
+<h3>Control plane components</h3>
+<ul>
+  <li><strong>kube-apiserver</strong> — single entry point. All clients (kubectl, controllers, kubelets) talk REST to it.</li>
+  <li><strong>etcd</strong> — distributed key-value store holding all cluster state. Single source of truth.</li>
+  <li><strong>kube-scheduler</strong> — picks which node a new pod runs on.</li>
+  <li><strong>kube-controller-manager</strong> — runs controllers (Deployment, ReplicaSet, Node, etc.) that watch state and reconcile.</li>
+  <li><strong>cloud-controller-manager</strong> — cloud-specific glue (load balancers, persistent disks).</li>
+</ul>
+
+<h3>Node components</h3>
+<ul>
+  <li><strong>kubelet</strong> — agent on each node; talks to apiserver, runs pods via the container runtime.</li>
+  <li><strong>kube-proxy</strong> — sets up iptables/IPVS rules for Service IPs.</li>
+  <li><strong>Container runtime</strong> — containerd or CRI-O (Docker daemon is no longer used).</li>
+</ul>
+
+<h3>The reconciliation loop</h3>
+<p>You declare desired state ("3 replicas of nginx"). Controllers compare desired vs actual and act ("only 2 running, start one more"). This loop runs continuously — that's the soul of K8s.</p>
+
+<hr>
+
+<!-- =========== MODULE 24 =========== -->
+<h2 id="m24"><span class="module-tag k8s">Module 24</span><br>Core Vocabulary</h2>
+
+<dl class="glossary">
+  <dt>Cluster</dt><dd>A K8s installation: 1+ control-plane nodes + 0+ worker nodes.</dd>
+  <dt>Node</dt><dd>A machine (VM or physical) that runs pods.</dd>
+  <dt>Pod</dt><dd>The smallest deployable unit — one or more co-located containers sharing network and storage.</dd>
+  <dt>Deployment</dt><dd>Manages a set of identical pods, with rolling updates.</dd>
+  <dt>ReplicaSet</dt><dd>Lower-level: ensures N copies of a pod. Created by Deployment.</dd>
+  <dt>StatefulSet</dt><dd>Like Deployment but pods get stable names (web-0, web-1) and persistent storage.</dd>
+  <dt>DaemonSet</dt><dd>Runs one pod on every node (or selected nodes). For agents (logging, monitoring).</dd>
+  <dt>Job</dt><dd>Runs a pod to completion (batch task).</dd>
+  <dt>CronJob</dt><dd>Job on a cron schedule.</dd>
+  <dt>Service</dt><dd>Stable IP/DNS in front of a set of pods.</dd>
+  <dt>Ingress</dt><dd>HTTP/S routing into the cluster from outside.</dd>
+  <dt>ConfigMap</dt><dd>Non-secret config as key-value or files, mounted into pods.</dd>
+  <dt>Secret</dt><dd>Like ConfigMap but for sensitive data.</dd>
+  <dt>Namespace</dt><dd>Logical isolation within a cluster (separate envs, teams).</dd>
+  <dt>Label</dt><dd>Key-value pair on objects, used for selection.</dd>
+  <dt>Selector</dt><dd>Query that matches labels.</dd>
+  <dt>Annotation</dt><dd>Key-value metadata; not used for selection.</dd>
+  <dt>Volume</dt><dd>Storage attached to a pod's lifetime.</dd>
+  <dt>PersistentVolume (PV)</dt><dd>Cluster-wide storage resource.</dd>
+  <dt>PersistentVolumeClaim (PVC)</dt><dd>A request by a pod for storage.</dd>
+  <dt>StorageClass</dt><dd>Template for dynamically provisioning PVs.</dd>
+  <dt>Manifest</dt><dd>YAML describing a resource. Sent to the apiserver.</dd>
+  <dt>kubectl</dt><dd>The CLI; talks to apiserver.</dd>
+  <dt>Helm</dt><dd>Package manager for Kubernetes manifests (Helm "charts").</dd>
+  <dt>Operator</dt><dd>App-specific controller for complex workloads (e.g., Postgres).</dd>
+</dl>
+
+<hr>
+
+<!-- =========== MODULE 25 =========== -->
+<h2 id="m25"><span class="module-tag k8s">Module 25</span><br>Pods</h2>
+
+<p>A <strong>Pod</strong> is the smallest unit you can deploy. It's a wrapper for one or more containers that:</p>
+<ul>
+  <li>Share a network namespace (same IP, same localhost).</li>
+  <li>Share volumes.</li>
+  <li>Are scheduled together on the same node.</li>
+</ul>
+
+<p>Most pods have one container. Multi-container pods are for tightly coupled helpers ("sidecars") — e.g., main app + log shipper, or main app + service mesh proxy.</p>
+
+<h3>Minimal pod manifest</h3>
+<pre><code>apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:1.25
+      ports:
+        - containerPort: 80
+      resources:
+        requests: { cpu: "100m", memory: "128Mi" }
+        limits:   { cpu: "500m", memory: "256Mi" }</code></pre>
+
+<p>Apply it: <code>kubectl apply -f pod.yaml</code>. But you almost never create raw pods in production — you use Deployments (next module), which manage pods for you.</p>
+
+<h3>Pod lifecycle phases</h3>
+<p><code>Pending</code> → <code>Running</code> → <code>Succeeded</code> / <code>Failed</code> / <code>Unknown</code>.</p>
+
+<h3>Init containers</h3>
+<p>Run-to-completion containers that execute before app containers. Used for one-off setup, schema migrations, waiting for dependencies.</p>
+<pre><code>spec:
+  initContainers:
+    - name: wait-for-db
+      image: busybox
+      command: ['sh','-c','until nc -z db 5432; do sleep 1; done']
+  containers:
+    - name: app
+      image: myapi:1.0</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 26 =========== -->
+<h2 id="m26"><span class="module-tag k8s">Module 26</span><br>Deployments</h2>
+
+<p>A <strong>Deployment</strong> declares how many copies of a pod you want and how to update them. It creates a ReplicaSet, which keeps the right number of pods alive.</p>
+
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  labels: { app: api }
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: api }
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1     # at most 1 pod down during update
+      maxSurge: 1           # at most 1 extra pod created
+  template:
+    metadata:
+      labels: { app: api }
+    spec:
+      containers:
+        - name: api
+          image: myorg/api:1.4.2
+          ports: [ { containerPort: 8080 } ]
+          env:
+            - name: DB_HOST
+              value: postgres
+          resources:
+            requests: { cpu: "200m", memory: "256Mi" }
+            limits:   { cpu: "1",    memory: "512Mi" }</code></pre>
+
+<h3>Rolling updates</h3>
+<p>Change <code>image: myorg/api:1.4.3</code>, <code>kubectl apply -f</code>. K8s creates new pods with the new image one at a time and removes old ones — zero-downtime.</p>
+
+<h3>Useful commands</h3>
+<pre><code>kubectl rollout status deploy/api
+kubectl rollout history deploy/api
+kubectl rollout undo deploy/api
+kubectl rollout undo deploy/api --to-revision=3
+kubectl scale deploy/api --replicas=5
+kubectl set image deploy/api api=myorg/api:1.4.4</code></pre>
+
+<h3>Update strategies</h3>
+<ul>
+  <li><strong>RollingUpdate</strong> (default) — gradual replacement.</li>
+  <li><strong>Recreate</strong> — kill all old, then start new. Brief downtime; OK for non-critical workloads.</li>
+  <li><strong>Blue/Green &amp; Canary</strong> — not native; achieved with two Deployments + Service routing or tools like Argo Rollouts, Flagger.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 27 =========== -->
+<h2 id="m27"><span class="module-tag k8s">Module 27</span><br>StatefulSets, Jobs, CronJobs, DaemonSets</h2>
+
+<h3>StatefulSet</h3>
+<p>Like Deployment but for stateful apps:</p>
+<ul>
+  <li>Pods get stable names: <code>db-0</code>, <code>db-1</code>, <code>db-2</code>.</li>
+  <li>Each pod gets its own PersistentVolume (via volumeClaimTemplates).</li>
+  <li>Ordered creation (db-0 first), ordered deletion (db-2 first).</li>
+</ul>
+
+<p>For: databases, distributed coordinators (etcd, Zookeeper), Kafka, Redis with persistence. Often you'll use an <strong>Operator</strong> instead of writing StatefulSet by hand (Postgres Operator, Strimzi for Kafka, Redis Operator, etc.).</p>
+
+<h3>Job</h3>
+<p>Runs pods until N successful completions. For one-off batch tasks: data migration, report generation, backup.</p>
+<pre><code>apiVersion: batch/v1
+kind: Job
+metadata: { name: db-migration }
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migrate
+          image: myorg/db-migrator:1.0
+          command: ["./migrate.sh"]
+  backoffLimit: 3</code></pre>
+
+<h3>CronJob</h3>
+<p>Job on a cron schedule. Like Linux cron, runs in the cluster.</p>
+<pre><code>apiVersion: batch/v1
+kind: CronJob
+metadata: { name: nightly-report }
+spec:
+  schedule: "0 2 * * *"            # 2 AM daily
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: reporter
+              image: myorg/reporter:1.0</code></pre>
+
+<h3>DaemonSet</h3>
+<p>Runs exactly one pod on every node (or matching nodes). For node-level agents: log shippers (Fluent Bit), monitoring (node-exporter), networking (CNI plugins).</p>
+
+<hr>
+
+<!-- =========== MODULE 28 =========== -->
+<h2 id="m28"><span class="module-tag k8s">Module 28</span><br>Services</h2>
+
+<p>Pods are ephemeral — they get new IPs on restart. A <strong>Service</strong> gives a stable virtual IP and DNS name in front of a set of pods (selected by labels) and load-balances across them.</p>
+
+<h3>Service types</h3>
+<table>
+  <thead><tr><th>Type</th><th>Reachable from</th><th>Use</th></tr></thead>
+  <tbody>
+    <tr><td><strong>ClusterIP</strong> (default)</td><td>Inside cluster only</td><td>Internal microservices</td></tr>
+    <tr><td><strong>NodePort</strong></td><td>Any node IP at a high port (30000–32767)</td><td>Quick external access in dev/on-prem</td></tr>
+    <tr><td><strong>LoadBalancer</strong></td><td>External cloud LB (auto-provisioned)</td><td>Public services on cloud K8s</td></tr>
+    <tr><td><strong>ExternalName</strong></td><td>DNS CNAME to external host</td><td>Alias for an external service</td></tr>
+    <tr><td><strong>Headless</strong> (<code>clusterIP: None</code>)</td><td>DNS returns pod IPs directly</td><td>StatefulSets, custom LB</td></tr>
+  </tbody>
+</table>
+
+<h3>ClusterIP example</h3>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: api
+  ports:
+    - port: 80              # service port
+      targetPort: 8080      # container port
+      protocol: TCP
+  type: ClusterIP</code></pre>
+
+<p>From any pod in the cluster, <code>http://api/</code> (or <code>http://api.namespace.svc.cluster.local</code>) hits the service and gets load-balanced to one of the matching pods.</p>
+
+<h3>How it works</h3>
+<p><code>kube-proxy</code> on each node programs iptables (or IPVS) rules so traffic to the service IP is DNAT'd to a random matching pod. CoreDNS resolves service names to service IPs.</p>
+
+<hr>
+
+<!-- =========== MODULE 29 =========== -->
+<h2 id="m29"><span class="module-tag k8s">Module 29</span><br>Ingress</h2>
+
+<p>An <strong>Ingress</strong> is HTTP/HTTPS routing into the cluster. It needs an <strong>Ingress Controller</strong> (nginx, Traefik, HAProxy, AWS ALB controller) running in the cluster — the controller watches Ingress resources and configures the actual proxy.</p>
+
+<h3>Why Ingress instead of LoadBalancer per service?</h3>
+<ul>
+  <li>One LB serves many services (host- or path-based routing).</li>
+  <li>Centralized TLS termination.</li>
+  <li>Authentication, rate limits, rewrites in the controller.</li>
+</ul>
+
+<h3>Ingress example</h3>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easyaudit
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [ api.easyaudit.com ]
+      secretName: easyaudit-tls
+  rules:
+    - host: api.easyaudit.com
+      http:
+        paths:
+          - path: /central
+            pathType: Prefix
+            backend:
+              service: { name: central-backend, port: { number: 80 } }
+          - path: /accounting
+            pathType: Prefix
+            backend:
+              service: { name: accounting-backend, port: { number: 80 } }
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: audit-frontend, port: { number: 80 } }</code></pre>
+
+<h3>cert-manager</h3>
+<p>Auto-issues TLS certificates from Let's Encrypt or your CA. Two CRDs: ClusterIssuer + Certificate. Once installed, just annotate Ingress.</p>
+
+<hr>
+
+<!-- =========== MODULE 30 =========== -->
+<h2 id="m30"><span class="module-tag k8s">Module 30</span><br>ConfigMaps &amp; Secrets</h2>
+
+<h3>ConfigMap — non-sensitive config</h3>
+<pre><code>apiVersion: v1
+kind: ConfigMap
+metadata: { name: app-config }
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  log_level: "Information"
+  appsettings.json: |
+    {
+      "Kestrel": { "Endpoints": { "Http": { "Url": "http://+:8080" } } }
+    }</code></pre>
+
+<p>Mount into a pod two ways:</p>
+<pre><code># As env vars
+envFrom:
+  - configMapRef: { name: app-config }
+
+# As files
+volumes:
+  - name: cfg
+    configMap: { name: app-config }
+volumeMounts:
+  - name: cfg
+    mountPath: /app/config</code></pre>
+
+<h3>Secret — sensitive data</h3>
+<pre><code>apiVersion: v1
+kind: Secret
+metadata: { name: db-secret }
+type: Opaque
+data:
+  username: YWRtaW4=         # base64 of "admin"
+  password: czBtM3BBc3M=     # base64 of "s0m3pAss"
+# Or use stringData (auto-base64):
+stringData:
+  username: admin
+  password: s0m3pAss</code></pre>
+
+<div class="callout warn">
+  <strong>Important:</strong> Secrets are <em>only base64-encoded</em>, not encrypted at rest by default. Enable encryption-at-rest in etcd, and use real secret managers for production: <strong>Sealed Secrets</strong>, <strong>External Secrets Operator</strong> + AWS Secrets Manager / Azure Key Vault / HashiCorp Vault.
+</div>
+
+<h3>Mount as env</h3>
+<pre><code>env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef: { name: db-secret, key: password }</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 31 =========== -->
+<h2 id="m31"><span class="module-tag k8s">Module 31</span><br>Resources: Requests &amp; Limits</h2>
+
+<p>Each container declares two numbers per resource (CPU, memory):</p>
+<ul>
+  <li><strong>Requests</strong> — guaranteed minimum. The scheduler uses this to place the pod on a node with enough free capacity.</li>
+  <li><strong>Limits</strong> — hard cap. CPU is throttled; memory is OOM-killed.</li>
+</ul>
+
+<pre><code>resources:
+  requests:
+    cpu: "200m"          # 0.2 of a core
+    memory: "256Mi"
+  limits:
+    cpu: "1"             # 1 full core
+    memory: "512Mi"</code></pre>
+
+<h3>Units</h3>
+<ul>
+  <li>CPU: <code>1</code> = 1 core. <code>500m</code> = half a core. <code>100m</code> = 0.1 core.</li>
+  <li>Memory: <code>Mi</code> = mebibytes (1024-based). <code>Gi</code> = gibibytes. (Avoid <code>M</code>/<code>G</code> which are 1000-based — confusing.)</li>
+</ul>
+
+<h3>QoS classes</h3>
+<table>
+  <thead><tr><th>Class</th><th>Condition</th><th>Eviction order</th></tr></thead>
+  <tbody>
+    <tr><td>Guaranteed</td><td>requests = limits for all containers</td><td>Last to be evicted</td></tr>
+    <tr><td>Burstable</td><td>Has requests, limits &gt; requests</td><td>Middle</td></tr>
+    <tr><td>BestEffort</td><td>No requests/limits</td><td>First evicted on memory pressure</td></tr>
+  </tbody>
+</table>
+
+<h3>How to choose</h3>
+<ul>
+  <li>Run the app under realistic load; observe CPU/memory.</li>
+  <li>Set requests at p50–p70 of usage.</li>
+  <li>Set limits at p99 with headroom — don't be too tight on memory (OOM kills).</li>
+  <li>Production tip: many shops set memory request = limit (Guaranteed QoS), keep CPU bursty.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 32 =========== -->
+<h2 id="m32"><span class="module-tag k8s">Module 32</span><br>Probes</h2>
+
+<p>K8s checks if your container is alive and ready via three probes:</p>
+
+<table>
+  <thead><tr><th>Probe</th><th>Question</th><th>Action on failure</th></tr></thead>
+  <tbody>
+    <tr><td><strong>liveness</strong></td><td>Is the process stuck/deadlocked?</td><td>Kill &amp; restart container</td></tr>
+    <tr><td><strong>readiness</strong></td><td>Can it serve traffic right now?</td><td>Remove pod from Service endpoints</td></tr>
+    <tr><td><strong>startup</strong></td><td>Has it finished booting?</td><td>Delay liveness probe until startup passes</td></tr>
+  </tbody>
+</table>
+
+<pre><code>livenessProbe:
+  httpGet: { path: /healthz/live, port: 8080 }
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet: { path: /healthz/ready, port: 8080 }
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+startupProbe:
+  httpGet: { path: /healthz/live, port: 8080 }
+  failureThreshold: 30
+  periodSeconds: 10        # 30 × 10s = 5 min to boot</code></pre>
+
+<h3>Probe types</h3>
+<ul>
+  <li><strong>httpGet</strong> — HTTP 200–399 = healthy.</li>
+  <li><strong>tcpSocket</strong> — TCP connect succeeds = healthy.</li>
+  <li><strong>exec</strong> — command exit 0 = healthy.</li>
+  <li><strong>grpc</strong> — gRPC health check.</li>
+</ul>
+
+<div class="callout">
+  <strong>Common mistake:</strong> using the same endpoint for liveness and readiness, AND making it depend on the database. If DB is briefly unavailable, K8s starts killing perfectly healthy pods. Liveness should only check "is my process responding?" — not external deps.
+</div>
+
+<hr>
+
+<!-- =========== MODULE 33 =========== -->
+<h2 id="m33"><span class="module-tag k8s">Module 33</span><br>Auto-scaling</h2>
+
+<h3>HorizontalPodAutoscaler (HPA)</h3>
+<p>Scales replicas up/down based on metrics.</p>
+<pre><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata: { name: api }
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70</code></pre>
+<p>Needs <strong>metrics-server</strong> installed. Custom metrics (RPS, queue length) need <strong>prometheus-adapter</strong> or KEDA.</p>
+
+<h3>VerticalPodAutoscaler (VPA)</h3>
+<p>Adjusts requests/limits over time based on observed usage. Use for unknown sizing; less common in production for live traffic (recreates pods).</p>
+
+<h3>Cluster Autoscaler</h3>
+<p>Adds/removes <em>nodes</em> when pods can't be scheduled or nodes are underused. Cloud-provider integration adds VMs as needed. Modern alternative: <strong>Karpenter</strong> (faster, smarter on AWS).</p>
+
+<h3>KEDA</h3>
+<p>Event-driven autoscaling. Scale on Kafka lag, Redis queue depth, RabbitMQ messages, AWS SQS, Azure Service Bus, etc. Even scale to zero.</p>
+
+<hr>
+
+<!-- =========== MODULE 34 =========== -->
+<h2 id="m34"><span class="module-tag k8s">Module 34</span><br>Persistent Volumes</h2>
+
+<h3>The objects</h3>
+<ul>
+  <li><strong>PersistentVolume (PV)</strong> — actual cluster-wide storage resource.</li>
+  <li><strong>PersistentVolumeClaim (PVC)</strong> — a request for storage from a pod.</li>
+  <li><strong>StorageClass</strong> — template for dynamic PV provisioning.</li>
+</ul>
+
+<h3>Static vs dynamic</h3>
+<p><strong>Dynamic</strong> (modern default): pod creates a PVC, K8s + a CSI driver provision the PV automatically (EBS volume, Azure Disk, etc.).</p>
+
+<h3>StorageClass example</h3>
+<pre><code>apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fast-ssd
+provisioner: disk.csi.azure.com   # or ebs.csi.aws.com, etc.
+parameters:
+  skuName: Premium_LRS
+reclaimPolicy: Retain</code></pre>
+
+<h3>PVC example</h3>
+<pre><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: db-data }
+spec:
+  accessModes: [ ReadWriteOnce ]
+  storageClassName: fast-ssd
+  resources:
+    requests: { storage: 50Gi }</code></pre>
+
+<h3>Mount in pod</h3>
+<pre><code>volumes:
+  - name: data
+    persistentVolumeClaim: { claimName: db-data }
+volumeMounts:
+  - name: data
+    mountPath: /var/lib/postgresql/data</code></pre>
+
+<h3>Access modes</h3>
+<ul>
+  <li><strong>ReadWriteOnce (RWO)</strong> — one node at a time. Most block storage.</li>
+  <li><strong>ReadOnlyMany (ROX)</strong> — many readers.</li>
+  <li><strong>ReadWriteMany (RWX)</strong> — many readers/writers. Needs network FS (NFS, EFS, Azure Files).</li>
+  <li><strong>ReadWriteOncePod</strong> — single pod (not just node). Stricter.</li>
+</ul>
+
+<hr>
+
+<!-- =========== MODULE 35 =========== -->
+<h2 id="m35"><span class="module-tag k8s">Module 35</span><br>RBAC &amp; Security</h2>
+
+<h3>RBAC primitives</h3>
+<ul>
+  <li><strong>Role</strong> — permissions inside a namespace.</li>
+  <li><strong>ClusterRole</strong> — permissions cluster-wide.</li>
+  <li><strong>RoleBinding</strong> — binds a Role to a user/group/ServiceAccount.</li>
+  <li><strong>ClusterRoleBinding</strong> — same, cluster-scope.</li>
+  <li><strong>ServiceAccount</strong> — identity for workloads.</li>
+</ul>
+
+<pre><code>apiVersion: v1
+kind: ServiceAccount
+metadata: { name: api-sa, namespace: prod }
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata: { namespace: prod, name: read-config }
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps","secrets"]
+    verbs: ["get","list","watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: { namespace: prod, name: api-read-config }
+subjects:
+  - kind: ServiceAccount
+    name: api-sa
+    namespace: prod
+roleRef:
+  kind: Role
+  name: read-config
+  apiGroup: rbac.authorization.k8s.io</code></pre>
+
+<h3>NetworkPolicy</h3>
+<p>Default: every pod can talk to every other pod. NetworkPolicies let you firewall:</p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: db-allow-api }
+spec:
+  podSelector:
+    matchLabels: { app: postgres }
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: { app: api }
+      ports:
+        - port: 5432</code></pre>
+<p>Needs a CNI plugin that supports policies (Calico, Cilium).</p>
+
+<h3>Pod Security Standards</h3>
+<p>Modern replacement for PodSecurityPolicy. Three levels: <code>privileged</code>, <code>baseline</code>, <code>restricted</code>. Apply per namespace via labels:</p>
+<pre><code>kubectl label ns prod \
+  pod-security.kubernetes.io/enforce=restricted \
+  pod-security.kubernetes.io/warn=restricted</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 36 =========== -->
+<h2 id="m36"><span class="module-tag k8s">Module 36</span><br>kubectl Reference</h2>
+
+<h3>Core verbs</h3>
+<pre><code>kubectl get pods                   # list
+kubectl get pods -A                # all namespaces
+kubectl get pods -o wide           # more columns (node, IP)
+kubectl get pods -o yaml           # full YAML
+kubectl describe pod &lt;name&gt;        # detailed status
+kubectl logs &lt;pod&gt;
+kubectl logs -f -c container &lt;pod&gt;
+kubectl logs --previous &lt;pod&gt;      # previous instance after restart
+kubectl exec -it &lt;pod&gt; -- sh
+kubectl port-forward svc/api 8080:80
+kubectl apply -f file.yaml         # create or update
+kubectl delete -f file.yaml
+kubectl edit deploy/api            # interactive edit
+kubectl rollout status deploy/api
+kubectl rollout undo deploy/api
+kubectl scale deploy/api --replicas=5
+kubectl top pods                   # CPU/mem (needs metrics-server)
+kubectl top nodes</code></pre>
+
+<h3>Selectors</h3>
+<pre><code>kubectl get pods -l app=api
+kubectl get pods -l 'env in (prod,staging)'
+kubectl delete pods -l app=api</code></pre>
+
+<h3>Contexts &amp; namespaces</h3>
+<pre><code>kubectl config get-contexts
+kubectl config use-context prod-cluster
+kubectl config set-context --current --namespace=easyaudit-prod</code></pre>
+
+<h3>Debugging</h3>
+<pre><code>kubectl describe node &lt;node&gt;       # capacity, conditions, events
+kubectl get events --sort-by=.lastTimestamp
+kubectl debug -it &lt;pod&gt; --image=busybox --target=&lt;container&gt;
+kubectl run tmp --rm -it --image=busybox -- sh   # one-off pod for debugging</code></pre>
+
+<h3>Templating quick wins</h3>
+<pre><code>kubectl get pods -o jsonpath='{.items[*].metadata.name}'
+kubectl get pods -o custom-columns=NAME:.metadata.name,NODE:.spec.nodeName</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 37 =========== -->
+<h2 id="m37"><span class="module-tag k8s">Module 37</span><br>Helm</h2>
+
+<p><strong>Helm</strong> is a package manager. A "chart" is a directory of templated YAML; values are filled in at install time. The chart + its values become a "release" in the cluster.</p>
+
+<h3>Chart structure</h3>
+<pre class="diagram">mychart/
+├── Chart.yaml
+├── values.yaml
+├── templates/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   └── _helpers.tpl
+└── charts/                  (sub-chart dependencies)</pre>
+
+<h3>Templates use Go templating</h3>
+<pre><code># templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-api
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    spec:
+      containers:
+        - name: api
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}</code></pre>
+
+<h3>values.yaml</h3>
+<pre><code>replicaCount: 3
+image:
+  repository: myorg/api
+  tag: 1.4.2</code></pre>
+
+<h3>Daily commands</h3>
+<pre><code>helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo update
+helm search repo postgres
+helm install my-pg bitnami/postgresql -f my-values.yaml
+helm list
+helm upgrade my-pg bitnami/postgresql -f my-values.yaml
+helm history my-pg
+helm rollback my-pg 1
+helm uninstall my-pg</code></pre>
+
+<h3>Why Helm?</h3>
+<ul>
+  <li>Reuse across environments (dev/staging/prod) with different values.</li>
+  <li>Easy install of community charts (cert-manager, ingress-nginx, prometheus, redis, postgres).</li>
+  <li>Atomic upgrade/rollback.</li>
+</ul>
+
+<h3>Alternative: Kustomize</h3>
+<p>Plain YAML overlays without Go templating. Good when templating gets hairy.</p>
+
+<hr>
+
+<!-- =========== MODULE 38 =========== -->
+<h2 id="m38"><span class="module-tag k8s">Module 38</span><br>Local K8s</h2>
+
+<h3>Options</h3>
+<table>
+  <thead><tr><th>Tool</th><th>Approach</th><th>Best for</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Docker Desktop</strong></td><td>Built-in K8s switch</td><td>Quick start on Mac/Windows</td></tr>
+    <tr><td><strong>Kind</strong></td><td>K8s in Docker containers</td><td>CI, multi-node testing</td></tr>
+    <tr><td><strong>Minikube</strong></td><td>VM-based (or Docker)</td><td>Closest to "real cluster" feel</td></tr>
+    <tr><td><strong>k3d</strong></td><td>K3s in Docker</td><td>Lightweight, fast</td></tr>
+    <tr><td><strong>MicroK8s</strong></td><td>Snap-installed</td><td>Linux servers, edge</td></tr>
+  </tbody>
+</table>
+
+<h3>Kind quick start</h3>
+<pre><code># Install: https://kind.sigs.k8s.io/
+kind create cluster --name dev
+kubectl cluster-info
+kubectl get nodes
+kind delete cluster --name dev</code></pre>
+
+<h3>Multi-node Kind</h3>
+<pre><code>kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker
+  - role: worker</code></pre>
+<pre><code>kind create cluster --config=kind-cluster.yaml --name multi</code></pre>
+
+<h3>Loading local images into Kind</h3>
+<pre><code>docker build -t myapp:dev .
+kind load docker-image myapp:dev --name dev
+# Now your Deployment can reference myapp:dev (set imagePullPolicy: IfNotPresent)</code></pre>
+
+<hr>
+
+<!-- =========== MODULE 39 =========== -->
+<h2 id="m39"><span class="module-tag k8s">Module 39</span><br>Production Operations</h2>
+
+<h3>Observability stack</h3>
+<ul>
+  <li><strong>Metrics</strong>: Prometheus + Grafana (commonly via kube-prometheus-stack Helm chart).</li>
+  <li><strong>Logs</strong>: Loki + Promtail, or ELK, or commercial (Datadog, Splunk).</li>
+  <li><strong>Traces</strong>: Tempo, Jaeger, or vendor APM. Wire OTel SDK in apps.</li>
+  <li><strong>Dashboards</strong>: Grafana with prebuilt K8s dashboards.</li>
+</ul>
+
+<h3>GitOps</h3>
+<p>Store all manifests in Git; an operator reconciles cluster to match. Tools: <strong>Argo CD</strong>, <strong>Flux</strong>. Pull-based, auditable, easy rollback.</p>
+
+<h3>CI/CD pattern</h3>
+<ol>
+  <li>Push to main → CI builds image, runs tests, scans for CVEs.</li>
+  <li>Image is tagged with commit SHA, pushed to registry.</li>
+  <li>CI updates Helm values / Kustomization with new tag in a Git repo.</li>
+  <li>Argo CD/Flux detects the change and applies to cluster.</li>
+  <li>Rolling update happens; Argo monitors health.</li>
+</ol>
+
+<h3>Backups</h3>
+<ul>
+  <li><strong>Velero</strong> — backup &amp; restore cluster resources + PVs.</li>
+  <li>Database-specific backups (pg_dump for Postgres, etc.) into object storage.</li>
+</ul>
+
+<h3>Cost control</h3>
+<ul>
+  <li>Right-size requests; over-requesting wastes nodes.</li>
+  <li>Use spot/preemptible nodes for non-critical workloads.</li>
+  <li>Cluster Autoscaler / Karpenter to remove idle nodes.</li>
+  <li>Tools: <strong>Kubecost</strong>, <strong>OpenCost</strong>.</li>
+</ul>
+
+<h3>Upgrading clusters</h3>
+<p>K8s releases every ~3 months; supported for ~14 months. Keep within 1–2 minor versions of latest. Process: drain a node, upgrade kubelet/runtime, uncordon. On managed K8s, click "upgrade" and the cloud handles it.</p>
+
+<hr>
+
+<!-- =========== MODULE 40 =========== -->
+<h2 id="m40"><span class="module-tag k8s">Module 40</span><br>Common K8s Mistakes</h2>
+
+<table>
+  <thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>No resource requests</td><td>Random OOMs / scheduling chaos</td><td>Set requests &amp; limits</td></tr>
+    <tr><td>Liveness probe checks DB</td><td>Pods restart when DB blips</td><td>Liveness only checks the process</td></tr>
+    <tr><td><code>:latest</code> images</td><td>Surprises &amp; rollback impossible</td><td>Pin to immutable tags or digests</td></tr>
+    <tr><td>One huge namespace for everything</td><td>Hard to manage RBAC</td><td>Split by env/team</td></tr>
+    <tr><td>Secrets in plain YAML in Git</td><td>Leaked credentials</td><td>Sealed Secrets / External Secrets</td></tr>
+    <tr><td>Default ServiceAccount with cluster-admin</td><td>Workload can hijack cluster</td><td>Per-app SA, least privilege</td></tr>
+    <tr><td>No PodDisruptionBudget</td><td>All replicas can go down during drain</td><td>PDB with minAvailable</td></tr>
+    <tr><td>HPA on raw CPU but app is async</td><td>Doesn't scale on real load</td><td>Custom metrics or KEDA</td></tr>
+    <tr><td>Storing data in emptyDir</td><td>Data lost on pod restart</td><td>PVC</td></tr>
+    <tr><td>Privileged containers</td><td>Effectively root on node</td><td>Drop caps, restricted PSS</td></tr>
+    <tr><td>Forgetting init containers for migrations</td><td>App starts before schema</td><td>Use Job or initContainer</td></tr>
+    <tr><td>No NetworkPolicies</td><td>Compromised pod can reach anything</td><td>Default-deny, then allow</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =========== MODULE 41 =========== -->
+<h2 id="m41"><span class="module-tag">Module 41</span><br>Glossary</h2>
+
+<dl class="glossary">
+  <dt>Container</dt><dd>Isolated process group sharing a host kernel.</dd>
+  <dt>Image</dt><dd>Immutable filesystem template for containers.</dd>
+  <dt>Layer</dt><dd>One filesystem diff in an image.</dd>
+  <dt>OCI</dt><dd>Open Container Initiative — image &amp; runtime spec.</dd>
+  <dt>Registry</dt><dd>Server hosting images.</dd>
+  <dt>Compose</dt><dd>Multi-container app definition (single host).</dd>
+  <dt>Pod</dt><dd>Smallest K8s deployable unit; 1+ containers.</dd>
+  <dt>Deployment</dt><dd>Manages identical pods with rolling updates.</dd>
+  <dt>StatefulSet</dt><dd>Pods with stable identity &amp; storage.</dd>
+  <dt>DaemonSet</dt><dd>One pod per node.</dd>
+  <dt>Job / CronJob</dt><dd>Batch / scheduled batch.</dd>
+  <dt>Service</dt><dd>Stable virtual IP &amp; DNS over pods.</dd>
+  <dt>Ingress</dt><dd>HTTP routing into the cluster.</dd>
+  <dt>ConfigMap / Secret</dt><dd>Configuration injected into pods.</dd>
+  <dt>PV / PVC</dt><dd>Cluster storage / pod's claim on storage.</dd>
+  <dt>StorageClass</dt><dd>Template for dynamic PV provisioning.</dd>
+  <dt>kubectl</dt><dd>K8s CLI.</dd>
+  <dt>Helm</dt><dd>Package manager for K8s.</dd>
+  <dt>Operator</dt><dd>Controller for app-specific lifecycle.</dd>
+  <dt>HPA / VPA</dt><dd>Horizontal / Vertical Pod Autoscaler.</dd>
+  <dt>RBAC</dt><dd>Role-Based Access Control.</dd>
+  <dt>NetworkPolicy</dt><dd>L3/L4 pod-to-pod firewall.</dd>
+  <dt>etcd</dt><dd>Cluster state store.</dd>
+  <dt>kubelet</dt><dd>Per-node agent running pods.</dd>
+  <dt>kube-proxy</dt><dd>Per-node network glue for Services.</dd>
+  <dt>CNI</dt><dd>Container Network Interface — plugin spec.</dd>
+  <dt>CSI</dt><dd>Container Storage Interface — plugin spec.</dd>
+  <dt>CRI</dt><dd>Container Runtime Interface (containerd, CRI-O).</dd>
+</dl>
+
+<hr>
+
+<!-- =========== MODULE 42 =========== -->
+<h2 id="m42"><span class="module-tag">Module 42</span><br>Practice Exercises</h2>
+
+<div class="exercise">
+  <h4>Exercise 1: First container</h4>
+  <ol>
+    <li><code>docker run hello-world</code></li>
+    <li><code>docker run -it ubuntu bash</code> — explore /, exit, observe filesystem layer.</li>
+    <li><code>docker run -d -p 8080:80 nginx</code> — open localhost:8080.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 2: Build a tiny image</h4>
+  <ol>
+    <li>Create a <code>Dockerfile</code>: <code>FROM nginx:alpine</code>, <code>COPY index.html /usr/share/nginx/html/</code></li>
+    <li><code>docker build -t mysite:1 .</code></li>
+    <li><code>docker run -d -p 8080:80 mysite:1</code></li>
+    <li>Edit index.html, rebuild, observe layer caching.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 3: Multi-stage build</h4>
+  <ol>
+    <li>Take a small Node or .NET app.</li>
+    <li>Write a 2-stage Dockerfile (build → runtime).</li>
+    <li>Compare image size vs single-stage. Aim for &lt;200 MB.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 4: Compose stack</h4>
+  <ol>
+    <li>Write a compose with: web + redis + postgres.</li>
+    <li>Wire the web container to talk to both by name.</li>
+    <li>Add healthchecks; use <code>depends_on: condition: service_healthy</code>.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 5: Local K8s</h4>
+  <ol>
+    <li>Install Kind. Create a 3-node cluster.</li>
+    <li>Deploy nginx via <code>kubectl create deploy nginx --image=nginx:alpine</code>.</li>
+    <li>Expose with <code>kubectl expose deploy nginx --port 80</code>.</li>
+    <li>Port-forward with <code>kubectl port-forward svc/nginx 8080:80</code>.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 6: Rolling update</h4>
+  <ol>
+    <li>Deploy your <code>mysite:1</code> from Exercise 2 to K8s with replicas=3.</li>
+    <li>Push <code>mysite:2</code> with different content.</li>
+    <li><code>kubectl set image deploy/mysite mysite=mysite:2</code></li>
+    <li>Watch <code>kubectl rollout status</code> and confirm zero-downtime.</li>
+    <li><code>kubectl rollout undo</code> back to v1.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 7: ConfigMap + Secret</h4>
+  <ol>
+    <li>Create a ConfigMap with app settings.</li>
+    <li>Create a Secret with a fake password.</li>
+    <li>Mount both into a busybox pod and <code>cat</code> them.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 8: Ingress + TLS</h4>
+  <ol>
+    <li>Install ingress-nginx via Helm.</li>
+    <li>Install cert-manager via Helm.</li>
+    <li>Deploy 2 services; add an Ingress that routes by path.</li>
+    <li>Add a self-signed TLS via cert-manager (or staging Let's Encrypt).</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- =========== MODULE 43 =========== -->
+<h2 id="m43"><span class="module-tag">Module 43</span><br>Interview Questions</h2>
+
+<div class="qa"><div class="q">Q: What's the difference between a container and a VM?</div>
+<div>VMs include a full guest OS and run on a hypervisor — strong isolation, slow boot, GBs. Containers share the host kernel and isolate via namespaces+cgroups — lightweight, fast boot, MBs.</div></div>
+
+<div class="qa"><div class="q">Q: Explain Docker layers and caching.</div>
+<div>Each Dockerfile instruction creates a layer. Layers are content-hashed and cached. If a step's inputs are unchanged, Docker reuses the cached layer. Order matters: put rarely-changing instructions (deps) before frequently-changing ones (source).</div></div>
+
+<div class="qa"><div class="q">Q: How do you reduce image size?</div>
+<div>Multi-stage builds, slim/distroless base images, combine RUN commands, .dockerignore to shrink build context, BuildKit cache mounts.</div></div>
+
+<div class="qa"><div class="q">Q: Why shouldn't you use <code>:latest</code>?</div>
+<div>Mutable tag — different machines may pull different image bytes for the same name, breaking reproducibility. Pin to specific tags or, ideally, image digests (<code>@sha256:...</code>).</div></div>
+
+<div class="qa"><div class="q">Q: What is a Pod?</div>
+<div>The smallest deployable unit in K8s — one or more co-located containers that share network namespace, IPC, and volumes. Usually one container per pod; multi-container pods are for tightly-coupled sidecars.</div></div>
+
+<div class="qa"><div class="q">Q: Deployment vs StatefulSet?</div>
+<div>Deployment: stateless replicas, interchangeable. StatefulSet: ordered, named pods with stable identity (db-0, db-1) and stable per-pod storage. For databases and clustered systems.</div></div>
+
+<div class="qa"><div class="q">Q: What is a Service?</div>
+<div>An abstraction giving a stable virtual IP and DNS name in front of a dynamic set of pods (selected by labels), with built-in load balancing.</div></div>
+
+<div class="qa"><div class="q">Q: Difference between liveness, readiness, startup probes?</div>
+<div>Liveness: am I alive? Failure → restart. Readiness: can I serve traffic? Failure → removed from Service endpoints. Startup: have I finished booting? Delays liveness until startup passes.</div></div>
+
+<div class="qa"><div class="q">Q: How does K8s do rolling updates?</div>
+<div>The Deployment creates a new ReplicaSet, scales it up while scaling the old down, respecting <code>maxUnavailable</code> and <code>maxSurge</code>. Old pods are terminated only after new ones are ready (readiness probes).</div></div>
+
+<div class="qa"><div class="q">Q: Requests vs limits?</div>
+<div>Requests: guaranteed minimum, used for scheduling. Limits: hard cap, CPU throttled / memory OOM-killed. Requests=limits → Guaranteed QoS class.</div></div>
+
+<div class="qa"><div class="q">Q: How do Secrets differ from ConfigMaps?</div>
+<div>API-level: Secrets are intended for sensitive data, base64-encoded by default, can be encrypted at rest in etcd, and have stricter audit. ConfigMaps are for non-sensitive config.</div></div>
+
+<div class="qa"><div class="q">Q: What is HPA?</div>
+<div>Horizontal Pod Autoscaler. Scales replicas of a Deployment up/down based on CPU, memory, or custom metrics.</div></div>
+
+<div class="qa"><div class="q">Q: How does a pod talk to another pod's database?</div>
+<div>Through a Service. The pod uses the Service DNS name (<code>postgres.default.svc.cluster.local</code> or just <code>postgres</code> in the same namespace). kube-proxy load-balances to a backing pod.</div></div>
+
+<div class="qa"><div class="q">Q: What's the difference between Ingress and LoadBalancer Service?</div>
+<div>LoadBalancer: one cloud LB per service; expensive at scale. Ingress: a single ingress controller (one LB) routes many hosts/paths to many services, plus TLS, auth, rewrites.</div></div>
+
+<div class="qa"><div class="q">Q: How do you do zero-downtime database migrations?</div>
+<div>Two-phase: deploy code that works with old AND new schema → run schema migration as a Job/initContainer → deploy code that uses only new schema. Never break-and-fix in one step.</div></div>
+
+<div class="qa"><div class="q">Q: How does etcd fit in?</div>
+<div>It's the key-value store backing the apiserver — all cluster state lives there (raft-replicated). Lose etcd, lose the cluster's brain. Backup it.</div></div>
+
+<div class="qa"><div class="q">Q: What's a CRD?</div>
+<div>Custom Resource Definition. Lets you define your own resource types (kind: MyApp) that the apiserver stores and serves like built-in ones. Operators use CRDs.</div></div>
+
+<div class="qa"><div class="q">Q: Why prefer non-root containers?</div>
+<div>If a container is compromised, root inside (especially with the right capabilities) can sometimes break out to host root. Non-root + dropped caps + no-new-privileges + read-only root is defense-in-depth.</div></div>
+
+<hr>
+
+<!-- ====== EASYAUDIT PROJECT SECTION ====== -->
+
+<div class="project-section">
+<h2 id="m44" style="margin-top:0; border:none;"><span class="module-tag project">Module 44 — Project</span><br>EasyAudit Container Architecture</h2>
+
+<h3>Your stack today</h3>
+<p>EasyAudit consists of:</p>
+<ul>
+  <li><code>central-backend</code> (.NET 8) — auth/users/master data; uses SQL Server, EF Core, Serilog, OpenTelemetry, Quartz, JWT</li>
+  <li><code>accounting-backend</code>, <code>task-backend</code>, <code>hub-backend</code> (.NET 8)</li>
+  <li><code>notification-backend</code>, <code>logging-backend</code> (planned)</li>
+  <li><code>audit-frontend</code> (React + Vite)</li>
+  <li><code>Dekstop_application</code> (Avalonia desktop)</li>
+</ul>
+
+<h3>Container architecture (target)</h3>
+<pre class="diagram">                              Internet
+                                  │
+                                  ▼
+                       ┌──────────────────────┐
+                       │  Reverse proxy /     │   nginx or Traefik
+                       │  Ingress controller  │   TLS, host/path routing
+                       └──────────┬───────────┘
+                                  │
+       ┌──────────────────┬───────┴────────────┬──────────────────┐
+       ▼                  ▼                    ▼                  ▼
+ ┌──────────┐      ┌────────────┐      ┌────────────┐      ┌──────────────┐
+ │ frontend │      │  central   │      │ accounting │      │ other        │
+ │ (nginx + │      │  -backend  │      │ -backend   │      │ backends     │
+ │  React)  │      │  (.NET 8)  │      │  (.NET 8)  │      │  …          │
+ └──────────┘      └─────┬──────┘      └─────┬──────┘      └──────────────┘
+                         │                   │
+                ┌────────┴───────────────────┴─────────────────────────┐
+                │                                                      │
+                ▼                                                      ▼
+          ┌───────────────┐    ┌──────────┐    ┌───────┐    ┌──────────────┐
+          │  SQL Server   │    │  Redis   │    │ Kafka │    │ logging stack │
+          │   (data)      │    │ (cache)  │    │(events)│   │ (Loki/Grafana)│
+          └───────────────┘    └──────────┘    └───────┘    └──────────────┘</pre>
+
+<h3>Why containers for EasyAudit</h3>
+<ul>
+  <li><strong>Identical dev/staging/prod</strong> — fewer "works on my machine".</li>
+  <li><strong>Easier scaling</strong> — run more replicas of a hot backend without provisioning new VMs.</li>
+  <li><strong>Cleaner dependency management</strong> — each backend's runtime is self-contained.</li>
+  <li><strong>Roll forward / roll back</strong> — image tags are atomic.</li>
+  <li><strong>Multi-cloud / portable</strong> — same images run on Azure, AWS, on-prem.</li>
+</ul>
+
+<h3>Two-stage roadmap</h3>
+<ol>
+  <li><strong>Stage 1 — Docker Compose</strong>: dockerize each backend; one compose file runs the whole stack on dev machines and a single VM. Get full parity. (Modules 45 &amp; 46.)</li>
+  <li><strong>Stage 2 — Kubernetes</strong>: same images on a managed K8s (AKS recommended for your .NET stack), with HPA, Ingress, TLS, secrets, Helm charts. (Modules 47 &amp; 48.)</li>
+</ol>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m45" style="margin-top:0; border:none;"><span class="module-tag project">Module 45 — Project</span><br>Dockerizing central-backend</h2>
+
+<h3>Multi-stage Dockerfile</h3>
+<p>Save as <code>central-backend/Dockerfile</code>:</p>
+<pre><code># syntax=docker/dockerfile:1.7
+ARG DOTNET_VERSION=8.0
+
+# ---------- Stage 1: build ----------
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION} AS build
+WORKDIR /src
+
+# Copy csproj first for layer cache
+COPY ["AuditSoftware.csproj", "./"]
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet restore "AuditSoftware.csproj"
+
+# Copy the rest and publish
+COPY . .
+RUN --mount=type=cache,target=/root/.nuget/packages \
+    dotnet publish "AuditSoftware.csproj" \
+      -c Release -o /app/publish \
+      --no-restore /p:UseAppHost=false
+
+# ---------- Stage 2: runtime ----------
+FROM mcr.microsoft.com/dotnet/aspnet:${DOTNET_VERSION} AS runtime
+WORKDIR /app
+
+# Install curl for healthcheck (or use the image's app user without)
+RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends curl \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+COPY --from=build /app/publish ./
+
+ENV ASPNETCORE_URLS=http://+:8080 \
+    ASPNETCORE_ENVIRONMENT=Production \
+    DOTNET_RUNNING_IN_CONTAINER=true \
+    DOTNET_USE_POLLING_FILE_WATCHER=false
+
+EXPOSE 8080
+
+# Run as the non-root 'app' user that ships with the aspnet image
+USER app
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+ENTRYPOINT ["dotnet", "AuditSoftware.dll"]</code></pre>
+
+<h3>.dockerignore</h3>
+<p>Save as <code>central-backend/.dockerignore</code>:</p>
+<pre><code>**/.git
+**/.vs
+**/.vscode
+**/bin
+**/obj
+**/node_modules
+**/*.user
+**/*.suo
+**/.env*
+Tests/
+README.md
+*.md
+docker-compose*.yml
+Dockerfile</code></pre>
+
+<h3>Build &amp; run locally</h3>
+<pre><code># From the central-backend folder
+docker build -t easyaudit/central-backend:dev .
+
+# Run, mapping the Uploads folder to a volume so files persist across restarts
+docker run -d --name central \
+  -p 8080:8080 \
+  -e "ConnectionStrings__Default=Server=host.docker.internal,1433;Database=EasyAudit;User Id=sa;Password=Your_password123;TrustServerCertificate=True" \
+  -v central-uploads:/app/Uploads \
+  easyaudit/central-backend:dev
+
+# Hit it
+curl http://localhost:8080/health</code></pre>
+
+<h3>Tagging strategy</h3>
+<table>
+  <thead><tr><th>Tag</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td><code>:dev</code></td><td>Local builds; never deploy to prod</td></tr>
+    <tr><td><code>:&lt;commit-sha&gt;</code></td><td>Every CI build (immutable)</td></tr>
+    <tr><td><code>:&lt;semver&gt;</code> e.g. <code>:1.4.2</code></td><td>Releases</td></tr>
+    <tr><td><code>:staging</code> / <code>:prod</code></td><td>Floating tags pointing at the current release</td></tr>
+  </tbody>
+</table>
+
+<h3>Image size budget</h3>
+<p>The runtime image should land around 220–280 MB (ASP.NET 8 base ≈ 220 MB + your published code). To go smaller:</p>
+<ul>
+  <li>Switch to <code>aspnet:8.0-alpine</code> (~80 MB base).</li>
+  <li>Use <code>--self-contained</code> + trimmed publish + Alpine for ~70 MB total.</li>
+  <li>Consider Microsoft's <strong>chiseled</strong> images (Ubuntu chiseled aspnet) — distroless-style, ~110 MB.</li>
+</ul>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m46" style="margin-top:0; border:none;"><span class="module-tag project">Module 46 — Project</span><br>Full-Stack docker-compose</h2>
+
+<p>This compose file runs the whole stack: SQL Server, all 6 Redis instances (matching the Redis course Module 41), Kafka (KRaft single-broker), all 6 backends, and the React frontend behind nginx.</p>
+
+<p>Save in repo root as <code>docker-compose.yml</code>:</p>
+
+<pre><code>version: '3.8'
+
+# ============= NETWORKS =============
+networks:
+  easyaudit:
+    driver: bridge
+
+# ============= VOLUMES =============
+volumes:
+  sql-data:
+  central-uploads:
+  central-redis-data:
+  task-redis-data:
+  notif-redis-data:
+  kafka-data:
+
+services:
+
+# ============= INFRASTRUCTURE =============
+
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Your_password123"
+      MSSQL_PID: "Developer"
+    ports: [ "1433:1433" ]
+    volumes: [ sql-data:/var/opt/mssql ]
+    networks: [ easyaudit ]
+    healthcheck:
+      test: ["CMD-SHELL",
+        "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P Your_password123 -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 5
+    restart: unless-stopped
+
+  kafka:
+    image: bitnami/kafka:3.7
+    ports: [ "9092:9092" ]
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    volumes: [ kafka-data:/bitnami/kafka ]
+    networks: [ easyaudit ]
+    restart: unless-stopped
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports: [ "8090:8080" ]
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on: [ kafka ]
+    networks: [ easyaudit ]
+
+# ============= REDIS PER BACKEND =============
+
+  redis-central:
+    image: redis:7.4-alpine
+    ports: [ "6379:6379" ]
+    volumes: [ central-redis-data:/data ]
+    command: ["redis-server",
+              "--appendonly","yes","--aof-use-rdb-preamble","yes",
+              "--maxmemory","256mb","--maxmemory-policy","volatile-ttl",
+              "--requirepass","centralPass"]
+    networks: [ easyaudit ]
+    restart: unless-stopped
+
+  redis-accounting:
+    image: redis:7.4-alpine
+    ports: [ "6380:6379" ]
+    command: ["redis-server","--save","","--appendonly","no",
+              "--maxmemory","1gb","--maxmemory-policy","allkeys-lru",
+              "--requirepass","accountingPass"]
+    networks: [ easyaudit ]
+
+  redis-task:
+    image: redis:7.4-alpine
+    ports: [ "6381:6379" ]
+    volumes: [ task-redis-data:/data ]
+    command: ["redis-server","--appendonly","yes",
+              "--maxmemory","256mb","--maxmemory-policy","volatile-ttl",
+              "--requirepass","taskPass"]
+    networks: [ easyaudit ]
+
+  redis-hub:
+    image: redis:7.4-alpine
+    ports: [ "6382:6379" ]
+    command: ["redis-server","--save","","--appendonly","no",
+              "--maxmemory","256mb","--maxmemory-policy","allkeys-lru",
+              "--requirepass","hubPass"]
+    networks: [ easyaudit ]
+
+  redis-notification:
+    image: redis:7.4-alpine
+    ports: [ "6383:6379" ]
+    volumes: [ notif-redis-data:/data ]
+    command: ["redis-server","--appendonly","yes",
+              "--maxmemory","256mb","--maxmemory-policy","volatile-lru",
+              "--requirepass","notifPass"]
+    networks: [ easyaudit ]
+
+  redis-logging:
+    image: redis:7.4-alpine
+    ports: [ "6384:6379" ]
+    command: ["redis-server","--save","","--appendonly","no",
+              "--maxmemory","256mb","--maxmemory-policy","allkeys-lru",
+              "--requirepass","logPass"]
+    networks: [ easyaudit ]
+
+# ============= BACKENDS =============
+
+  central-backend:
+    build:
+      context: ./central-backend
+      dockerfile: Dockerfile
+    image: easyaudit/central-backend:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Server=sql-server,1433;Database=EasyAudit;User Id=sa;Password=Your_password123;TrustServerCertificate=True"
+      Redis__ConnectionString: "redis-central:6379,password=centralPass,abortConnect=false"
+      Kafka__BootstrapServers: "kafka:9092"
+    ports: [ "5001:8080" ]
+    volumes: [ central-uploads:/app/Uploads ]
+    depends_on:
+      sql-server: { condition: service_healthy }
+      redis-central: { condition: service_started }
+      kafka: { condition: service_started }
+    networks: [ easyaudit ]
+    restart: unless-stopped
+
+  accounting-backend:
+    build: { context: ./accounting-backend }
+    image: easyaudit/accounting-backend:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Server=sql-server,1433;Database=EasyAudit;User Id=sa;Password=Your_password123;TrustServerCertificate=True"
+      Redis__ConnectionString: "redis-accounting:6379,password=accountingPass,abortConnect=false"
+      Kafka__BootstrapServers: "kafka:9092"
+    ports: [ "5002:8080" ]
+    depends_on:
+      sql-server: { condition: service_healthy }
+      redis-accounting: { condition: service_started }
+    networks: [ easyaudit ]
+    restart: unless-stopped
+
+  task-backend:
+    build: { context: ./task-backend }
+    image: easyaudit/task-backend:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Server=sql-server,1433;Database=EasyAudit;User Id=sa;Password=Your_password123;TrustServerCertificate=True"
+      Redis__ConnectionString: "redis-task:6379,password=taskPass,abortConnect=false"
+      Kafka__BootstrapServers: "kafka:9092"
+    ports: [ "5003:8080" ]
+    depends_on:
+      sql-server: { condition: service_healthy }
+    networks: [ easyaudit ]
+
+  hub-backend:
+    build: { context: ./hub-backend }
+    image: easyaudit/hub-backend:dev
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Default: "Server=sql-server,1433;Database=EasyAudit;User Id=sa;Password=Your_password123;TrustServerCertificate=True"
+      Redis__ConnectionString: "redis-hub:6379,password=hubPass,abortConnect=false"
+      Kafka__BootstrapServers: "kafka:9092"
+    ports: [ "5004:8080" ]
+    depends_on:
+      sql-server: { condition: service_healthy }
+    networks: [ easyaudit ]
+
+  # notification-backend &amp; logging-backend will follow the same pattern
+
+# ============= FRONTEND =============
+
+  audit-frontend:
+    build:
+      context: ./audit-frontend
+      args:
+        VITE_API_BASE: "http://localhost"
+    image: easyaudit/audit-frontend:dev
+    ports: [ "8080:80" ]
+    depends_on:
+      - central-backend
+      - accounting-backend
+    networks: [ easyaudit ]
+
+  reverse-proxy:
+    image: nginx:alpine
+    ports: [ "80:80" ]
+    volumes:
+      - ./infra/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - audit-frontend
+      - central-backend
+      - accounting-backend
+    networks: [ easyaudit ]</code></pre>
+
+<h3>Sample reverse-proxy config</h3>
+<p><code>infra/nginx.conf</code>:</p>
+<pre><code>server {
+  listen 80;
+  server_name _;
+
+  # Frontend
+  location / {
+    proxy_pass http://audit-frontend:80;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $remote_addr;
+  }
+
+  # APIs
+  location /api/central/    { proxy_pass http://central-backend:8080/; }
+  location /api/accounting/ { proxy_pass http://accounting-backend:8080/; }
+  location /api/task/       { proxy_pass http://task-backend:8080/; }
+  location /api/hub/        { proxy_pass http://hub-backend:8080/; }
+}</code></pre>
+
+<h3>Bring it up</h3>
+<pre><code>docker compose up -d --build
+docker compose ps
+docker compose logs -f central-backend
+
+# Hit the stack
+curl http://localhost/api/central/health
+open http://localhost           # frontend
+open http://localhost:8090      # kafka-ui</code></pre>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m47" style="margin-top:0; border:none;"><span class="module-tag project">Module 47 — Project</span><br>Kubernetes for central-backend</h2>
+
+<p>Now we move <code>central-backend</code> from compose to Kubernetes. The same image, but K8s manages replicas, rolling updates, scaling, secrets.</p>
+
+<h3>Files we'll create</h3>
+<pre class="diagram">k8s/
+├── namespace.yaml
+├── central-backend/
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── configmap.yaml
+│   ├── secret.yaml
+│   └── hpa.yaml</pre>
+
+<h3>1. Namespace</h3>
+<pre><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: easyaudit
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted</code></pre>
+
+<h3>2. ConfigMap (non-sensitive)</h3>
+<pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: central-config
+  namespace: easyaudit
+data:
+  ASPNETCORE_ENVIRONMENT: "Production"
+  Kafka__BootstrapServers: "kafka.easyaudit.svc.cluster.local:9092"
+  Logging__LogLevel__Default: "Information"</code></pre>
+
+<h3>3. Secret (sensitive — never commit real values)</h3>
+<pre><code>apiVersion: v1
+kind: Secret
+metadata:
+  name: central-secret
+  namespace: easyaudit
+type: Opaque
+stringData:
+  ConnectionStrings__Default: "Server=sql-server.easyaudit.svc.cluster.local,1433;Database=EasyAudit;User Id=sa;Password=REDACTED;TrustServerCertificate=True"
+  Redis__ConnectionString: "redis-central.easyaudit.svc.cluster.local:6379,password=REDACTED,abortConnect=false"
+  Jwt__SigningKey: "REDACTED-32+chars"</code></pre>
+<p>In production: don't put real values in YAML in Git. Use <strong>Sealed Secrets</strong>, <strong>External Secrets Operator</strong> + Azure Key Vault, or HashiCorp Vault.</p>
+
+<h3>4. Deployment</h3>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: central-backend
+  namespace: easyaudit
+  labels: { app: central-backend }
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: { maxUnavailable: 0, maxSurge: 1 }
+  selector:
+    matchLabels: { app: central-backend }
+  template:
+    metadata:
+      labels: { app: central-backend }
+    spec:
+      serviceAccountName: central-backend
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1654          # 'app' user in mcr.microsoft.com/dotnet/aspnet:8.0
+        fsGroup: 1654
+        seccompProfile: { type: RuntimeDefault }
+      containers:
+        - name: central
+          image: ghcr.io/easyaudit/central-backend:1.0.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef: { name: central-config }
+            - secretRef: { name: central-secret }
+          env:
+            - name: ASPNETCORE_URLS
+              value: "http://+:8080"
+          resources:
+            requests: { cpu: "200m", memory: "256Mi" }
+            limits:   { cpu: "1",    memory: "768Mi" }
+          startupProbe:
+            httpGet: { path: /health, port: 8080 }
+            failureThreshold: 30
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /health/live, port: 8080 }
+            periodSeconds: 20
+            failureThreshold: 3
+          readinessProbe:
+            httpGet: { path: /health/ready, port: 8080 }
+            periodSeconds: 5
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/Uploads
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false   # set true once /tmp etc. are mounted as emptyDir
+            capabilities:
+              drop: [ ALL ]
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: central-uploads
+      terminationGracePeriodSeconds: 30
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: central-backend
+  namespace: easyaudit
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: central-uploads
+  namespace: easyaudit
+spec:
+  accessModes: [ ReadWriteOnce ]
+  storageClassName: managed-csi   # AKS default; change per cloud
+  resources: { requests: { storage: 20Gi } }</code></pre>
+
+<h3>5. Service</h3>
+<pre><code>apiVersion: v1
+kind: Service
+metadata:
+  name: central-backend
+  namespace: easyaudit
+spec:
+  selector: { app: central-backend }
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http</code></pre>
+
+<h3>6. Ingress</h3>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: central-backend
+  namespace: easyaudit
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "20m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [ api.easyaudit.com ]
+      secretName: easyaudit-api-tls
+  rules:
+    - host: api.easyaudit.com
+      http:
+        paths:
+          - path: /central(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service: { name: central-backend, port: { number: 80 } }</code></pre>
+
+<h3>7. HorizontalPodAutoscaler</h3>
+<pre><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: central-backend
+  namespace: easyaudit
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: central-backend
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target: { type: Utilization, averageUtilization: 70 }
+    - type: Resource
+      resource:
+        name: memory
+        target: { type: Utilization, averageUtilization: 80 }</code></pre>
+
+<h3>Apply &amp; verify</h3>
+<pre><code>kubectl apply -f k8s/namespace.yaml
+kubectl apply -f k8s/central-backend/
+
+kubectl -n easyaudit get all
+kubectl -n easyaudit logs -f deploy/central-backend
+kubectl -n easyaudit rollout status deploy/central-backend
+kubectl -n easyaudit describe hpa central-backend
+
+# Roll out a new version
+kubectl -n easyaudit set image deploy/central-backend central=ghcr.io/easyaudit/central-backend:1.0.1
+kubectl -n easyaudit rollout status deploy/central-backend
+# If something's wrong:
+kubectl -n easyaudit rollout undo deploy/central-backend</code></pre>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m48" style="margin-top:0; border:none;"><span class="module-tag project">Module 48 — Project</span><br>Production K8s Architecture for EasyAudit</h2>
+
+<h3>Cluster choice</h3>
+<p>Recommended: <strong>Azure Kubernetes Service (AKS)</strong> for a .NET shop in India — best ecosystem fit, native integration with Azure Key Vault, Azure SQL, Azure Container Registry. Alternatives: AWS EKS, Google GKE, DigitalOcean DOKS.</p>
+
+<h3>Namespace layout</h3>
+<table>
+  <thead><tr><th>Namespace</th><th>Contents</th></tr></thead>
+  <tbody>
+    <tr><td><code>easyaudit-prod</code></td><td>All app workloads in production</td></tr>
+    <tr><td><code>easyaudit-stg</code></td><td>Staging mirror</td></tr>
+    <tr><td><code>easyaudit-dev</code></td><td>Dev environment (optional)</td></tr>
+    <tr><td><code>infra</code></td><td>cert-manager, ingress-nginx, monitoring</td></tr>
+    <tr><td><code>data</code></td><td>Databases, Kafka, Redis (or external managed)</td></tr>
+  </tbody>
+</table>
+
+<h3>Top-down architecture</h3>
+<pre class="diagram">                                 Internet (HTTPS)
+                                       │
+                                       ▼
+                              ┌─────────────────┐
+                              │   Cloud LB      │  (Azure LB, AWS ALB)
+                              └────────┬────────┘
+                                       │
+                              ┌─────────────────┐
+                              │ ingress-nginx   │  (Helm chart)
+                              │ + cert-manager  │  (TLS)
+                              └────────┬────────┘
+                                       │
+        ┌──────────────────────────────┼──────────────────────────────┐
+        ▼                              ▼                              ▼
+  ┌──────────┐    ┌──────────┐   ┌──────────┐   ┌──────────────┐   ┌──────────┐
+  │ frontend │    │ central  │   │accounting│   │   task,      │   │ logging  │
+  │ (Service)│    │ Service  │   │ Service  │   │ hub, notif   │   │ Service  │
+  └──────────┘    └─────┬────┘   └─────┬────┘   └─────────────┘   └──────────┘
+                        ▼              ▼
+              ┌──────────────────────────────────────┐
+              │  Deployments + HPAs (replicas 2..N)  │
+              │  Pods running .NET images            │
+              │  with ServiceAccounts &amp; SecurityCtx  │
+              └─────────────┬─────────────────┬──────┘
+                            ▼                 ▼
+            ┌──────────────────┐    ┌────────────────────┐
+            │ Azure SQL        │    │ Azure Cache for    │
+            │ Database         │    │ Redis (per backend)│
+            │ (managed)        │    │ (managed)          │
+            └──────────────────┘    └────────────────────┘
+                            │
+                            ▼
+            ┌──────────────────────────────┐
+            │ Confluent Cloud / Azure      │
+            │ Event Hubs (Kafka API)       │
+            │ for notification + logging   │
+            └──────────────────────────────┘
+
+       Cross-cutting (in cluster):
+         • External Secrets Operator → Azure Key Vault
+         • Argo CD → reconciles k8s/ Git folder
+         • kube-prometheus-stack → metrics + Grafana
+         • Loki + Promtail → logs
+         • OpenTelemetry Collector → traces (Tempo / App Insights)</pre>
+
+<h3>Key production decisions</h3>
+<table>
+  <thead><tr><th>Concern</th><th>Recommendation</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Stateful infra (DB/Redis/Kafka)</strong></td>
+      <td>Use managed services (Azure SQL, Azure Cache for Redis, Confluent Cloud). Don't run statefulsets for these unless you have ops capacity.</td>
+    </tr>
+    <tr>
+      <td><strong>Image registry</strong></td>
+      <td>Azure Container Registry (ACR) attached to AKS — uses managed identity, no secrets to rotate.</td>
+    </tr>
+    <tr>
+      <td><strong>Secrets</strong></td>
+      <td>Azure Key Vault + External Secrets Operator (or AKS CSI Driver). Never commit secrets to Git.</td>
+    </tr>
+    <tr>
+      <td><strong>CI/CD</strong></td>
+      <td>GitHub Actions or Azure DevOps → build &amp; push image with commit-SHA tag → update Helm/Kustomize values in Git → Argo CD applies.</td>
+    </tr>
+    <tr>
+      <td><strong>Helm structure</strong></td>
+      <td>One umbrella chart with sub-charts per backend, OR one chart per backend. Values per env (values-dev.yaml, values-prod.yaml).</td>
+    </tr>
+    <tr>
+      <td><strong>Ingress</strong></td>
+      <td>ingress-nginx (Helm) + cert-manager (Helm) + Let's Encrypt. Single LB; host/path routing.</td>
+    </tr>
+    <tr>
+      <td><strong>Scaling</strong></td>
+      <td>HPA per backend, baseline replicas=2 for HA, max based on load tests. AKS Cluster Autoscaler or Karpenter to grow nodes.</td>
+    </tr>
+    <tr>
+      <td><strong>Observability</strong></td>
+      <td>kube-prometheus-stack (Prometheus + Grafana + Alertmanager), Loki for logs, Tempo for traces; or use Azure Monitor + App Insights.</td>
+    </tr>
+    <tr>
+      <td><strong>Backup</strong></td>
+      <td>Velero for cluster-resource backup; managed services handle their own DB backups.</td>
+    </tr>
+    <tr>
+      <td><strong>Network policy</strong></td>
+      <td>Default-deny in <code>easyaudit-prod</code>; allow only required pod-to-pod (frontend→backend→DB).</td>
+    </tr>
+    <tr>
+      <td><strong>RBAC</strong></td>
+      <td>One ServiceAccount per backend. Devs get namespace-scoped roles. Cluster-admin reserved for cluster ops.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Helm umbrella structure</h3>
+<pre class="diagram">helm/
+├── easyaudit/
+│   ├── Chart.yaml                    # umbrella chart
+│   ├── values.yaml                   # shared defaults
+│   ├── values-dev.yaml
+│   ├── values-staging.yaml
+│   ├── values-prod.yaml
+│   └── charts/
+│       ├── central-backend/          # one chart per backend
+│       │   ├── Chart.yaml
+│       │   ├── values.yaml
+│       │   └── templates/
+│       │       ├── deployment.yaml
+│       │       ├── service.yaml
+│       │       ├── ingress.yaml
+│       │       ├── hpa.yaml
+│       │       └── _helpers.tpl
+│       ├── accounting-backend/
+│       ├── task-backend/
+│       ├── hub-backend/
+│       ├── notification-backend/
+│       └── logging-backend/</pre>
+
+<p>Install:</p>
+<pre><code>helm upgrade --install easyaudit ./helm/easyaudit \
+  -n easyaudit-prod --create-namespace \
+  -f ./helm/easyaudit/values-prod.yaml</code></pre>
+
+<h3>CI/CD pipeline outline (GitHub Actions)</h3>
+<pre><code>name: build-and-deploy
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'central-backend/**' ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: easyauditacr.azurecr.io
+          username: ${{ secrets.ACR_USER }}
+          password: ${{ secrets.ACR_TOKEN }}
+      - name: Build &amp; push
+        uses: docker/build-push-action@v5
+        with:
+          context: ./central-backend
+          push: true
+          tags: |
+            easyauditacr.azurecr.io/central-backend:${{ github.sha }}
+            easyauditacr.azurecr.io/central-backend:main
+          cache-from: type=registry,ref=easyauditacr.azurecr.io/central-backend:cache
+          cache-to: type=registry,ref=easyauditacr.azurecr.io/central-backend:cache,mode=max
+
+  promote:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { repository: easyaudit/k8s-deploy, token: ${{ secrets.PAT }} }
+      - name: Bump image tag
+        run: |
+          yq eval -i '.centralBackend.image.tag = "${{ github.sha }}"' \
+            helm/easyaudit/values-prod.yaml
+          git config user.name "ci"; git config user.email "ci@easyaudit"
+          git commit -am "promote central-backend ${{ github.sha }}"
+          git push
+      # Argo CD picks up the change and deploys</code></pre>
+
+<h3>Day-2 operations checklist</h3>
+<ul>
+  <li>SLOs/SLIs defined per backend (p99 latency, error rate).</li>
+  <li>Alerts on: pod CrashLoopBackOff, HPA at max for &gt; 10 min, error rate &gt; 1%, p99 latency &gt; threshold, &lt; 80% available pods.</li>
+  <li>Runbooks for: failed rollout, DB connection storm, OOM kills, certificate renewal failure.</li>
+  <li>PodDisruptionBudgets per Deployment so node drains don't take service to zero.</li>
+  <li>Quarterly K8s minor upgrade.</li>
+  <li>Quarterly DR drill: restore Velero backup to a fresh cluster.</li>
+</ul>
+
+<h3>Migration path from your current setup</h3>
+<ol>
+  <li><strong>Week 1–2</strong>: dockerize all backends (Module 45 pattern); compose stack works locally end-to-end.</li>
+  <li><strong>Week 3</strong>: stand up an AKS cluster with ingress-nginx, cert-manager, Argo CD, External Secrets, monitoring stack via Helm.</li>
+  <li><strong>Week 4</strong>: write Helm chart for central-backend; deploy to <code>easyaudit-stg</code>; test rolling updates.</li>
+  <li><strong>Week 5–6</strong>: replicate for accounting, task, hub backends.</li>
+  <li><strong>Week 7</strong>: notification + logging backends (after they exist).</li>
+  <li><strong>Week 8</strong>: cutover prod traffic; keep VM stack as warm standby for one week, then decommission.</li>
+</ol>
+</div>
+
+<hr>
+
+<!-- =========== MODULE 49 =========== -->
+<h2 id="m49"><span class="module-tag">Module 49</span><br>Resources &amp; Roadmap</h2>
+
+<h3>Free official resources</h3>
+<ul>
+  <li><strong>docs.docker.com</strong> — Docker docs, Dockerfile reference</li>
+  <li><strong>kubernetes.io/docs</strong> — Kubernetes docs</li>
+  <li><strong>kubernetes.io/training</strong> — official tutorials</li>
+  <li><strong>learn.microsoft.com/azure/aks</strong> — AKS docs</li>
+  <li><strong>helm.sh/docs</strong> — Helm docs</li>
+</ul>
+
+<h3>Books</h3>
+<ul>
+  <li><em>Docker Deep Dive</em> — Nigel Poulton</li>
+  <li><em>The Kubernetes Book</em> — Nigel Poulton</li>
+  <li><em>Kubernetes Up &amp; Running</em> (3rd ed.) — Burns, Beda, Hightower, Villalba</li>
+  <li><em>Kubernetes Patterns</em> (2nd ed.) — Bilgin Ibryam, Roland Huss</li>
+  <li><em>Production Kubernetes</em> — Dotson, Garrison, Kim, Smith</li>
+</ul>
+
+<h3>Tools to know</h3>
+<ul>
+  <li><strong>kubectl</strong>, <strong>k9s</strong> (TUI), <strong>kubectx/kubens</strong>, <strong>stern</strong> (multi-pod logs)</li>
+  <li><strong>Lens</strong>, <strong>OpenLens</strong>, <strong>Octant</strong> — GUI</li>
+  <li><strong>Kustomize</strong>, <strong>Helm</strong> — manifest management</li>
+  <li><strong>Argo CD</strong>, <strong>Flux</strong> — GitOps</li>
+  <li><strong>Velero</strong> — backup/restore</li>
+  <li><strong>Trivy</strong>, <strong>Grype</strong> — image scanning</li>
+  <li><strong>kube-bench</strong>, <strong>kube-hunter</strong> — security audits</li>
+  <li><strong>kube-prometheus-stack</strong>, <strong>Loki</strong>, <strong>Tempo</strong> — observability</li>
+</ul>
+
+<h3>30/60/90-day learning roadmap</h3>
+
+<h4>Days 1–30 — Docker fluency</h4>
+<ul>
+  <li>Run containers with <code>docker run</code>; manage images, networks, volumes.</li>
+  <li>Write Dockerfiles for two real apps (one .NET, one frontend).</li>
+  <li>Multi-stage build for <code>central-backend</code> (Module 45).</li>
+  <li>Compose for the full EasyAudit stack (Module 46).</li>
+  <li>Read <em>Docker Deep Dive</em> chapters 1–10.</li>
+</ul>
+
+<h4>Days 31–60 — Kubernetes essentials</h4>
+<ul>
+  <li>Local cluster with Kind. Deploy nginx, then your central-backend image.</li>
+  <li>Internalize: Deployment, Service, Ingress, ConfigMap, Secret, PVC.</li>
+  <li>Liveness/readiness/startup probes. Resource requests &amp; limits.</li>
+  <li>HPA based on CPU.</li>
+  <li>Helm: install ingress-nginx and cert-manager; write a chart for central-backend.</li>
+  <li>Read <em>The Kubernetes Book</em> end-to-end.</li>
+</ul>
+
+<h4>Days 61–90 — Production readiness</h4>
+<ul>
+  <li>Stand up AKS (or EKS/GKE). Connect to ACR. Deploy via Argo CD.</li>
+  <li>Wire External Secrets to Key Vault.</li>
+  <li>Install kube-prometheus-stack + Loki + cert-manager.</li>
+  <li>Implement RBAC, NetworkPolicies, PodSecurityStandards.</li>
+  <li>Run a chaos test: kill nodes, drain, check service continuity.</li>
+  <li>Set up the GitOps flow described in Module 48.</li>
+  <li>Read <em>Production Kubernetes</em>; explore CKA/CKAD certifications.</li>
+</ul>
+
+<hr>
+
+<footer style="text-align:center; color: var(--muted); font-size: 0.9em; margin-top: 64px;">
+  The Complete Docker &amp; Kubernetes Course — including the EasyAudit container architecture (Modules 44–48).
+</footer>
+
+</main>
+
+</div>
+</body>
+</html>

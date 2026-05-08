@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Courses Dashboard</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        color: #fff;
+      }
+      .container {
+        max-width: 1200px;
+        padding: 20px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 3em;
+        margin-bottom: 40px;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      }
+      .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+      }
+      .course-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+        display: block;
+      }
+      .course-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      }
+      .course-card:active {
+        transform: scale(0.98);
+      }
+      .course-title {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+      .course-description {
+        font-size: 1em;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Welcome to Your Courses Dashboard</h1>
+      <div class="courses-grid">
+        <a href="docker-kubernetes-course.html" class="course-card">
+          <div class="course-title">Docker & Kubernetes Course</div>
+          <div class="course-description">
+            Complete guide to containerization and orchestration.
+          </div>
+        </a>
+        <a href="dotnet-complete-course.html" class="course-card">
+          <div class="course-title">.NET Complete Course</div>
+          <div class="course-description">
+            Comprehensive .NET development training.
+          </div>
+        </a>
+        <a href="dsa-complete-course.html" class="course-card">
+          <div class="course-title">Data Structures & Algorithms</div>
+          <div class="course-description">
+            Master DSA concepts and problem-solving.
+          </div>
+        </a>
+        <a
+          href="english-communication-complete-course.html"
+          class="course-card"
+        >
+          <div class="course-title">English Communication</div>
+          <div class="course-description">
+            Improve your communication skills.
+          </div>
+        </a>
+        <a href="kafka-beginner-guide.html" class="course-card">
+          <div class="course-title">Kafka Beginner Guide</div>
+          <div class="course-description">Introduction to Apache Kafka.</div>
+        </a>
+        <a href="qa-qc-complete-course.html" class="course-card">
+          <div class="course-title">QA/QC Complete Course</div>
+          <div class="course-description">
+            Quality assurance and control training.
+          </div>
+        </a>
+        <a href="react-typescript-complete-course.html" class="course-card">
+          <div class="course-title">React & TypeScript Course</div>
+          <div class="course-description">
+            Build modern web apps with React and TS.
+          </div>
+        </a>
+        <a href="sql-complete-course.html" class="course-card">
+          <div class="course-title">SQL Complete Course</div>
+          <div class="course-description">Master SQL database management.</div>
+        </a>
+        <a href="system-design-architect-course.html" class="course-card">
+          <div class="course-title">System Design & Architecture</div>
+          <div class="course-description">Learn system design principles.</div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

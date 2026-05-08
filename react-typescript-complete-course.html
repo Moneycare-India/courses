@@ -1,0 +1,5060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete React + TypeScript Course — From Zero to Production</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #087ea4;
+    --accent-2: #149eca;
+    --accent-soft: #e0f5fc;
+    --border: #d0d7de;
+    --code-bg: #1e1e1e;
+    --code-fg: #e6e6e6;
+    --inline-code-bg: #eef2f5;
+    --inline-code-fg: #d6336c;
+    --table-head: #f6f8fa;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9c74f;
+    --tip-bg: #e3fcec;
+    --tip-border: #2da44e;
+    --warn-bg: #ffeef0;
+    --warn-border: #cf222e;
+    --info-bg: #ddf4ff;
+    --info-border: #0969da;
+    --sidebar-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65; color: var(--fg); background: var(--bg);
+    margin: 0; padding: 0;
+  }
+  .layout { display: grid; grid-template-columns: 290px 1fr; gap: 0; min-height: 100vh; }
+  aside.sidebar {
+    background: var(--sidebar-bg); border-right: 1px solid var(--border);
+    padding: 24px 20px; position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; font-size: 0.9em;
+  }
+  aside.sidebar h2 {
+    font-size: 0.82em; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin: 22px 0 6px; padding: 0; border: none;
+  }
+  aside.sidebar h2:first-of-type { margin-top: 0; }
+  aside.sidebar a {
+    display: block; padding: 4px 8px; color: var(--fg); text-decoration: none;
+    border-radius: 4px; margin-bottom: 2px; line-height: 1.35;
+  }
+  aside.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+  aside.sidebar .brand {
+    font-weight: 700; font-size: 1.05em; color: var(--accent); margin-bottom: 4px;
+  }
+  aside.sidebar .brand-sub { font-size: 0.8em; color: var(--muted); margin-bottom: 16px; }
+  main { max-width: 920px; padding: 48px 48px 96px; }
+  header.title {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px; margin-bottom: 32px;
+  }
+  header.title h1 { margin: 0 0 8px 0; font-size: 2.2em; line-height: 1.2; }
+  header.title p { margin: 0; color: var(--muted); font-size: 1.05em; }
+  .module-tag {
+    display: inline-block; background: var(--accent); color: white;
+    padding: 2px 10px; border-radius: 12px; font-size: 0.75em;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .module-tag.project { background: #6f42c1; }
+  .module-tag.clean { background: #2da44e; }
+  h2 {
+    margin-top: 64px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border); font-size: 1.6em;
+  }
+  h3 { margin-top: 36px; font-size: 1.25em; }
+  h4 { margin-top: 24px; font-size: 1.05em; color: var(--accent); }
+  p, li { font-size: 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--inline-code-bg); color: var(--inline-code-fg);
+    padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 18px 20px; border-radius: 8px;
+    overflow-x: auto; line-height: 1.5; font-size: 0.88em;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--table-head); font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .callout {
+    border-left: 4px solid var(--callout-border); background: var(--callout-bg);
+    padding: 12px 16px; margin: 16px 0; border-radius: 4px;
+  }
+  .callout.tip { border-color: var(--tip-border); background: var(--tip-bg); }
+  .callout.warn { border-color: var(--warn-border); background: var(--warn-bg); }
+  .callout.info { border-color: var(--info-border); background: var(--info-bg); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  pre.diagram {
+    background: #f6f8fa; color: #24292f;
+    border: 1px solid var(--border); font-size: 0.82em;
+  }
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;
+  }
+  .compare .bad, .compare .good {
+    border-radius: 8px; padding: 16px; font-size: 0.9em;
+  }
+  .compare .bad { background: #ffeef0; border: 1px solid #f5c2c0; }
+  .compare .good { background: #e3fcec; border: 1px solid #b3e8c1; }
+  .compare h4 { margin-top: 0; }
+  .compare .bad h4 { color: #cf222e; }
+  .compare .good h4 { color: #2da44e; }
+  .compare pre { font-size: 0.82em; padding: 12px 14px; }
+  details {
+    background: #f6f8fa; border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 16px; margin: 12px 0;
+  }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+  .exercise {
+    background: #e0f5fc; border: 1px solid #9bd9ec;
+    border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+  }
+  .exercise h4 { margin-top: 0; color: var(--accent); }
+  .qa {
+    margin: 12px 0; padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #f6f8fa; border-radius: 4px;
+  }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .glossary dt { font-weight: 700; color: var(--accent); margin-top: 14px; }
+  .glossary dd { margin: 4px 0 0 0; padding-left: 16px; }
+  .project-section {
+    background: linear-gradient(180deg, #f9f5ff 0%, #ffffff 100%);
+    border-left: 4px solid #6f42c1;
+    padding: 20px 28px; margin: 24px 0; border-radius: 6px;
+  }
+  .part-divider {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: white; padding: 28px 32px; border-radius: 12px;
+    margin: 64px 0 32px; text-align: center;
+  }
+  .part-divider h2 { color: white; border: none; margin: 0; font-size: 1.7em; }
+  .part-divider p { margin: 8px 0 0 0; opacity: 0.9; font-size: 1em; }
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 24px 80px; max-width: none; }
+    .compare { grid-template-columns: 1fr; }
+  }
+  @media print {
+    aside.sidebar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { max-width: none; padding: 0; }
+    pre, .callout, details, .exercise, .qa, .project-section, .part-divider, .compare { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+<!-- VS Code-style syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/vs2015.min.css">
+<style>
+  /* Keep our pre layout; hljs only colorizes tokens */
+  pre code.hljs { padding: 0; background: transparent; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+      hljs.configure({ cssSelector: 'pre code', ignoreUnescapedHTML: true });
+      hljs.highlightAll();
+    }
+  });
+</script>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">React + TypeScript</div>
+  <div class="brand-sub">The Complete Course</div>
+
+  <h2>Part A: JS &amp; TypeScript</h2>
+  <a href="#m1">1. JavaScript Essentials</a>
+  <a href="#m2">2. TypeScript Intro</a>
+  <a href="#m3">3. TypeScript Basics</a>
+  <a href="#m4">4. TypeScript Advanced</a>
+  <a href="#m5">5. tsconfig &amp; Strict Mode</a>
+  <a href="#m6">6. Modern JS in React</a>
+  <a href="#m7">7. Async Patterns</a>
+  <a href="#m8">8. Functional Programming</a>
+
+  <h2>Part B: React Foundations</h2>
+  <a href="#m9">9. React Intro &amp; JSX</a>
+  <a href="#m10">10. Components &amp; Props</a>
+  <a href="#m11">11. State &amp; useState</a>
+  <a href="#m12">12. Effects &amp; useEffect</a>
+  <a href="#m13">13. Conditional Render &amp; Lists</a>
+  <a href="#m14">14. Forms &amp; Refs</a>
+  <a href="#m15">15. Children &amp; Composition</a>
+
+  <h2>Part C: Hooks Deep Dive</h2>
+  <a href="#m16">16. useState in Depth</a>
+  <a href="#m17">17. useEffect in Depth</a>
+  <a href="#m18">18. useMemo &amp; useCallback</a>
+  <a href="#m19">19. useReducer</a>
+  <a href="#m20">20. useContext</a>
+  <a href="#m21">21. Custom Hooks</a>
+  <a href="#m22">22. Modern Hooks</a>
+
+  <h2>Part D: TypeScript + React</h2>
+  <a href="#m23">23. Typing Components &amp; Props</a>
+  <a href="#m24">24. Typing Hooks</a>
+  <a href="#m25">25. Typing Events</a>
+  <a href="#m26">26. Generic Components</a>
+
+  <h2>Part E: State Management</h2>
+  <a href="#m27">27. State Taxonomy</a>
+  <a href="#m28">28. React Query Basics</a>
+  <a href="#m29">29. React Query Mutations</a>
+  <a href="#m30">30. Zustand</a>
+  <a href="#m31">31. Redux/Jotai/Context</a>
+
+  <h2>Part F: Routing &amp; Forms</h2>
+  <a href="#m32">32. React Router</a>
+  <a href="#m33">33. React Hook Form</a>
+  <a href="#m34">34. Zod Validation</a>
+  <a href="#m35">35. RHF + Zod Together</a>
+
+  <h2>Part G: Styling &amp; Tooling</h2>
+  <a href="#m36">36. Vite</a>
+  <a href="#m37">37. ESLint &amp; Prettier</a>
+  <a href="#m38">38. Tailwind CSS</a>
+  <a href="#m39">39. Radix &amp; shadcn/ui</a>
+  <a href="#m40">40. Env &amp; Config</a>
+  <a href="#m41">41. Build &amp; Deploy</a>
+
+  <h2>Part H: Testing</h2>
+  <a href="#m42">42. Testing Philosophy</a>
+  <a href="#m43">43. Vitest + RTL</a>
+  <a href="#m44">44. MSW for API Mocking</a>
+  <a href="#m45">45. Playwright E2E</a>
+
+  <h2>Part I: Performance</h2>
+  <a href="#m46">46. Bundle &amp; Code Splitting</a>
+  <a href="#m47">47. React Re-renders</a>
+  <a href="#m48">48. memo / useMemo / useCallback</a>
+  <a href="#m49">49. Web Vitals</a>
+
+  <h2>Part J: Patterns</h2>
+  <a href="#m50">50. Folder Structure</a>
+  <a href="#m51">51. Component Patterns</a>
+  <a href="#m52">52. Composition</a>
+  <a href="#m53">53. Error Boundaries &amp; Suspense</a>
+  <a href="#m54">54. Accessibility</a>
+
+  <h2>Part K: Clean Code</h2>
+  <a href="#m55">55. Naming</a>
+  <a href="#m56">56. Component Size</a>
+  <a href="#m57">57. Code Smells</a>
+  <a href="#m58">58. Code Reviews</a>
+
+  <h2>Reference</h2>
+  <a href="#m59">59. Glossary</a>
+  <a href="#m60">60. Practice Exercises</a>
+  <a href="#m61">61. Interview Questions</a>
+
+  <h2>EasyAudit Project</h2>
+  <a href="#m62">62. audit-frontend Review</a>
+  <a href="#m63">63. Refactoring Plan</a>
+  <a href="#m64">64. Testing Strategy</a>
+  <a href="#m65">65. Resources &amp; Roadmap</a>
+</aside>
+
+<main>
+
+<header class="title">
+  <h1>The Complete React + TypeScript Course</h1>
+  <p>JS/TS foundations → React → hooks → state management (React Query, Zustand) → routing &amp; forms → testing → performance → patterns → clean code, ending with a concrete review and refactor plan for EasyAudit's audit-frontend.</p>
+</header>
+
+<div class="part-divider">
+  <h2>Part A — JavaScript &amp; TypeScript Foundations</h2>
+  <p>Modules 1–8: the language layer underneath React</p>
+</div>
+
+<!-- ============== MODULE 1 ============== -->
+<h2 id="m1"><span class="module-tag">Module 1</span><br>JavaScript Essentials for React Devs</h2>
+
+<h3>The features you'll use every day</h3>
+
+<h4>let / const / var</h4>
+<pre><code>const userId = 42;          // can't be reassigned
+let count = 0;              // can be reassigned
+// var — block-scoped is safer; never use var in modern code</code></pre>
+
+<h4>Arrow functions</h4>
+<pre><code>const add = (a, b) =&gt; a + b;
+const greet = name =&gt; `Hello, ${name}`;
+const fetchUser = async (id) =&gt; await api.get(`/users/${id}`);
+
+// vs traditional
+function add(a, b) { return a + b; }</code></pre>
+
+<p>Arrow functions don't have their own <code>this</code> — they inherit it from the enclosing scope. That's the main reason React loves them.</p>
+
+<h4>Destructuring</h4>
+<pre><code>// Object
+const { name, age } = user;
+const { name: userName, age = 0 } = user;   // rename + default
+
+// Array
+const [first, second, ...rest] = items;
+
+// In function params
+function Greeting({ name, age }) { ... }</code></pre>
+
+<h4>Spread &amp; rest</h4>
+<pre><code>const a = [1, 2, 3];
+const b = [...a, 4, 5];                     // spread → [1,2,3,4,5]
+
+const original = { a: 1, b: 2 };
+const updated = { ...original, b: 99 };     // shallow copy + override
+
+function sum(...numbers) {                   // rest
+    return numbers.reduce((s, n) =&gt; s + n, 0);
+}</code></pre>
+
+<h4>Template literals</h4>
+<pre><code>const greeting = `Hello, ${user.name}! You are ${user.age} years old.`;
+const multiline = `
+    Line 1
+    Line 2
+`;</code></pre>
+
+<h4>Optional chaining + nullish coalescing</h4>
+<pre><code>const city = user?.address?.city;            // undefined-safe access
+const name = user?.name ?? 'Anonymous';      // ?? = null/undefined-only fallback
+const count = data?.count ?? 0;              // | | would also fall back on 0 (often a bug)</code></pre>
+
+<h4>Array methods (the ones that matter for React)</h4>
+<pre><code>users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;);          // transform
+users.filter(u =&gt; u.isActive);                          // keep matching
+users.find(u =&gt; u.id === 42);                           // first matching
+users.some(u =&gt; u.isAdmin);                             // any?
+users.every(u =&gt; u.isActive);                           // all?
+users.reduce((sum, u) =&gt; sum + u.age, 0);               // fold
+users.sort((a, b) =&gt; a.age - b.age);                    // mutates! often want [...users].sort(...)
+users.flatMap(u =&gt; u.tags);                             // flatten one level</code></pre>
+
+<h4>Promises</h4>
+<pre><code>// Promise = future value
+fetch('/api/users').then(r =&gt; r.json()).then(data =&gt; { ... });
+
+// Async/await — cleaner
+const r = await fetch('/api/users');
+const data = await r.json();</code></pre>
+
+<h4>Modules</h4>
+<pre><code>// math.js
+export function add(a, b) { return a + b; }
+export const PI = 3.14159;
+export default function multiply(a, b) { return a * b; }
+
+// app.js
+import multiply, { add, PI } from './math';
+import * as math from './math';</code></pre>
+
+<h3>Things to forget</h3>
+<ul>
+  <li><code>var</code> — replaced by <code>let</code>/<code>const</code></li>
+  <li><code>function() { ... }</code> in component code — use arrow functions</li>
+  <li><code>this</code> in functional React — you almost never need it</li>
+  <li>Callback hell — use async/await</li>
+  <li><code>== </code> — always use <code>===</code> (strict equality)</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 2 ============== -->
+<h2 id="m2"><span class="module-tag">Module 2</span><br>TypeScript Intro</h2>
+
+<h3>What is TypeScript?</h3>
+<p><strong>TypeScript</strong> is JavaScript with a static type system bolted on top. Types are checked at compile time and erased at runtime — the output is plain JavaScript that any browser/Node can run. Created by Microsoft (Anders Hejlsberg again — same designer as C#).</p>
+
+<h3>Why TypeScript?</h3>
+<ul>
+  <li><strong>Catch bugs at compile time</strong> instead of runtime — typos, null derefs, wrong shapes.</li>
+  <li><strong>Self-documenting</strong> — types describe contracts.</li>
+  <li><strong>IDE superpowers</strong> — autocomplete, rename, find-references actually work.</li>
+  <li><strong>Refactor safely</strong> — break it, the compiler tells you everywhere it broke.</li>
+  <li><strong>Industry standard</strong> for React projects in 2026.</li>
+</ul>
+
+<h3>JavaScript → TypeScript</h3>
+<pre><code>// JavaScript
+function greet(user) {
+    return `Hello, ${user.name}`;       // What if user has no name? What if user is undefined?
+}
+
+// TypeScript
+function greet(user: { name: string }): string {
+    return `Hello, ${user.name}`;
+}
+
+greet({ name: 'Alice' });               // OK
+greet({});                              // ERROR at compile time
+greet(undefined);                       // ERROR
+greet({ name: 42 });                    // ERROR — name must be string</code></pre>
+
+<h3>How it runs</h3>
+<pre class="diagram">  .ts file
+     │
+     ▼ tsc (or Vite/esbuild/swc) compiles &amp; type-checks
+  .js file (types stripped) ──► browser/node runs it</code></pre>
+
+<p>In a Vite project (like audit-frontend), TS type-checking and compilation happen via <code>esbuild</code> + <code>tsc --noEmit</code>. Errors stop your build.</p>
+
+<hr>
+
+<!-- ============== MODULE 3 ============== -->
+<h2 id="m3"><span class="module-tag">Module 3</span><br>TypeScript Basics</h2>
+
+<h3>Primitive types</h3>
+<pre><code>let name: string = 'Alice';
+let age: number = 30;
+let isActive: boolean = true;
+let tags: string[] = ['a', 'b'];
+let scores: Array&lt;number&gt; = [1, 2, 3];
+let mixed: (string | number)[] = [1, 'two', 3];
+
+// Tuple — fixed-length, ordered
+let pair: [string, number] = ['Alice', 30];
+
+let nothing: null = null;
+let undef: undefined = undefined;
+let nope: void;             // for functions returning nothing
+let any: any;               // skips type checking — AVOID
+let unknown: unknown;       // safer "any" — must narrow before use
+let never: never;           // function never returns (throws or infinite loop)</code></pre>
+
+<h3>Type inference</h3>
+<p>You usually don't need annotations — TS infers from context.</p>
+<pre><code>const name = 'Alice';                      // string (inferred)
+const age = 30;                              // number
+const user = { name: 'Alice', age: 30 };    // { name: string; age: number }
+
+// Add explicit types when:
+// 1. The type would otherwise be wrong (any, unknown)
+// 2. Function parameters / public APIs
+// 3. You want a wider/narrower type than inferred</code></pre>
+
+<h3>Object types — interface vs type alias</h3>
+<pre><code>// interface
+interface User {
+    id: number;
+    name: string;
+    email: string;
+    age?: number;        // optional
+    readonly createdAt: Date;
+}
+
+// type alias — same idea, can also represent unions, primitives
+type User = {
+    id: number;
+    name: string;
+};
+
+type Status = 'active' | 'pending' | 'banned';   // union literal type
+type UserId = number;                              // alias for primitive</code></pre>
+
+<p><strong>When to use which</strong>: in modern TS the difference is mostly stylistic. Use <code>interface</code> for object shapes you might extend later (especially across module boundaries — they merge), and <code>type</code> for unions, intersections, primitives, mapped/conditional types.</p>
+
+<h3>Functions</h3>
+<pre><code>function add(a: number, b: number): number {
+    return a + b;
+}
+
+const multiply = (a: number, b: number): number =&gt; a * b;
+
+// Optional &amp; default params
+function greet(name: string, greeting: string = 'Hello', loud?: boolean): string {
+    const msg = `${greeting}, ${name}`;
+    return loud ? msg.toUpperCase() : msg;
+}</code></pre>
+
+<h3>Union &amp; intersection</h3>
+<pre><code>type StringOrNumber = string | number;        // union — one OR the other
+type Combined = User &amp; { isAdmin: boolean };  // intersection — both
+
+let id: StringOrNumber = 42;
+id = 'abc';
+
+const admin: Combined = { id: 1, name: 'Alice', email: 'a@b.com',
+                           createdAt: new Date(), isAdmin: true };</code></pre>
+
+<h3>Literal types</h3>
+<pre><code>type Direction = 'up' | 'down' | 'left' | 'right';
+type DiceRoll = 1 | 2 | 3 | 4 | 5 | 6;
+type Status = 'idle' | 'loading' | 'success' | 'error';
+
+function move(dir: Direction) { ... }
+move('up');           // OK
+move('north');        // ERROR</code></pre>
+
+<h3>Enums (use literals instead, mostly)</h3>
+<pre><code>// Old style
+enum Role { Admin, User, Guest }
+
+// Modern preference — string literals + const
+const Role = { Admin: 'admin', User: 'user', Guest: 'guest' } as const;
+type Role = typeof Role[keyof typeof Role];   // 'admin' | 'user' | 'guest'</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 4 ============== -->
+<h2 id="m4"><span class="module-tag">Module 4</span><br>TypeScript Advanced</h2>
+
+<h3>Generics</h3>
+<pre><code>function identity&lt;T&gt;(value: T): T {
+    return value;
+}
+
+const num = identity(42);          // T = number
+const str = identity('hello');     // T = string
+
+// With constraints
+function getLength&lt;T extends { length: number }&gt;(x: T): number {
+    return x.length;
+}
+getLength('abc');         // OK — string has length
+getLength([1,2,3]);       // OK
+getLength(42);            // ERROR — number has no length</code></pre>
+
+<h3>Generic types &amp; data structures</h3>
+<pre><code>interface ApiResponse&lt;T&gt; {
+    data: T;
+    error?: string;
+    timestamp: number;
+}
+
+const usersResp: ApiResponse&lt;User[]&gt; = await fetchUsers();
+const userResp: ApiResponse&lt;User&gt; = await fetchUser(42);</code></pre>
+
+<h3>Type narrowing</h3>
+<p>The compiler "narrows" a union type as you check it.</p>
+<pre><code>function format(value: string | number): string {
+    if (typeof value === 'string') {
+        return value.toUpperCase();    // value is string here
+    }
+    return value.toFixed(2);            // value is number here
+}
+
+// Narrowing with discriminated unions — the React way
+type State =
+    | { status: 'idle' }
+    | { status: 'loading' }
+    | { status: 'success'; data: User[] }
+    | { status: 'error'; error: string };
+
+function render(state: State) {
+    switch (state.status) {
+        case 'idle':    return 'Ready';
+        case 'loading': return 'Loading…';
+        case 'success': return `${state.data.length} users`;  // .data is typed
+        case 'error':   return state.error;                    // .error is typed
+    }
+}</code></pre>
+
+<h3>Utility types (built-in)</h3>
+<pre><code>interface User { id: number; name: string; email: string; password: string; }
+
+type PartialUser = Partial&lt;User&gt;;          // all props optional
+type RequiredUser = Required&lt;User&gt;;        // all required
+type ReadonlyUser = Readonly&lt;User&gt;;        // all readonly
+
+type PublicUser = Omit&lt;User, 'password'&gt;;             // exclude password
+type LoginInput = Pick&lt;User, 'email' | 'password'&gt;;   // only email + password
+
+type UserMap = Record&lt;string, User&gt;;       // { [key: string]: User }
+type RoleNames = 'admin' | 'user';
+type RolePermissions = Record&lt;RoleNames, string[]&gt;;
+
+type ReturnT = ReturnType&lt;typeof fetchUser&gt;;           // infer return type
+type ParamsT = Parameters&lt;typeof fetchUser&gt;;           // tuple of params
+type Awaited = Awaited&lt;Promise&lt;User&gt;&gt;;                  // unwrap promise → User</code></pre>
+
+<h3>Conditional &amp; mapped types (advanced)</h3>
+<pre><code>// Conditional type
+type IsString&lt;T&gt; = T extends string ? true : false;
+
+// Mapped type — make all properties optional with custom logic
+type AllNullable&lt;T&gt; = { [K in keyof T]: T[K] | null };
+
+type NullableUser = AllNullable&lt;User&gt;;
+// = { id: number | null; name: string | null; ... }</code></pre>
+
+<h3>as const</h3>
+<pre><code>// Without as const
+const config = { mode: 'production', port: 3000 };
+// type: { mode: string; port: number }
+
+// With as const
+const config = { mode: 'production', port: 3000 } as const;
+// type: { readonly mode: 'production'; readonly port: 3000 }</code></pre>
+
+<h3>Type assertions vs type guards</h3>
+<pre><code>// Assertion — "trust me, compiler" (can lie!)
+const el = document.querySelector('.my-input') as HTMLInputElement;
+
+// Type guard — proves it at runtime
+function isUser(value: unknown): value is User {
+    return typeof value === 'object' &amp;&amp; value !== null &amp;&amp;
+           'id' in value &amp;&amp; 'email' in value;
+}
+
+if (isUser(maybe)) {
+    maybe.name;     // typed as User here
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 5 ============== -->
+<h2 id="m5"><span class="module-tag">Module 5</span><br>tsconfig &amp; Strict Mode</h2>
+
+<h3>The tsconfig.json that matters</h3>
+<pre><code>{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+
+    "strict": true,                          // enable ALL strict checks
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,        // arr[0] is T | undefined
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,                 // each file independently compilable
+
+    "allowJs": false,
+    "noEmit": true,                          // Vite/esbuild handles emit
+
+    "paths": {
+      "@/*": ["./src/*"]                     // @/components/Foo
+    }
+  },
+  "include": ["src"]
+}</code></pre>
+
+<h3>What "strict" actually turns on</h3>
+<table>
+  <thead><tr><th>Flag</th><th>What it catches</th></tr></thead>
+  <tbody>
+    <tr><td><code>strictNullChecks</code></td><td><code>null</code>/<code>undefined</code> can't be assigned to a non-nullable type</td></tr>
+    <tr><td><code>noImplicitAny</code></td><td>Variables/params without types fail (no silent <code>any</code>)</td></tr>
+    <tr><td><code>strictFunctionTypes</code></td><td>Function parameter contravariance</td></tr>
+    <tr><td><code>strictBindCallApply</code></td><td>bind/call/apply args type-checked</td></tr>
+    <tr><td><code>strictPropertyInitialization</code></td><td>Class fields must be initialized</td></tr>
+    <tr><td><code>alwaysStrict</code></td><td>Emit <code>"use strict"</code></td></tr>
+    <tr><td><code>noImplicitThis</code></td><td>this without type fails</td></tr>
+    <tr><td><code>useUnknownInCatchVariables</code></td><td>catch (e: unknown) instead of any</td></tr>
+  </tbody>
+</table>
+
+<div class="callout tip">
+  <strong>Always use <code>"strict": true</code></strong> in new projects. Migrating an existing codebase to strict is real work, but the type-safety dividend pays it back.
+</div>
+
+<h3>Path aliases</h3>
+<p>Avoid <code>../../../components/Foo</code> hellscapes. Set up aliases in <code>tsconfig.json</code> AND your bundler (Vite):</p>
+<pre><code>// vite.config.ts
+import { defineConfig } from 'vite';
+import path from 'path';
+
+export default defineConfig({
+  resolve: {
+    alias: { '@': path.resolve(__dirname, './src') }
+  }
+});
+
+// Now anywhere:
+import { Button } from '@/components/Button';</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 6 ============== -->
+<h2 id="m6"><span class="module-tag">Module 6</span><br>Modern JS in React</h2>
+
+<h3>Object shorthand</h3>
+<pre><code>const name = 'Alice';
+const age = 30;
+
+// Long
+const user = { name: name, age: age };
+
+// Short
+const user = { name, age };
+
+// In React state updates
+setUser({ ...user, name });</code></pre>
+
+<h3>Computed property names</h3>
+<pre><code>const field = 'email';
+const update = { [field]: 'a@b.com' };       // { email: 'a@b.com' }
+
+// In setState
+setForm(prev =&gt; ({ ...prev, [field]: value }));</code></pre>
+
+<h3>Default function params</h3>
+<pre><code>function Button({ variant = 'primary', size = 'md' }: ButtonProps) { ... }</code></pre>
+
+<h3>Object/array spread vs Object.assign</h3>
+<p>Always prefer spread — clearer and works in TS without quirks.</p>
+<pre><code>// Don't
+const merged = Object.assign({}, a, b);
+// Do
+const merged = { ...a, ...b };</code></pre>
+
+<h3>Immutable updates (critical for React)</h3>
+<p>React detects changes by reference equality. Mutating state in place won't trigger re-renders. Always create a new object/array.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — mutates in place</h4>
+    <pre><code>users.push(newUser);            // same reference
+setUsers(users);                // React: "no change"
+
+user.name = 'Bob';
+setUser(user);
+
+items[0].done = true;
+setItems(items);</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — new references</h4>
+    <pre><code>setUsers([...users, newUser]);
+
+setUser({ ...user, name: 'Bob' });
+
+setItems(items.map((item, i) =&gt;
+    i === 0 ? { ...item, done: true } : item
+));
+
+// Remove
+setUsers(users.filter(u =&gt; u.id !== id));</code></pre>
+  </div>
+</div>
+
+<h3>For complex updates: Immer</h3>
+<pre><code>import { produce } from 'immer';
+
+setItems(produce(items, draft =&gt; {
+    draft[0].done = true;       // looks mutable, isn't
+    draft.push(newItem);
+}));</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 7 ============== -->
+<h2 id="m7"><span class="module-tag">Module 7</span><br>Async Patterns</h2>
+
+<h3>async/await</h3>
+<pre><code>async function fetchUser(id: number): Promise&lt;User&gt; {
+    const r = await fetch(`/api/users/${id}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return r.json();
+}
+
+// Use it
+try {
+    const user = await fetchUser(42);
+    console.log(user.name);
+} catch (err) {
+    console.error(err);
+}</code></pre>
+
+<h3>Parallel vs sequential</h3>
+<pre><code>// Sequential — slow (sum of times)
+const a = await fetchA();
+const b = await fetchB();
+
+// Parallel — fast (max of times)
+const [a, b] = await Promise.all([fetchA(), fetchB()]);
+
+// First to finish wins
+const winner = await Promise.race([fetchA(), fetchB()]);
+
+// All settle (some may fail)
+const results = await Promise.allSettled([fetchA(), fetchB()]);
+results.forEach(r =&gt; r.status === 'fulfilled' ? ... : ...);</code></pre>
+
+<h3>AbortController — cancellation</h3>
+<pre><code>const ctrl = new AbortController();
+
+fetch('/api/users', { signal: ctrl.signal })
+    .then(r =&gt; r.json());
+
+// Cancel
+ctrl.abort();</code></pre>
+
+<p>Critical for React — when a component unmounts, abort in-flight requests to prevent state updates on unmounted components.</p>
+
+<h3>Common errors</h3>
+<table>
+  <thead><tr><th>Mistake</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Forgetting await</td><td><code>noFloatingPromises</code> ESLint rule</td></tr>
+    <tr><td>Using await in a forEach (doesn't actually wait)</td><td>Use <code>for...of</code> or <code>Promise.all(items.map(...))</code></td></tr>
+    <tr><td>Not handling errors</td><td>try/catch or <code>.catch()</code></td></tr>
+    <tr><td>Missing AbortController</td><td>Always pass a signal in long-lived components</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 8 ============== -->
+<h2 id="m8"><span class="module-tag">Module 8</span><br>Functional Programming Basics</h2>
+
+<p>You don't need to master FP to use React, but the FP mindset makes React click.</p>
+
+<h3>Pure functions</h3>
+<p>Same input → same output. No side effects. No mutation.</p>
+<pre><code>// Pure
+const add = (a: number, b: number) =&gt; a + b;
+
+// Impure — depends on outside, has side effect
+let count = 0;
+const inc = () =&gt; ++count;</code></pre>
+
+<p>React components should be (mostly) pure functions of props + state.</p>
+
+<h3>Immutability</h3>
+<p>Don't mutate; return new values. Already covered in Module 6 — it's the FP cornerstone.</p>
+
+<h3>Higher-order functions</h3>
+<pre><code>// Function that returns a function
+const greet = (greeting: string) =&gt; (name: string) =&gt; `${greeting}, ${name}`;
+const sayHi = greet('Hi');
+sayHi('Alice');         // 'Hi, Alice'
+
+// Function that takes a function
+const onClick = (handler: () =&gt; void) =&gt; () =&gt; handler();</code></pre>
+
+<h3>Composition over inheritance</h3>
+<p>FP composes small functions. React composes small components. The mindset is the same.</p>
+
+<h3>Map / filter / reduce</h3>
+<p>Three workhorses. If you can think in these, you can think in React.</p>
+<pre><code>// Get total revenue from active users
+const total = users
+    .filter(u =&gt; u.isActive)
+    .flatMap(u =&gt; u.orders)
+    .reduce((sum, o) =&gt; sum + o.amount, 0);</code></pre>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part B — React Foundations</h2>
+  <p>Modules 9–15: components, props, state, effects, the things you'll write every day</p>
+</div>
+
+<!-- ============== MODULE 9 ============== -->
+<h2 id="m9"><span class="module-tag">Module 9</span><br>React Intro &amp; JSX</h2>
+
+<h3>What is React?</h3>
+<p><strong>React</strong> is a UI library (not a framework) for building component-based interfaces. Created at Facebook (Meta) by Jordan Walke in 2013. The core idea: describe the UI as a function of state; React figures out how to update the DOM efficiently.</p>
+
+<h3>Mental model</h3>
+<pre class="diagram">    state         render             DOM
+   ┌────┐  ──►  ┌──────────┐  ──►  ┌────────┐
+   │ {} │       │  &lt;App /&gt; │       │ &lt;div&gt;.. │
+   └────┘       └──────────┘       └────────┘
+       ▲                                │ user event
+       └────────── setState ◄───────────┘</pre>
+
+<p>You write what the UI <em>should look like</em> for a given state. React diffs the old vs new tree (the "virtual DOM") and patches only what changed.</p>
+
+<h3>JSX</h3>
+<p>JSX is a syntax extension that looks like HTML but compiles to JavaScript function calls.</p>
+<pre><code>// JSX
+const greeting = &lt;h1 className="title"&gt;Hello, {name}&lt;/h1&gt;;
+
+// Compiles to (roughly):
+const greeting = React.createElement('h1', { className: 'title' }, 'Hello, ', name);</code></pre>
+
+<h3>JSX rules</h3>
+<ul>
+  <li>One root element — wrap multiples in <code>&lt;&gt;...&lt;/&gt;</code> (Fragment).</li>
+  <li><code>className</code> not <code>class</code> — <code>class</code> is a JS keyword.</li>
+  <li><code>htmlFor</code> not <code>for</code>.</li>
+  <li>camelCase event handlers: <code>onClick</code>, <code>onSubmit</code>.</li>
+  <li>Self-close tags without children: <code>&lt;img /&gt;</code>, <code>&lt;input /&gt;</code>.</li>
+  <li>Curly braces for JS expressions: <code>{count + 1}</code>, <code>{user.name.toUpperCase()}</code>.</li>
+  <li>Inline styles take an object: <code>style={{ color: 'red' }}</code>.</li>
+</ul>
+
+<h3>First component</h3>
+<pre><code>// src/components/Greeting.tsx
+type GreetingProps = { name: string };
+
+export function Greeting({ name }: GreetingProps) {
+    return (
+        &lt;div className="greeting"&gt;
+            &lt;h1&gt;Hello, {name}!&lt;/h1&gt;
+            &lt;p&gt;Welcome to React.&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}
+
+// Use it
+&lt;Greeting name="Alice" /&gt;</code></pre>
+
+<h3>Conditional content</h3>
+<pre><code>// Ternary
+{isLoggedIn ? &lt;Dashboard /&gt; : &lt;Login /&gt;}
+
+// Logical AND (only render if true)
+{hasError &amp;&amp; &lt;ErrorBanner message={error} /&gt;}
+
+// CAREFUL: short-circuit gotcha
+{count &amp;&amp; &lt;p&gt;{count} items&lt;/p&gt;}     // when count=0, renders "0" — BAD
+{count &gt; 0 &amp;&amp; &lt;p&gt;{count} items&lt;/p&gt;}  // GOOD</code></pre>
+
+<h3>Lists</h3>
+<pre><code>{users.map(u =&gt; (
+    &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;
+))}</code></pre>
+
+<p><strong>Key</strong> is critical — it tells React how to track items across renders. Use a stable id, never the array index for non-static lists.</p>
+
+<hr>
+
+<!-- ============== MODULE 10 ============== -->
+<h2 id="m10"><span class="module-tag">Module 10</span><br>Components &amp; Props</h2>
+
+<h3>Components are functions that return JSX</h3>
+<pre><code>function Button({ label, onClick }: { label: string; onClick: () =&gt; void }) {
+    return &lt;button onClick={onClick}&gt;{label}&lt;/button&gt;;
+}</code></pre>
+
+<h3>Props — read-only inputs</h3>
+<p>Props are like function arguments — passed in by parents, never mutated by children.</p>
+<pre><code>function UserCard({ name, email, isAdmin = false }: UserCardProps) {
+    return (
+        &lt;div&gt;
+            &lt;h2&gt;{name}{isAdmin &amp;&amp; ' (Admin)'}&lt;/h2&gt;
+            &lt;p&gt;{email}&lt;/p&gt;
+        &lt;/div&gt;
+    );
+}
+
+type UserCardProps = {
+    name: string;
+    email: string;
+    isAdmin?: boolean;       // optional, default false
+};</code></pre>
+
+<h3>Children prop</h3>
+<pre><code>type CardProps = {
+    title: string;
+    children: React.ReactNode;
+};
+
+function Card({ title, children }: CardProps) {
+    return (
+        &lt;div className="card"&gt;
+            &lt;h3&gt;{title}&lt;/h3&gt;
+            &lt;div className="card-body"&gt;{children}&lt;/div&gt;
+        &lt;/div&gt;
+    );
+}
+
+// Use
+&lt;Card title="Hello"&gt;
+    &lt;p&gt;Anything goes here.&lt;/p&gt;
+    &lt;Button label="Click" onClick={handle} /&gt;
+&lt;/Card&gt;</code></pre>
+
+<h3>Spreading props</h3>
+<pre><code>function PrimaryButton(props: React.ButtonHTMLAttributes&lt;HTMLButtonElement&gt;) {
+    return &lt;button className="btn-primary" {...props} /&gt;;
+}
+
+&lt;PrimaryButton onClick={handle} disabled={isLoading} type="submit"&gt;
+    Save
+&lt;/PrimaryButton&gt;</code></pre>
+
+<h3>One-way data flow</h3>
+<p>Data flows down (props), events flow up (callbacks). Children never directly mutate parent state — they call a callback the parent passed in.</p>
+<pre><code>function Parent() {
+    const [count, setCount] = useState(0);
+    return &lt;Child count={count} onIncrement={() =&gt; setCount(c =&gt; c + 1)} /&gt;;
+}
+
+function Child({ count, onIncrement }: { count: number; onIncrement: () =&gt; void }) {
+    return (
+        &lt;div&gt;
+            Count: {count}
+            &lt;button onClick={onIncrement}&gt;+&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 11 ============== -->
+<h2 id="m11"><span class="module-tag">Module 11</span><br>State &amp; useState</h2>
+
+<h3>What's state?</h3>
+<p>Any data the component <em>owns</em> and that may change over time. When state changes, React re-renders the component.</p>
+
+<pre><code>import { useState } from 'react';
+
+function Counter() {
+    const [count, setCount] = useState(0);   // [value, setter] = useState(initial)
+
+    return (
+        &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+            Clicked {count} times
+        &lt;/button&gt;
+    );
+}</code></pre>
+
+<h3>Multiple state variables</h3>
+<pre><code>function LoginForm() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    // ...
+}</code></pre>
+
+<h3>State updates are asynchronous</h3>
+<pre><code>function handleClick() {
+    setCount(count + 1);
+    setCount(count + 1);
+    setCount(count + 1);
+    // count is still old value here, all three set the SAME value
+    // → final count = count + 1 (not + 3)
+}
+
+// Use updater function for sequential updates
+function handleClick() {
+    setCount(c =&gt; c + 1);
+    setCount(c =&gt; c + 1);
+    setCount(c =&gt; c + 1);
+    // → final count = +3
+}</code></pre>
+
+<h3>State as object</h3>
+<pre><code>const [form, setForm] = useState({ email: '', password: '' });
+
+// To update one field — spread the rest
+setForm(prev =&gt; ({ ...prev, email: 'new@x.com' }));</code></pre>
+
+<h3>Lazy initial state</h3>
+<p>If the initial value is expensive to compute, pass a function:</p>
+<pre><code>// Bad — runs on EVERY render (wasted work)
+const [items, setItems] = useState(JSON.parse(localStorage.getItem('items') || '[]'));
+
+// Good — runs only on mount
+const [items, setItems] = useState(() =&gt; JSON.parse(localStorage.getItem('items') || '[]'));</code></pre>
+
+<h3>State should be minimal</h3>
+<p>Don't store derivable values. Compute them from existing state instead.</p>
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — duplicated state</h4>
+    <pre><code>const [items, setItems] = useState&lt;Item[]&gt;([]);
+const [count, setCount] = useState(0);          // redundant
+const [hasItems, setHasItems] = useState(false); // redundant
+
+// Now you must keep them in sync — error-prone</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — derive on render</h4>
+    <pre><code>const [items, setItems] = useState&lt;Item[]&gt;([]);
+const count = items.length;         // derived
+const hasItems = items.length &gt; 0;  // derived
+
+// One source of truth</code></pre>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 12 ============== -->
+<h2 id="m12"><span class="module-tag">Module 12</span><br>Effects &amp; useEffect</h2>
+
+<h3>What's an effect?</h3>
+<p>Anything outside the pure render path: API calls, subscriptions, manual DOM manipulation, timers. <code>useEffect</code> runs <em>after</em> render.</p>
+
+<pre><code>import { useEffect, useState } from 'react';
+
+function UserProfile({ userId }: { userId: number }) {
+    const [user, setUser] = useState&lt;User | null&gt;(null);
+
+    useEffect(() =&gt; {
+        let cancelled = false;
+        fetch(`/api/users/${userId}`)
+            .then(r =&gt; r.json())
+            .then(data =&gt; { if (!cancelled) setUser(data); });
+
+        return () =&gt; { cancelled = true; };   // cleanup
+    }, [userId]);   // dependency array
+
+    if (!user) return &lt;p&gt;Loading...&lt;/p&gt;;
+    return &lt;h1&gt;{user.name}&lt;/h1&gt;;
+}</code></pre>
+
+<h3>Anatomy of useEffect</h3>
+<pre><code>useEffect(() =&gt; {
+    // 1. Effect — runs after every render where deps changed
+    const id = setInterval(() =&gt; console.log('tick'), 1000);
+
+    // 2. Cleanup — runs before next effect AND on unmount
+    return () =&gt; clearInterval(id);
+}, [/* 3. Deps */]);</code></pre>
+
+<h3>Dependency array — three behaviors</h3>
+<table>
+  <thead><tr><th>Pattern</th><th>When effect runs</th></tr></thead>
+  <tbody>
+    <tr><td><code>useEffect(fn)</code> — no array</td><td>Every render — almost always wrong</td></tr>
+    <tr><td><code>useEffect(fn, [])</code> — empty array</td><td>Only after mount; cleanup on unmount</td></tr>
+    <tr><td><code>useEffect(fn, [a, b])</code> — listed deps</td><td>Whenever a or b changes (by reference)</td></tr>
+  </tbody>
+</table>
+
+<h3>Common effect uses</h3>
+
+<h4>Subscriptions</h4>
+<pre><code>useEffect(() =&gt; {
+    const handler = (e: KeyboardEvent) =&gt; { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () =&gt; window.removeEventListener('keydown', handler);
+}, [onClose]);</code></pre>
+
+<h4>Timers</h4>
+<pre><code>useEffect(() =&gt; {
+    const id = setTimeout(() =&gt; setShow(false), 3000);
+    return () =&gt; clearTimeout(id);
+}, []);</code></pre>
+
+<h4>Sync external state</h4>
+<pre><code>useEffect(() =&gt; {
+    document.title = `${unread} unread messages`;
+}, [unread]);</code></pre>
+
+<h3>Effects you should NOT write</h3>
+<ul>
+  <li><strong>Calculating from props/state</strong> — just compute during render.</li>
+  <li><strong>Updating state based on props</strong> — derive at render or use <code>key</code> to reset.</li>
+  <li><strong>Server data fetching</strong> in real apps — use <strong>React Query</strong> (Module 28); it solves caching, dedup, refetch, errors.</li>
+  <li><strong>Event handlers</strong> — those go directly in <code>onClick</code>, not in effects.</li>
+</ul>
+
+<h3>The exhaustive-deps rule</h3>
+<p>The ESLint plugin <code>react-hooks/exhaustive-deps</code> checks your dep arrays. <strong>Don't suppress it</strong> — if it warns, you have a real bug.</p>
+
+<h3>Strict Mode &amp; effects running twice</h3>
+<p>In dev with <code>&lt;StrictMode&gt;</code>, effects run, clean up, then run again — to expose missing cleanups. This is intentional. Make sure your effects are idempotent and clean up properly.</p>
+
+<hr>
+
+<!-- ============== MODULE 13 ============== -->
+<h2 id="m13"><span class="module-tag">Module 13</span><br>Conditional Rendering &amp; Lists</h2>
+
+<h3>Common patterns</h3>
+<pre><code>// Branch
+{isLoading
+    ? &lt;Spinner /&gt;
+    : error
+        ? &lt;ErrorMessage error={error} /&gt;
+        : &lt;UserList users={users} /&gt;}
+
+// Cleaner — early returns
+function UserPage() {
+    if (isLoading) return &lt;Spinner /&gt;;
+    if (error) return &lt;ErrorMessage error={error} /&gt;;
+    return &lt;UserList users={users} /&gt;;
+}
+
+// Show only when condition
+{isOpen &amp;&amp; &lt;Modal onClose={close} /&gt;}
+
+// Default fallback
+{user?.name ?? &lt;em&gt;Anonymous&lt;/em&gt;}</code></pre>
+
+<h3>Lists with map</h3>
+<pre><code>&lt;ul&gt;
+    {users.map(user =&gt; (
+        &lt;li key={user.id}&gt;
+            {user.name} ({user.email})
+        &lt;/li&gt;
+    ))}
+&lt;/ul&gt;</code></pre>
+
+<h3>Why keys?</h3>
+<p>Keys help React identify which items changed/added/removed. Without stable keys, React might rebuild whole subtrees, lose focus, or apply state to the wrong item.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — index as key</h4>
+    <pre><code>{items.map((item, i) =&gt; (
+    &lt;li key={i}&gt;{item.label}&lt;/li&gt;
+))}
+// If you reorder/insert/delete, indexes
+// shift, breaking React's reconciliation.</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — stable id as key</h4>
+    <pre><code>{items.map(item =&gt; (
+    &lt;li key={item.id}&gt;{item.label}&lt;/li&gt;
+))}
+// If no id, generate stable ones
+// (e.g. uuid at create time, not in render).</code></pre>
+  </div>
+</div>
+
+<h3>Index keys are OK when</h3>
+<ul>
+  <li>The list is static (never reorders).</li>
+  <li>Items have no state of their own.</li>
+  <li>List is rendered top-to-bottom only and items aren't filtered.</li>
+</ul>
+
+<h3>Empty / loading / error states</h3>
+<p>Always handle them explicitly. A blank screen is not a state.</p>
+<pre><code>function UserList({ users, loading, error }: Props) {
+    if (loading) return &lt;Spinner /&gt;;
+    if (error) return &lt;ErrorBanner error={error} /&gt;;
+    if (users.length === 0) return &lt;EmptyState message="No users yet" /&gt;;
+
+    return (
+        &lt;ul&gt;
+            {users.map(u =&gt; &lt;UserRow key={u.id} user={u} /&gt;)}
+        &lt;/ul&gt;
+    );
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 14 ============== -->
+<h2 id="m14"><span class="module-tag">Module 14</span><br>Forms &amp; Refs</h2>
+
+<h3>Controlled inputs</h3>
+<p>State is the source of truth; the input reflects state.</p>
+<pre><code>function LoginForm() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = (e: React.FormEvent) =&gt; {
+        e.preventDefault();
+        login(email, password);
+    };
+
+    return (
+        &lt;form onSubmit={handleSubmit}&gt;
+            &lt;input
+                type="email"
+                value={email}
+                onChange={e =&gt; setEmail(e.target.value)}
+                required
+            /&gt;
+            &lt;input
+                type="password"
+                value={password}
+                onChange={e =&gt; setPassword(e.target.value)}
+                required
+            /&gt;
+            &lt;button type="submit"&gt;Log in&lt;/button&gt;
+        &lt;/form&gt;
+    );
+}</code></pre>
+
+<h3>Object form state</h3>
+<pre><code>const [form, setForm] = useState({ email: '', password: '' });
+
+const handleChange = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    const { name, value } = e.target;
+    setForm(prev =&gt; ({ ...prev, [name]: value }));
+};
+
+&lt;input name="email" value={form.email} onChange={handleChange} /&gt;
+&lt;input name="password" type="password" value={form.password} onChange={handleChange} /&gt;</code></pre>
+
+<p>For real forms, use <strong>React Hook Form</strong> (Module 33) — better performance, less boilerplate, easier validation.</p>
+
+<h3>Refs (useRef)</h3>
+<p>Use refs to access DOM nodes or hold mutable values that don't trigger re-renders.</p>
+<pre><code>import { useRef, useEffect } from 'react';
+
+function AutofocusInput() {
+    const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+
+    useEffect(() =&gt; {
+        inputRef.current?.focus();
+    }, []);
+
+    return &lt;input ref={inputRef} /&gt;;
+}</code></pre>
+
+<h3>useRef as mutable instance variable</h3>
+<pre><code>function Timer() {
+    const intervalId = useRef&lt;number | null&gt;(null);
+    const [seconds, setSeconds] = useState(0);
+
+    const start = () =&gt; {
+        intervalId.current = window.setInterval(() =&gt; setSeconds(s =&gt; s + 1), 1000);
+    };
+
+    const stop = () =&gt; {
+        if (intervalId.current) clearInterval(intervalId.current);
+    };
+
+    useEffect(() =&gt; () =&gt; { if (intervalId.current) clearInterval(intervalId.current); }, []);
+
+    return &lt;div&gt;{seconds} &lt;button onClick={start}&gt;Start&lt;/button&gt;&lt;button onClick={stop}&gt;Stop&lt;/button&gt;&lt;/div&gt;;
+}</code></pre>
+
+<p><strong>Don't store rendering state in refs.</strong> Refs don't trigger re-renders. State that affects what the user sees → useState.</p>
+
+<hr>
+
+<!-- ============== MODULE 15 ============== -->
+<h2 id="m15"><span class="module-tag">Module 15</span><br>Children &amp; Composition</h2>
+
+<h3>Children prop</h3>
+<p>The most powerful pattern in React: components can wrap arbitrary content.</p>
+
+<pre><code>function Modal({ children, onClose }: { children: React.ReactNode; onClose: () =&gt; void }) {
+    return (
+        &lt;div className="overlay" onClick={onClose}&gt;
+            &lt;div className="modal" onClick={e =&gt; e.stopPropagation()}&gt;
+                {children}
+            &lt;/div&gt;
+        &lt;/div&gt;
+    );
+}
+
+&lt;Modal onClose={close}&gt;
+    &lt;h2&gt;Confirm delete&lt;/h2&gt;
+    &lt;p&gt;Are you sure?&lt;/p&gt;
+    &lt;button onClick={confirm}&gt;Delete&lt;/button&gt;
+&lt;/Modal&gt;</code></pre>
+
+<h3>Composition vs configuration</h3>
+<p>Instead of a giant prop API, accept content via children/slots.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — explosion of props</h4>
+    <pre><code>&lt;Card
+    title="Order"
+    titleColor="blue"
+    showFooter
+    footerText="Save"
+    footerButtonOnClick={save}
+    headerExtra={badge}
+/&gt;</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — slots via composition</h4>
+    <pre><code>&lt;Card&gt;
+    &lt;Card.Header&gt;Order {badge}&lt;/Card.Header&gt;
+    &lt;Card.Body&gt;...&lt;/Card.Body&gt;
+    &lt;Card.Footer&gt;
+        &lt;button onClick={save}&gt;Save&lt;/button&gt;
+    &lt;/Card.Footer&gt;
+&lt;/Card&gt;</code></pre>
+  </div>
+</div>
+
+<h3>Multiple "slots" via named props</h3>
+<pre><code>type LayoutProps = {
+    header: React.ReactNode;
+    sidebar: React.ReactNode;
+    children: React.ReactNode;
+};
+
+function Layout({ header, sidebar, children }: LayoutProps) {
+    return (
+        &lt;div className="layout"&gt;
+            &lt;header&gt;{header}&lt;/header&gt;
+            &lt;aside&gt;{sidebar}&lt;/aside&gt;
+            &lt;main&gt;{children}&lt;/main&gt;
+        &lt;/div&gt;
+    );
+}
+
+&lt;Layout
+    header={&lt;TopNav /&gt;}
+    sidebar={&lt;NavMenu /&gt;}
+&gt;
+    &lt;Routes /&gt;
+&lt;/Layout&gt;</code></pre>
+
+<h3>Render props (older pattern, occasionally useful)</h3>
+<pre><code>&lt;DataLoader url="/api/users"&gt;
+    {(data, loading) =&gt; loading ? &lt;Spinner /&gt; : &lt;UserList users={data} /&gt;}
+&lt;/DataLoader&gt;</code></pre>
+<p>Mostly replaced by hooks today. But still useful for some library APIs.</p>
+
+<h3>Lifting state up</h3>
+<p>When two siblings need to share state, move it to their common parent. The parent owns the state and passes it down.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part C — Hooks Deep Dive</h2>
+  <p>Modules 16–22: every hook you'll use, with the gotchas explained</p>
+</div>
+
+<!-- ============== MODULE 16 ============== -->
+<h2 id="m16"><span class="module-tag">Module 16</span><br>useState in Depth</h2>
+
+<h3>Functional updates — when to use them</h3>
+<p>When the new value depends on the previous, ALWAYS use the function form.</p>
+<pre><code>// WRONG inside async/timer/event-batch
+function tick() {
+    setSeconds(seconds + 1);    // captures old `seconds` from closure
+}
+
+// RIGHT
+function tick() {
+    setSeconds(prev =&gt; prev + 1);
+}</code></pre>
+
+<h3>Batching</h3>
+<p>React batches state updates that happen in the same event handler / effect into a single re-render. Multiple setState calls = one render.</p>
+<pre><code>function handleClick() {
+    setA(1);
+    setB(2);
+    setC(3);
+    // Only ONE re-render after this function ends.
+}</code></pre>
+
+<h3>The "stale state" trap</h3>
+<pre><code>function ChatRoom() {
+    const [messages, setMessages] = useState&lt;string[]&gt;([]);
+
+    useEffect(() =&gt; {
+        const ws = new WebSocket('/chat');
+        ws.onmessage = (e) =&gt; {
+            // BAD — captures messages once at mount, forever empty
+            setMessages([...messages, e.data]);
+
+            // GOOD
+            setMessages(prev =&gt; [...prev, e.data]);
+        };
+    }, []);   // empty deps — handler captures `messages` once
+}</code></pre>
+
+<h3>Reset state by changing the key</h3>
+<p>Want to reset all state in a component? Re-mount it by changing its <code>key</code>.</p>
+<pre><code>&lt;UserForm key={selectedUserId} userId={selectedUserId} /&gt;
+// Switching selectedUserId fully re-mounts UserForm — fresh state.</code></pre>
+
+<h3>Don't store derived data in state</h3>
+<p>Already covered in Module 11 — bears repeating because it's the #1 useState mistake.</p>
+
+<hr>
+
+<!-- ============== MODULE 17 ============== -->
+<h2 id="m17"><span class="module-tag">Module 17</span><br>useEffect in Depth</h2>
+
+<h3>The mental model</h3>
+<p>useEffect "synchronizes" something external with React state. Think: "After this render, make sure X is true."</p>
+
+<h3>Common cleanup patterns</h3>
+<pre><code>// 1. Subscriptions
+useEffect(() =&gt; {
+    const sub = pubsub.subscribe('user', handler);
+    return () =&gt; sub.unsubscribe();
+}, []);
+
+// 2. Timers
+useEffect(() =&gt; {
+    const id = setTimeout(action, 1000);
+    return () =&gt; clearTimeout(id);
+}, [action]);
+
+// 3. Cancelable async
+useEffect(() =&gt; {
+    const ctrl = new AbortController();
+    fetch(url, { signal: ctrl.signal })
+        .then(r =&gt; r.json())
+        .then(setData)
+        .catch(err =&gt; { if (err.name !== 'AbortError') setError(err); });
+    return () =&gt; ctrl.abort();
+}, [url]);</code></pre>
+
+<h3>Dependencies must include everything used inside</h3>
+<p>Anything from props/state/context referenced inside the effect must be in the dep array. ESLint enforces this.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — missing deps, stale values</h4>
+    <pre><code>useEffect(() =&gt; {
+    fetch(`/api/${userId}`).then(setUser);
+}, []);   // userId not listed!</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — listed</h4>
+    <pre><code>useEffect(() =&gt; {
+    fetch(`/api/${userId}`).then(setUser);
+}, [userId]);</code></pre>
+  </div>
+</div>
+
+<h3>Dependencies that change every render</h3>
+<p>If you depend on a function or object, it must be stable, or the effect runs on every render.</p>
+<pre><code>function Parent() {
+    const config = { delay: 1000 };  // NEW object each render!
+    return &lt;Child config={config} /&gt;;
+}
+
+function Child({ config }) {
+    useEffect(() =&gt; {
+        // Runs every render — bad
+    }, [config]);
+}</code></pre>
+
+<p>Fixes (in order of preference):</p>
+<ol>
+  <li>Move the object/function inside the effect (no dep needed).</li>
+  <li>Pass primitive deps instead: <code>[config.delay]</code>.</li>
+  <li>Memoize with <code>useMemo</code>/<code>useCallback</code> in the parent.</li>
+</ol>
+
+<h3>You probably don't need an effect for…</h3>
+<table>
+  <thead><tr><th>You're doing</th><th>Do this instead</th></tr></thead>
+  <tbody>
+    <tr><td>Computing from props/state</td><td>Calculate during render</td></tr>
+    <tr><td>Resetting state when prop changes</td><td>Use <code>key</code> to remount</td></tr>
+    <tr><td>Fetching data</td><td>Use React Query (Module 28)</td></tr>
+    <tr><td>Updating state on event</td><td>Do it directly in the handler</td></tr>
+    <tr><td>Sharing logic between components</td><td>Custom hook (Module 21)</td></tr>
+  </tbody>
+</table>
+
+<p>The official React docs have an excellent page: "You Might Not Need an Effect" — required reading.</p>
+
+<hr>
+
+<!-- ============== MODULE 18 ============== -->
+<h2 id="m18"><span class="module-tag">Module 18</span><br>useMemo &amp; useCallback</h2>
+
+<h3>What they do</h3>
+<ul>
+  <li><strong>useMemo</strong> — caches a computed value across renders if deps haven't changed.</li>
+  <li><strong>useCallback</strong> — caches a function reference across renders if deps haven't changed.</li>
+</ul>
+
+<pre><code>// Expensive calculation
+const sortedItems = useMemo(() =&gt;
+    items.slice().sort((a, b) =&gt; a.price - b.price),
+    [items]);
+
+// Stable callback for memoized children
+const handleSelect = useCallback((id: number) =&gt; {
+    setSelectedId(id);
+}, []);</code></pre>
+
+<h3>When to use them</h3>
+<ul>
+  <li>Genuinely expensive computation (sort 10k items, regex, parse).</li>
+  <li>Reference equality matters: passing the value/fn into <code>useEffect</code> deps, <code>React.memo</code> children, or another hook.</li>
+</ul>
+
+<h3>When NOT to use them</h3>
+<ul>
+  <li>To "speed up" cheap computations — useMemo isn't free; the comparison + extra closure costs something.</li>
+  <li>For every callback "just in case".</li>
+  <li>If the children aren't memoized, useCallback doesn't help.</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Don't reach for useMemo/useCallback by reflex.</strong> Profile first. The React Compiler (in beta in 2026) auto-memoizes, removing this manual layer entirely.
+</div>
+
+<h3>useMemo with a stable object reference</h3>
+<pre><code>// Without useMemo, contextValue is a new object each render —
+// every consumer of the context re-renders.
+const contextValue = useMemo(() =&gt; ({ user, login, logout }), [user]);
+&lt;AuthContext.Provider value={contextValue}&gt;...&lt;/AuthContext.Provider&gt;</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 19 ============== -->
+<h2 id="m19"><span class="module-tag">Module 19</span><br>useReducer</h2>
+
+<p>An alternative to useState for complex state with multiple actions. Same idea as Redux: state + dispatch + reducer function.</p>
+
+<pre><code>type CartState = { items: Item[]; total: number };
+type CartAction =
+    | { type: 'add'; item: Item }
+    | { type: 'remove'; id: number }
+    | { type: 'clear' };
+
+function reducer(state: CartState, action: CartAction): CartState {
+    switch (action.type) {
+        case 'add':
+            return {
+                items: [...state.items, action.item],
+                total: state.total + action.item.price,
+            };
+        case 'remove': {
+            const item = state.items.find(i =&gt; i.id === action.id);
+            return {
+                items: state.items.filter(i =&gt; i.id !== action.id),
+                total: state.total - (item?.price ?? 0),
+            };
+        }
+        case 'clear':
+            return { items: [], total: 0 };
+    }
+}
+
+function Cart() {
+    const [state, dispatch] = useReducer(reducer, { items: [], total: 0 });
+
+    return (
+        &lt;div&gt;
+            {state.items.map(i =&gt; (
+                &lt;div key={i.id}&gt;
+                    {i.name}
+                    &lt;button onClick={() =&gt; dispatch({ type: 'remove', id: i.id })}&gt;X&lt;/button&gt;
+                &lt;/div&gt;
+            ))}
+            &lt;p&gt;Total: ${state.total}&lt;/p&gt;
+            &lt;button onClick={() =&gt; dispatch({ type: 'clear' })}&gt;Clear&lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<h3>useState vs useReducer</h3>
+<table>
+  <thead><tr><th>Choose useState when…</th><th>Choose useReducer when…</th></tr></thead>
+  <tbody>
+    <tr><td>State is simple (few fields, simple updates)</td><td>State has many shapes / many actions</td></tr>
+    <tr><td>Updates are independent</td><td>Updates depend on multiple fields</td></tr>
+    <tr><td>You want quick code</td><td>You want testable, predictable transitions</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 20 ============== -->
+<h2 id="m20"><span class="module-tag">Module 20</span><br>useContext</h2>
+
+<p>Pass values through the component tree without prop drilling. Best for "ambient" data: theme, current user, locale.</p>
+
+<pre><code>// 1. Create context
+type AuthValue = { user: User | null; login: (u: User) =&gt; void; logout: () =&gt; void };
+const AuthContext = createContext&lt;AuthValue | null&gt;(null);
+
+// 2. Provider
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState&lt;User | null&gt;(null);
+    const value = useMemo(() =&gt; ({
+        user,
+        login: setUser,
+        logout: () =&gt; setUser(null),
+    }), [user]);
+    return &lt;AuthContext.Provider value={value}&gt;{children}&lt;/AuthContext.Provider&gt;;
+}
+
+// 3. Consumer hook
+export function useAuth() {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error('useAuth must be inside AuthProvider');
+    return ctx;
+}
+
+// 4. Use anywhere
+function NavBar() {
+    const { user, logout } = useAuth();
+    return user ? (
+        &lt;div&gt;Hi {user.name} &lt;button onClick={logout}&gt;Log out&lt;/button&gt;&lt;/div&gt;
+    ) : null;
+}</code></pre>
+
+<h3>Context performance trap</h3>
+<p>When the context value changes (new reference), every consumer re-renders. Solutions:</p>
+<ul>
+  <li>Memoize the value (the example above does this).</li>
+  <li>Split context into <code>StateContext</code> + <code>DispatchContext</code> if the dispatcher is stable but state churns.</li>
+  <li>Use Zustand (Module 30) instead — it has selectors so consumers re-render only when their slice changes.</li>
+</ul>
+
+<h3>Don't use context for everything</h3>
+<p>Context is for ambient data. For local component coupling, prop drilling 1–2 levels is FINE — clearer than scattering context.</p>
+
+<hr>
+
+<!-- ============== MODULE 21 ============== -->
+<h2 id="m21"><span class="module-tag">Module 21</span><br>Custom Hooks</h2>
+
+<p>A function whose name starts with <code>use</code> and that calls other hooks. Bundles reusable stateful logic.</p>
+
+<h3>Example: useLocalStorage</h3>
+<pre><code>function useLocalStorage&lt;T&gt;(key: string, initial: T) {
+    const [value, setValue] = useState&lt;T&gt;(() =&gt; {
+        try {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : initial;
+        } catch {
+            return initial;
+        }
+    });
+
+    useEffect(() =&gt; {
+        localStorage.setItem(key, JSON.stringify(value));
+    }, [key, value]);
+
+    return [value, setValue] as const;
+}
+
+// Use it like useState
+function ThemeSwitcher() {
+    const [theme, setTheme] = useLocalStorage&lt;'light' | 'dark'&gt;('theme', 'light');
+    return &lt;button onClick={() =&gt; setTheme(t =&gt; t === 'light' ? 'dark' : 'light')}&gt;{theme}&lt;/button&gt;;
+}</code></pre>
+
+<h3>Example: useDebounce</h3>
+<pre><code>function useDebounce&lt;T&gt;(value: T, delay = 300): T {
+    const [debounced, setDebounced] = useState(value);
+    useEffect(() =&gt; {
+        const id = setTimeout(() =&gt; setDebounced(value), delay);
+        return () =&gt; clearTimeout(id);
+    }, [value, delay]);
+    return debounced;
+}
+
+// Use it
+const [query, setQuery] = useState('');
+const debouncedQuery = useDebounce(query, 500);
+
+useEffect(() =&gt; {
+    if (debouncedQuery) search(debouncedQuery);
+}, [debouncedQuery]);</code></pre>
+
+<h3>Example: useToggle</h3>
+<pre><code>function useToggle(initial = false) {
+    const [value, setValue] = useState(initial);
+    const toggle = useCallback(() =&gt; setValue(v =&gt; !v), []);
+    const setTrue = useCallback(() =&gt; setValue(true), []);
+    const setFalse = useCallback(() =&gt; setValue(false), []);
+    return { value, toggle, setTrue, setFalse } as const;
+}</code></pre>
+
+<h3>Rules of hooks</h3>
+<ol>
+  <li><strong>Only call hooks at the top level.</strong> Not inside loops, conditions, or nested functions.</li>
+  <li><strong>Only call hooks from React functions.</strong> Components or other custom hooks — not regular JS functions.</li>
+</ol>
+
+<p>The ESLint plugin <code>react-hooks/rules-of-hooks</code> enforces both. Don't disable.</p>
+
+<h3>When to extract a custom hook</h3>
+<ul>
+  <li>Two components share the same useState + useEffect pattern.</li>
+  <li>A component's logic is hard to read; extracting clarifies it.</li>
+  <li>You'd write a "service" in another framework — that's a custom hook in React.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 22 ============== -->
+<h2 id="m22"><span class="module-tag">Module 22</span><br>Modern Hooks</h2>
+
+<h3>useId — stable IDs for labels/aria</h3>
+<pre><code>function FormField({ label, ...rest }: { label: string }) {
+    const id = useId();
+    return (
+        &lt;div&gt;
+            &lt;label htmlFor={id}&gt;{label}&lt;/label&gt;
+            &lt;input id={id} {...rest} /&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<h3>useTransition — mark non-urgent updates</h3>
+<pre><code>function SearchPage() {
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState&lt;Result[]&gt;([]);
+    const [isPending, startTransition] = useTransition();
+
+    const handleChange = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+        setQuery(e.target.value);                // urgent — keep input snappy
+        startTransition(() =&gt; {
+            setResults(expensiveFilter(e.target.value));   // non-urgent
+        });
+    };
+
+    return (
+        &lt;&gt;
+            &lt;input value={query} onChange={handleChange} /&gt;
+            {isPending &amp;&amp; &lt;Spinner /&gt;}
+            &lt;ResultList results={results} /&gt;
+        &lt;/&gt;
+    );
+}</code></pre>
+
+<h3>useDeferredValue</h3>
+<pre><code>function Search({ query }: { query: string }) {
+    const deferred = useDeferredValue(query);
+    const results = useMemo(() =&gt; filterItems(deferred), [deferred]);
+    return &lt;ResultList results={results} /&gt;;
+}</code></pre>
+
+<h3>useSyncExternalStore</h3>
+<p>For subscribing to non-React state stores (Zustand, Redux internally use this). You probably don't write it directly — libraries do.</p>
+
+<h3>useImperativeHandle</h3>
+<p>Lets a parent call methods on a child via ref. Use sparingly — usually means design needs rethinking.</p>
+<pre><code>const Input = forwardRef&lt;{ focus: () =&gt; void }, {}&gt;((props, ref) =&gt; {
+    const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+    useImperativeHandle(ref, () =&gt; ({
+        focus: () =&gt; inputRef.current?.focus(),
+    }));
+    return &lt;input ref={inputRef} /&gt;;
+});
+
+// Parent
+const myRef = useRef&lt;{ focus: () =&gt; void } | null&gt;(null);
+&lt;Input ref={myRef} /&gt;
+&lt;button onClick={() =&gt; myRef.current?.focus()}&gt;Focus&lt;/button&gt;</code></pre>
+
+<h3>useLayoutEffect — synchronous DOM measurements</h3>
+<p>Runs synchronously after DOM mutation, before browser paint. Use only when you need to measure the DOM and update state in the same frame to avoid flicker.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part D — TypeScript + React</h2>
+  <p>Modules 23–26: typing your React code idiomatically</p>
+</div>
+
+<!-- ============== MODULE 23 ============== -->
+<h2 id="m23"><span class="module-tag">Module 23</span><br>Typing Components &amp; Props</h2>
+
+<h3>Function component types</h3>
+<pre><code>// Modern preferred — explicit return type via JSX
+type ButtonProps = {
+    label: string;
+    onClick: () =&gt; void;
+};
+
+export function Button({ label, onClick }: ButtonProps) {
+    return &lt;button onClick={onClick}&gt;{label}&lt;/button&gt;;
+}
+
+// Don't use React.FC — it has quirks (implicit children, no generics)</code></pre>
+
+<h3>Children types</h3>
+<pre><code>type CardProps = {
+    title: string;
+    children: React.ReactNode;       // anything renderable
+};
+
+// Stricter alternatives
+children: React.ReactElement;        // exactly one element
+children: string;                    // text only
+children: (data: T) =&gt; React.ReactNode;  // render prop</code></pre>
+
+<h3>Extending HTML element props</h3>
+<pre><code>type ButtonProps = React.ButtonHTMLAttributes&lt;HTMLButtonElement&gt; &amp; {
+    variant?: 'primary' | 'secondary';
+};
+
+export function Button({ variant = 'primary', className, ...rest }: ButtonProps) {
+    return &lt;button className={`btn-${variant} ${className ?? ''}`} {...rest} /&gt;;
+}
+
+// Use like a real button
+&lt;Button onClick={...} disabled type="submit" form="myform"&gt;Save&lt;/Button&gt;</code></pre>
+
+<h3>Discriminated union props</h3>
+<pre><code>type AlertProps =
+    | { variant: 'success'; message: string }
+    | { variant: 'error'; message: string; retry: () =&gt; void };
+
+function Alert(props: AlertProps) {
+    if (props.variant === 'error') {
+        return (
+            &lt;div className="error"&gt;
+                {props.message}
+                &lt;button onClick={props.retry}&gt;Retry&lt;/button&gt;   {/* typed */}
+            &lt;/div&gt;
+        );
+    }
+    return &lt;div className="success"&gt;{props.message}&lt;/div&gt;;
+}
+
+// TS enforces this at the call site
+&lt;Alert variant="error" message="Failed" retry={...} /&gt;
+&lt;Alert variant="success" message="Saved" /&gt;
+&lt;Alert variant="error" message="Failed" /&gt;   // ERROR — needs retry</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 24 ============== -->
+<h2 id="m24"><span class="module-tag">Module 24</span><br>Typing Hooks</h2>
+
+<h3>useState</h3>
+<pre><code>const [count, setCount] = useState(0);                  // inferred number
+const [user, setUser] = useState&lt;User | null&gt;(null);    // explicit when initial doesn't tell the full story
+const [items, setItems] = useState&lt;Item[]&gt;([]);          // empty array needs a hint</code></pre>
+
+<h3>useRef</h3>
+<pre><code>// DOM ref
+const inputRef = useRef&lt;HTMLInputElement&gt;(null);
+inputRef.current?.focus();
+
+// Mutable instance var
+const intervalId = useRef&lt;number | null&gt;(null);
+intervalId.current = setInterval(...);</code></pre>
+
+<h3>useReducer</h3>
+<pre><code>type State = { count: number };
+type Action = { type: 'inc' } | { type: 'dec' } | { type: 'set'; n: number };
+
+function reducer(state: State, action: Action): State {
+    switch (action.type) {
+        case 'inc': return { count: state.count + 1 };
+        case 'dec': return { count: state.count - 1 };
+        case 'set': return { count: action.n };
+    }
+}
+
+const [state, dispatch] = useReducer(reducer, { count: 0 });
+dispatch({ type: 'inc' });</code></pre>
+
+<h3>useContext</h3>
+<pre><code>// Pattern: throw if not provided — gives you non-nullable in consumers
+const AuthContext = createContext&lt;AuthValue | null&gt;(null);
+
+export function useAuth(): AuthValue {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error('useAuth: missing AuthProvider');
+    return ctx;
+}</code></pre>
+
+<h3>Custom hook return types</h3>
+<pre><code>// Use 'as const' to make the tuple type narrow
+function useToggle(initial = false) {
+    const [v, setV] = useState(initial);
+    return [v, () =&gt; setV(x =&gt; !x)] as const;
+    //         ^ otherwise return type would be (boolean | (() =&gt; void))[]
+}
+
+const [open, toggle] = useToggle();   // open: boolean, toggle: () =&gt; void</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 25 ============== -->
+<h2 id="m25"><span class="module-tag">Module 25</span><br>Typing Events</h2>
+
+<h3>Common event types</h3>
+<pre><code>const onChange = (e: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; setValue(e.target.value);
+const onSubmit = (e: React.FormEvent&lt;HTMLFormElement&gt;) =&gt; { e.preventDefault(); ... };
+const onClick  = (e: React.MouseEvent&lt;HTMLButtonElement&gt;) =&gt; ...;
+const onKey    = (e: React.KeyboardEvent&lt;HTMLInputElement&gt;) =&gt; { if (e.key === 'Enter') ... };
+const onFocus  = (e: React.FocusEvent&lt;HTMLInputElement&gt;) =&gt; ...;
+const onDrag   = (e: React.DragEvent&lt;HTMLDivElement&gt;) =&gt; ...;</code></pre>
+
+<h3>Inline handlers — TypeScript usually infers</h3>
+<pre><code>// No type needed — inferred from the JSX attribute
+&lt;input onChange={e =&gt; setValue(e.target.value)} /&gt;
+&lt;form onSubmit={e =&gt; { e.preventDefault(); save(); }} /&gt;</code></pre>
+
+<h3>Generic handler signatures</h3>
+<pre><code>type SaveHandler = (user: User) =&gt; Promise&lt;void&gt;;
+
+type UserFormProps = {
+    initial?: User;
+    onSave: SaveHandler;
+    onCancel: () =&gt; void;
+};</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 26 ============== -->
+<h2 id="m26"><span class="module-tag">Module 26</span><br>Generic Components</h2>
+
+<h3>Why generic components?</h3>
+<p>Reusable components that preserve the type of what they handle — no <code>any</code>.</p>
+
+<pre><code>type ListProps&lt;T&gt; = {
+    items: T[];
+    renderItem: (item: T) =&gt; React.ReactNode;
+    keyOf: (item: T) =&gt; string | number;
+};
+
+export function List&lt;T&gt;({ items, renderItem, keyOf }: ListProps&lt;T&gt;) {
+    return (
+        &lt;ul&gt;
+            {items.map(item =&gt; (
+                &lt;li key={keyOf(item)}&gt;{renderItem(item)}&lt;/li&gt;
+            ))}
+        &lt;/ul&gt;
+    );
+}
+
+// Usage — TS infers T = User
+&lt;List
+    items={users}
+    keyOf={u =&gt; u.id}
+    renderItem={u =&gt; &lt;span&gt;{u.name}&lt;/span&gt;}   // u is User here
+/&gt;</code></pre>
+
+<h3>Generic Select</h3>
+<pre><code>type Option&lt;T&gt; = { label: string; value: T };
+
+type SelectProps&lt;T&gt; = {
+    options: Option&lt;T&gt;[];
+    value: T;
+    onChange: (next: T) =&gt; void;
+};
+
+export function Select&lt;T extends string | number&gt;({ options, value, onChange }: SelectProps&lt;T&gt;) {
+    return (
+        &lt;select value={String(value)} onChange={e =&gt;
+            onChange(options.find(o =&gt; String(o.value) === e.target.value)!.value)
+        }&gt;
+            {options.map(o =&gt; &lt;option key={String(o.value)} value={String(o.value)}&gt;{o.label}&lt;/option&gt;)}
+        &lt;/select&gt;
+    );
+}
+
+&lt;Select&lt;UserId&gt;
+    options={users.map(u =&gt; ({ label: u.name, value: u.id }))}
+    value={selectedId}
+    onChange={setSelectedId}
+/&gt;</code></pre>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part E — State Management</h2>
+  <p>Modules 27–31: server state, client state, URL state — and which tool for each</p>
+</div>
+
+<!-- ============== MODULE 27 ============== -->
+<h2 id="m27"><span class="module-tag">Module 27</span><br>State Taxonomy — Pick the Right Tool</h2>
+
+<p>Most React apps mix four kinds of state. They need different tools.</p>
+
+<table>
+  <thead><tr><th>Kind</th><th>Examples</th><th>Best tool</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Server state</strong></td>
+      <td>User list from API, current user profile, dashboard data</td>
+      <td><strong>React Query / TanStack Query</strong></td>
+    </tr>
+    <tr>
+      <td><strong>URL state</strong></td>
+      <td>Current page, filters, sort, search query, modal open</td>
+      <td><strong>React Router</strong> (search params, route params)</td>
+    </tr>
+    <tr>
+      <td><strong>Local UI state</strong></td>
+      <td>Modal open/closed, form input, hovered, expanded</td>
+      <td><code>useState</code> / <code>useReducer</code> in the component</td>
+    </tr>
+    <tr>
+      <td><strong>Global client state</strong></td>
+      <td>Theme, current user, selected workspace, cart contents</td>
+      <td><strong>Zustand</strong> (or Context for small needs)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Why this matters</h3>
+<p>Most React performance and complexity issues come from putting state in the wrong place — fetching data with useEffect (server state in local state), or syncing the whole world through Context (everything is global state).</p>
+
+<h3>Quick decision rules</h3>
+<ul>
+  <li>Comes from an API? → React Query.</li>
+  <li>Should survive refresh / be shareable via URL? → URL state.</li>
+  <li>Used by exactly one component? → useState.</li>
+  <li>Used by 5+ unrelated components? → Zustand.</li>
+  <li>"Ambient" data (theme, user, locale)? → Context (with care).</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 28 ============== -->
+<h2 id="m28"><span class="module-tag">Module 28</span><br>React Query Basics</h2>
+
+<p><strong>TanStack Query</strong> (formerly React Query) is the standard tool for fetching, caching, and syncing server state. It eliminates 90% of <code>useEffect + useState + setError</code> boilerplate.</p>
+
+<h3>Setup</h3>
+<pre><code>npm i @tanstack/react-query @tanstack/react-query-devtools
+
+// main.tsx
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 60_000,         // 1 min — don't refetch within this window
+            gcTime: 5 * 60_000,        // 5 min — keep in cache
+            retry: 1,
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
+createRoot(document.getElementById('root')!).render(
+    &lt;QueryClientProvider client={queryClient}&gt;
+        &lt;App /&gt;
+        &lt;ReactQueryDevtools /&gt;
+    &lt;/QueryClientProvider&gt;
+);</code></pre>
+
+<h3>useQuery — fetching data</h3>
+<pre><code>import { useQuery } from '@tanstack/react-query';
+
+function UserPage({ userId }: { userId: number }) {
+    const { data, isLoading, isError, error } = useQuery({
+        queryKey: ['user', userId],                     // unique key for cache
+        queryFn: () =&gt; fetch(`/api/users/${userId}`).then(r =&gt; r.json()),
+    });
+
+    if (isLoading) return &lt;Spinner /&gt;;
+    if (isError) return &lt;p&gt;Error: {(error as Error).message}&lt;/p&gt;;
+    return &lt;h1&gt;{data.name}&lt;/h1&gt;;
+}</code></pre>
+
+<h3>What you get for free</h3>
+<ul>
+  <li>Caching — same key = no duplicate requests across components.</li>
+  <li>Background refetching — when window refocuses, network reconnects, or staleTime expires.</li>
+  <li>Loading / error states managed for you.</li>
+  <li>Request deduplication — multiple components with the same key fire one request.</li>
+  <li>Devtools — see every query, its data, and its cache status.</li>
+</ul>
+
+<h3>Strongly typed wrapper</h3>
+<pre><code>// api/users.ts
+export const usersApi = {
+    list: () =&gt; fetch('/api/users').then(r =&gt; r.json() as Promise&lt;User[]&gt;),
+    byId: (id: number) =&gt; fetch(`/api/users/${id}`).then(r =&gt; r.json() as Promise&lt;User&gt;),
+};
+
+// hooks/useUsers.ts
+export const userKeys = {
+    all: ['users'] as const,
+    lists: () =&gt; [...userKeys.all, 'list'] as const,
+    detail: (id: number) =&gt; [...userKeys.all, 'detail', id] as const,
+};
+
+export function useUsers() {
+    return useQuery({
+        queryKey: userKeys.lists(),
+        queryFn: usersApi.list,
+    });
+}
+
+export function useUser(id: number) {
+    return useQuery({
+        queryKey: userKeys.detail(id),
+        queryFn: () =&gt; usersApi.byId(id),
+        enabled: id &gt; 0,                    // skip until id valid
+    });
+}</code></pre>
+
+<h3>Pagination &amp; dependent queries</h3>
+<pre><code>// Pagination — keepPreviousData makes pagination smooth
+const { data } = useQuery({
+    queryKey: ['users', page],
+    queryFn: () =&gt; fetchUsers(page),
+    placeholderData: keepPreviousData,
+});
+
+// Dependent — only run after first query has data
+const { data: user } = useUser(userId);
+const { data: orders } = useQuery({
+    queryKey: ['orders', user?.id],
+    queryFn: () =&gt; fetchOrders(user!.id),
+    enabled: !!user,
+});</code></pre>
+
+<h3>Stale time vs cache time (gcTime)</h3>
+<table>
+  <thead><tr><th>Concept</th><th>What</th></tr></thead>
+  <tbody>
+    <tr><td><strong>staleTime</strong></td><td>How long data is considered "fresh" — no auto-refetch within this window.</td></tr>
+    <tr><td><strong>gcTime</strong> (was cacheTime)</td><td>How long data stays in memory after no component is using it.</td></tr>
+  </tbody>
+</table>
+
+<p>Tune <code>staleTime</code> based on how often the data changes. Static-ish lookups: minutes. User-specific dashboards: 0 (always check on mount).</p>
+
+<hr>
+
+<!-- ============== MODULE 29 ============== -->
+<h2 id="m29"><span class="module-tag">Module 29</span><br>React Query Mutations &amp; Cache Updates</h2>
+
+<h3>useMutation</h3>
+<pre><code>import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+function CreateUserButton() {
+    const qc = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: (newUser: CreateUserDto) =&gt;
+            fetch('/api/users', {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: { 'Content-Type': 'application/json' }
+            }).then(r =&gt; r.json()),
+
+        onSuccess: () =&gt; {
+            // Invalidate the list query so it refetches
+            qc.invalidateQueries({ queryKey: userKeys.lists() });
+        },
+    });
+
+    return (
+        &lt;button
+            disabled={mutation.isPending}
+            onClick={() =&gt; mutation.mutate({ email: 'new@x.com', name: 'New' })}
+        &gt;
+            {mutation.isPending ? 'Saving...' : 'Add user'}
+        &lt;/button&gt;
+    );
+}</code></pre>
+
+<h3>onSuccess / onError / onSettled</h3>
+<pre><code>const mutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: (data, id) =&gt; {
+        toast.success('Deleted');
+        qc.invalidateQueries({ queryKey: userKeys.lists() });
+        qc.removeQueries({ queryKey: userKeys.detail(id) });
+    },
+    onError: (err) =&gt; toast.error(`Failed: ${err.message}`),
+    onSettled: () =&gt; { /* always */ },
+});</code></pre>
+
+<h3>Optimistic updates</h3>
+<p>Update the UI immediately, roll back if the request fails.</p>
+<pre><code>const updateUser = useMutation({
+    mutationFn: (user: User) =&gt; api.updateUser(user),
+
+    onMutate: async (user) =&gt; {
+        // Cancel outgoing refetches
+        await qc.cancelQueries({ queryKey: userKeys.detail(user.id) });
+
+        // Snapshot for rollback
+        const prev = qc.getQueryData&lt;User&gt;(userKeys.detail(user.id));
+
+        // Optimistically update
+        qc.setQueryData(userKeys.detail(user.id), user);
+
+        return { prev };
+    },
+
+    onError: (err, user, ctx) =&gt; {
+        // Roll back
+        if (ctx?.prev) qc.setQueryData(userKeys.detail(user.id), ctx.prev);
+        toast.error('Update failed, reverted');
+    },
+
+    onSettled: (_, __, user) =&gt; {
+        // Always refresh from server
+        qc.invalidateQueries({ queryKey: userKeys.detail(user.id) });
+    },
+});</code></pre>
+
+<h3>Cache surgery</h3>
+<pre><code>// Read
+const cached = qc.getQueryData&lt;User&gt;(userKeys.detail(42));
+
+// Write
+qc.setQueryData(userKeys.detail(42), updatedUser);
+
+// Update inside a list
+qc.setQueryData&lt;User[]&gt;(userKeys.lists(), old =&gt;
+    old?.map(u =&gt; u.id === updated.id ? updated : u) ?? []);
+
+// Invalidate (mark stale + refetch active)
+qc.invalidateQueries({ queryKey: ['users'] });
+
+// Remove
+qc.removeQueries({ queryKey: userKeys.detail(42) });</code></pre>
+
+<h3>Why React Query beats useEffect for data</h3>
+<table>
+  <thead><tr><th>useEffect</th><th>React Query</th></tr></thead>
+  <tbody>
+    <tr><td>Fetches every mount</td><td>Cached across navigation</td></tr>
+    <tr><td>Manual loading/error</td><td>Built-in</td></tr>
+    <tr><td>Manual cancellation</td><td>Automatic</td></tr>
+    <tr><td>Manual refetch on focus</td><td>Built-in</td></tr>
+    <tr><td>Duplicate requests easy to write</td><td>Deduplicated by key</td></tr>
+    <tr><td>No optimistic updates</td><td>First-class API</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 30 ============== -->
+<h2 id="m30"><span class="module-tag">Module 30</span><br>Zustand for Client State</h2>
+
+<p><strong>Zustand</strong> ("state" in German) is a tiny, hooks-based state library. No provider, no boilerplate, with selector-based subscriptions to avoid unnecessary re-renders.</p>
+
+<h3>Setup</h3>
+<pre><code>npm i zustand
+
+// stores/cartStore.ts
+import { create } from 'zustand';
+
+type Item = { id: number; name: string; price: number };
+
+type CartState = {
+    items: Item[];
+    add: (item: Item) =&gt; void;
+    remove: (id: number) =&gt; void;
+    clear: () =&gt; void;
+    total: () =&gt; number;
+};
+
+export const useCart = create&lt;CartState&gt;((set, get) =&gt; ({
+    items: [],
+    add: (item) =&gt; set(state =&gt; ({ items: [...state.items, item] })),
+    remove: (id) =&gt; set(state =&gt; ({ items: state.items.filter(i =&gt; i.id !== id) })),
+    clear: () =&gt; set({ items: [] }),
+    total: () =&gt; get().items.reduce((s, i) =&gt; s + i.price, 0),
+}));</code></pre>
+
+<h3>Use it anywhere — no provider needed</h3>
+<pre><code>function CartIcon() {
+    // Subscribe to JUST the count — re-renders only when count changes
+    const count = useCart(state =&gt; state.items.length);
+    return &lt;span&gt;Cart ({count})&lt;/span&gt;;
+}
+
+function CartList() {
+    const items = useCart(state =&gt; state.items);
+    const remove = useCart(state =&gt; state.remove);
+    return (
+        &lt;ul&gt;
+            {items.map(i =&gt; (
+                &lt;li key={i.id}&gt;{i.name} &lt;button onClick={() =&gt; remove(i.id)}&gt;X&lt;/button&gt;&lt;/li&gt;
+            ))}
+        &lt;/ul&gt;
+    );
+}</code></pre>
+
+<h3>Persistence</h3>
+<pre><code>import { persist } from 'zustand/middleware';
+
+export const useCart = create&lt;CartState&gt;()(
+    persist(
+        (set, get) =&gt; ({ /* same as before */ }),
+        { name: 'cart-storage' }    // localStorage key
+    )
+);</code></pre>
+
+<h3>Devtools</h3>
+<pre><code>import { devtools } from 'zustand/middleware';
+
+export const useCart = create&lt;CartState&gt;()(
+    devtools((set, get) =&gt; ({ /* ... */ }), { name: 'CartStore' })
+);</code></pre>
+
+<h3>Slices for big stores</h3>
+<pre><code>const createAuthSlice = (set) =&gt; ({
+    user: null,
+    login: (u) =&gt; set({ user: u }),
+    logout: () =&gt; set({ user: null }),
+});
+
+const createUiSlice = (set) =&gt; ({
+    theme: 'light',
+    toggleTheme: () =&gt; set(state =&gt; ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
+});
+
+export const useStore = create((set) =&gt; ({
+    ...createAuthSlice(set),
+    ...createUiSlice(set),
+}));</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 31 ============== -->
+<h2 id="m31"><span class="module-tag">Module 31</span><br>Redux / Jotai / Context — Comparison</h2>
+
+<table>
+  <thead><tr><th>Tool</th><th>Mental Model</th><th>Best for</th><th>Pain points</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>useState</strong></td>
+      <td>Per-component value</td>
+      <td>Local UI state</td>
+      <td>Prop drilling if shared</td>
+    </tr>
+    <tr>
+      <td><strong>Context + useReducer</strong></td>
+      <td>Tree-scoped state</td>
+      <td>Auth, theme, small global state</td>
+      <td>Re-renders all consumers; not great for frequent updates</td>
+    </tr>
+    <tr>
+      <td><strong>Zustand</strong></td>
+      <td>Single store, hook-based, selectors</td>
+      <td>Global client state, simple API</td>
+      <td>Lacks DevTools features of Redux at full power</td>
+    </tr>
+    <tr>
+      <td><strong>Jotai</strong></td>
+      <td>Atomic primitives — small atoms compose</td>
+      <td>Fine-grained reactive state, derived values</td>
+      <td>Different mental model; can fragment</td>
+    </tr>
+    <tr>
+      <td><strong>Redux Toolkit</strong></td>
+      <td>Single store, reducers, actions, slices</td>
+      <td>Big apps, complex flows, time travel debug</td>
+      <td>More boilerplate; overkill for many apps</td>
+    </tr>
+    <tr>
+      <td><strong>React Query</strong></td>
+      <td>Server cache, not "state"</td>
+      <td>Anything from an API</td>
+      <td>Not for purely client state</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Recommended modern stack</h3>
+<ul>
+  <li><strong>useState/useReducer</strong> for local UI.</li>
+  <li><strong>React Query</strong> for server data.</li>
+  <li><strong>React Router</strong> for URL state.</li>
+  <li><strong>Zustand</strong> for global client state.</li>
+  <li><strong>Context</strong> only for genuinely tree-scoped, low-churn data (auth user, theme, locale).</li>
+</ul>
+
+<p>This combination handles 95% of apps with minimum boilerplate.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part F — Routing &amp; Forms</h2>
+  <p>Modules 32–35: navigation and the most common interactive UI need</p>
+</div>
+
+<!-- ============== MODULE 32 ============== -->
+<h2 id="m32"><span class="module-tag">Module 32</span><br>React Router</h2>
+
+<h3>Setup (v6/v7 syntax)</h3>
+<pre><code>npm i react-router-dom
+
+// main.tsx
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: &lt;RootLayout /&gt;,
+        children: [
+            { index: true, element: &lt;HomePage /&gt; },
+            { path: 'users', element: &lt;UsersPage /&gt; },
+            { path: 'users/:id', element: &lt;UserDetailPage /&gt; },
+            { path: 'login', element: &lt;LoginPage /&gt; },
+            { path: '*', element: &lt;NotFoundPage /&gt; },
+        ],
+    },
+]);
+
+createRoot(document.getElementById('root')!).render(
+    &lt;RouterProvider router={router} /&gt;
+);</code></pre>
+
+<h3>Layouts with nested routes</h3>
+<pre><code>function RootLayout() {
+    return (
+        &lt;&gt;
+            &lt;NavBar /&gt;
+            &lt;main&gt;
+                &lt;Outlet /&gt;       {/* child route renders here */}
+            &lt;/main&gt;
+            &lt;Footer /&gt;
+        &lt;/&gt;
+    );
+}</code></pre>
+
+<h3>Navigation</h3>
+<pre><code>import { Link, NavLink, useNavigate } from 'react-router-dom';
+
+// Declarative
+&lt;Link to="/users"&gt;Users&lt;/Link&gt;
+&lt;NavLink to="/users" className={({ isActive }) =&gt; isActive ? 'active' : ''}&gt;Users&lt;/NavLink&gt;
+
+// Programmatic
+const navigate = useNavigate();
+const onSave = async () =&gt; {
+    await save();
+    navigate('/users');
+    navigate('/users', { replace: true });   // no back-button entry
+    navigate(-1);                             // back
+};</code></pre>
+
+<h3>URL params</h3>
+<pre><code>// Route: /users/:id
+import { useParams } from 'react-router-dom';
+
+function UserDetailPage() {
+    const { id } = useParams&lt;{ id: string }&gt;();
+    const userId = Number(id);
+    const { data: user } = useUser(userId);
+    // ...
+}</code></pre>
+
+<h3>Search params (the underused superpower)</h3>
+<p>Filters, sort, pagination — put them in the URL, not state. Bookmarkable, shareable, survive refresh.</p>
+<pre><code>import { useSearchParams } from 'react-router-dom';
+
+function UsersPage() {
+    const [params, setParams] = useSearchParams();
+    const page = Number(params.get('page') ?? 1);
+    const search = params.get('q') ?? '';
+
+    return (
+        &lt;&gt;
+            &lt;input
+                value={search}
+                onChange={e =&gt; setParams(p =&gt; { p.set('q', e.target.value); return p; })}
+            /&gt;
+            &lt;Pager page={page} onChange={p =&gt; setParams({ page: String(p), q: search })} /&gt;
+        &lt;/&gt;
+    );
+}</code></pre>
+
+<h3>Protected routes</h3>
+<pre><code>function RequireAuth({ children }: { children: React.ReactNode }) {
+    const { user } = useAuth();
+    const location = useLocation();
+    if (!user) return &lt;Navigate to="/login" state={{ from: location }} replace /&gt;;
+    return &lt;&gt;{children}&lt;/&gt;;
+}
+
+// In router
+{ path: 'admin', element: &lt;RequireAuth&gt;&lt;AdminPage /&gt;&lt;/RequireAuth&gt; }</code></pre>
+
+<h3>Loaders &amp; actions (data router)</h3>
+<p>v6.4+ adds loaders/actions that run before the route renders — alternative to React Query for some patterns.</p>
+<pre><code>{
+    path: 'users/:id',
+    loader: async ({ params }) =&gt; fetch(`/api/users/${params.id}`).then(r =&gt; r.json()),
+    element: &lt;UserDetailPage /&gt;,
+}
+
+// Inside component
+const user = useLoaderData() as User;</code></pre>
+
+<p>Many teams stick with React Query even with the data router — depends on team preference.</p>
+
+<hr>
+
+<!-- ============== MODULE 33 ============== -->
+<h2 id="m33"><span class="module-tag">Module 33</span><br>React Hook Form</h2>
+
+<p>Manual form state with useState gets painful fast. <strong>React Hook Form</strong> handles refs, validation, errors, and only re-renders the inputs that changed.</p>
+
+<pre><code>npm i react-hook-form
+
+import { useForm } from 'react-hook-form';
+
+type FormValues = {
+    email: string;
+    password: string;
+};
+
+export function LoginForm() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm&lt;FormValues&gt;({
+        defaultValues: { email: '', password: '' },
+    });
+
+    const onSubmit = async (values: FormValues) =&gt; {
+        await login(values);
+    };
+
+    return (
+        &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+            &lt;input
+                type="email"
+                {...register('email', {
+                    required: 'Email is required',
+                    pattern: { value: /^[^@]+@[^@]+$/, message: 'Invalid email' },
+                })}
+            /&gt;
+            {errors.email &amp;&amp; &lt;span&gt;{errors.email.message}&lt;/span&gt;}
+
+            &lt;input
+                type="password"
+                {...register('password', {
+                    required: 'Password is required',
+                    minLength: { value: 8, message: 'Min 8 chars' },
+                })}
+            /&gt;
+            {errors.password &amp;&amp; &lt;span&gt;{errors.password.message}&lt;/span&gt;}
+
+            &lt;button type="submit" disabled={isSubmitting}&gt;
+                {isSubmitting ? 'Logging in…' : 'Log in'}
+            &lt;/button&gt;
+        &lt;/form&gt;
+    );
+}</code></pre>
+
+<h3>Why it's better than useState forms</h3>
+<ul>
+  <li><strong>Performance</strong> — uses uncontrolled inputs + refs; only re-renders fields that change.</li>
+  <li><strong>Less code</strong> — no <code>onChange</code> handlers, no spread ceremony.</li>
+  <li><strong>Built-in validation</strong> — integrates with Zod, Yup.</li>
+  <li><strong>Loading + error states</strong> for free.</li>
+  <li><strong>Field arrays</strong> for dynamic lists (<code>useFieldArray</code>).</li>
+</ul>
+
+<h3>Field array</h3>
+<pre><code>const { control, register } = useForm&lt;{ tags: { value: string }[] }&gt;();
+const { fields, append, remove } = useFieldArray({ control, name: 'tags' });
+
+return (
+    &lt;&gt;
+        {fields.map((f, i) =&gt; (
+            &lt;div key={f.id}&gt;
+                &lt;input {...register(`tags.${i}.value`)} /&gt;
+                &lt;button type="button" onClick={() =&gt; remove(i)}&gt;X&lt;/button&gt;
+            &lt;/div&gt;
+        ))}
+        &lt;button type="button" onClick={() =&gt; append({ value: '' })}&gt;Add&lt;/button&gt;
+    &lt;/&gt;
+);</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 34 ============== -->
+<h2 id="m34"><span class="module-tag">Module 34</span><br>Zod Validation</h2>
+
+<p><strong>Zod</strong> is a TypeScript-first schema library. Define a schema once, get validation AND a TypeScript type.</p>
+
+<pre><code>npm i zod
+
+import { z } from 'zod';
+
+const loginSchema = z.object({
+    email: z.string().email('Invalid email'),
+    password: z.string().min(8, 'Min 8 chars'),
+    rememberMe: z.boolean().optional(),
+});
+
+type LoginValues = z.infer&lt;typeof loginSchema&gt;;
+// ↑ {email: string; password: string; rememberMe?: boolean}
+
+// Validate runtime input
+const result = loginSchema.safeParse(input);
+if (!result.success) {
+    console.log(result.error.issues);
+} else {
+    const data = result.data;       // typed
+}</code></pre>
+
+<h3>Useful schema bits</h3>
+<pre><code>z.string().min(1).max(100)
+z.string().email()
+z.string().url()
+z.string().regex(/^[A-Z]/)
+z.string().transform(s =&gt; s.trim())
+z.string().optional()
+z.string().nullable()
+z.string().default('hello')
+
+z.number().int().positive().lte(100)
+z.boolean()
+z.date()
+z.array(z.string())
+z.tuple([z.string(), z.number()])
+z.enum(['draft', 'published', 'archived'])
+z.literal('published')
+z.union([z.string(), z.number()])
+z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('a'), x: z.number() }),
+    z.object({ kind: z.literal('b'), y: z.string() }),
+])
+
+// Nested
+const userSchema = z.object({
+    id: z.number(),
+    profile: z.object({
+        name: z.string(),
+        age: z.number().int().min(0).max(150),
+    }),
+    tags: z.array(z.string()).max(10),
+});</code></pre>
+
+<h3>Where to use Zod</h3>
+<ul>
+  <li>Form validation (with React Hook Form — Module 35).</li>
+  <li>Validating API responses (catch backend drift).</li>
+  <li>Validating env vars.</li>
+  <li>Parsing URL search params.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 35 ============== -->
+<h2 id="m35"><span class="module-tag">Module 35</span><br>RHF + Zod Together</h2>
+
+<p>The killer combination: schema once, types and validation everywhere.</p>
+
+<pre><code>npm i react-hook-form zod @hookform/resolvers
+
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const schema = z.object({
+    email: z.string().email('Enter a valid email'),
+    password: z.string().min(8, 'Min 8 chars').regex(/[A-Z]/, 'Need uppercase'),
+    age: z.coerce.number().int().min(13, 'Must be 13+'),
+});
+
+type FormValues = z.infer&lt;typeof schema&gt;;
+
+export function SignupForm() {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+    } = useForm&lt;FormValues&gt;({
+        resolver: zodResolver(schema),
+        defaultValues: { email: '', password: '', age: 0 },
+    });
+
+    const onSubmit = async (values: FormValues) =&gt; {
+        await api.signup(values);
+    };
+
+    return (
+        &lt;form onSubmit={handleSubmit(onSubmit)}&gt;
+            &lt;label&gt;
+                Email
+                &lt;input {...register('email')} /&gt;
+                {errors.email &amp;&amp; &lt;span&gt;{errors.email.message}&lt;/span&gt;}
+            &lt;/label&gt;
+
+            &lt;label&gt;
+                Password
+                &lt;input type="password" {...register('password')} /&gt;
+                {errors.password &amp;&amp; &lt;span&gt;{errors.password.message}&lt;/span&gt;}
+            &lt;/label&gt;
+
+            &lt;label&gt;
+                Age
+                &lt;input type="number" {...register('age')} /&gt;
+                {errors.age &amp;&amp; &lt;span&gt;{errors.age.message}&lt;/span&gt;}
+            &lt;/label&gt;
+
+            &lt;button type="submit" disabled={isSubmitting}&gt;Sign up&lt;/button&gt;
+        &lt;/form&gt;
+    );
+}</code></pre>
+
+<h3>Reusable form-field component</h3>
+<pre><code>import { useFormContext, FieldValues, Path } from 'react-hook-form';
+
+type Props&lt;T extends FieldValues&gt; = {
+    name: Path&lt;T&gt;;
+    label: string;
+    type?: string;
+};
+
+export function Field&lt;T extends FieldValues&gt;({ name, label, type = 'text' }: Props&lt;T&gt;) {
+    const { register, formState: { errors } } = useFormContext&lt;T&gt;();
+    const err = errors[name]?.message as string | undefined;
+    return (
+        &lt;label&gt;
+            {label}
+            &lt;input type={type} {...register(name)} /&gt;
+            {err &amp;&amp; &lt;span className="error"&gt;{err}&lt;/span&gt;}
+        &lt;/label&gt;
+    );
+}
+
+// Use under FormProvider
+&lt;FormProvider {...form}&gt;
+    &lt;Field&lt;FormValues&gt; name="email" label="Email" /&gt;
+    &lt;Field&lt;FormValues&gt; name="password" label="Password" type="password" /&gt;
+&lt;/FormProvider&gt;</code></pre>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part G — Styling &amp; Tooling</h2>
+  <p>Modules 36–41: Vite, ESLint, Tailwind, Radix/shadcn, env, build &amp; deploy</p>
+</div>
+
+<!-- ============== MODULE 36 ============== -->
+<h2 id="m36"><span class="module-tag">Module 36</span><br>Vite</h2>
+
+<p><strong>Vite</strong> is the modern build tool — instant dev server (native ES modules + esbuild), production bundling via Rollup. Replaced Create React App and Webpack-based setups for almost everyone.</p>
+
+<h3>Create a project</h3>
+<pre><code>npm create vite@latest my-app -- --template react-ts
+cd my-app
+npm install
+npm run dev          # localhost:5173 in &lt; 1 sec</code></pre>
+
+<h3>vite.config.ts</h3>
+<pre><code>import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+
+export default defineConfig({
+    plugins: [react()],
+    resolve: {
+        alias: { '@': path.resolve(__dirname, './src') },
+    },
+    server: {
+        port: 5173,
+        proxy: {
+            '/api': {
+                target: 'http://localhost:5001',
+                changeOrigin: true,
+            },
+        },
+    },
+    build: {
+        sourcemap: true,
+        chunkSizeWarningLimit: 1000,
+    },
+});</code></pre>
+
+<h3>Why dev is so fast</h3>
+<ul>
+  <li>Vite serves your source files unbundled over native ES modules.</li>
+  <li>Browser requests files; Vite transforms them on-demand.</li>
+  <li>Hot Module Replacement (HMR) updates only the changed module — sub-50ms.</li>
+  <li>Dependencies pre-bundled once with esbuild (Go-fast).</li>
+</ul>
+
+<h3>Production build</h3>
+<pre><code>npm run build       # outputs to dist/
+npm run preview     # local preview of the production build</code></pre>
+
+<p>Production uses Rollup for tree-shaking, code splitting, and asset hashing. Output is plain static files you can deploy anywhere.</p>
+
+<h3>Useful plugins</h3>
+<ul>
+  <li><code>@vitejs/plugin-react</code> — JSX/TSX + Fast Refresh</li>
+  <li><code>vite-plugin-svgr</code> — import SVGs as React components</li>
+  <li><code>vite-tsconfig-paths</code> — auto-respect tsconfig path aliases</li>
+  <li><code>vite-plugin-pwa</code> — turn your app into a PWA</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 37 ============== -->
+<h2 id="m37"><span class="module-tag">Module 37</span><br>ESLint &amp; Prettier</h2>
+
+<h3>What they do</h3>
+<ul>
+  <li><strong>ESLint</strong> — finds bugs, enforces patterns ("no unused vars", "exhaustive-deps").</li>
+  <li><strong>Prettier</strong> — formats code (commas, spacing, line wrapping). Opinionated; barely configurable.</li>
+</ul>
+
+<p>They overlap but are complementary. Use both. Run Prettier on save; run ESLint in CI.</p>
+
+<h3>Install</h3>
+<pre><code>npm i -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin \
+    eslint-plugin-react-hooks eslint-plugin-react-refresh \
+    prettier eslint-config-prettier eslint-plugin-prettier</code></pre>
+
+<h3>eslint.config.js (flat config, ESLint 9+)</h3>
+<pre><code>import js from '@eslint/js';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+
+export default [
+    js.configs.recommended,
+    {
+        files: ['**/*.{ts,tsx}'],
+        languageOptions: {
+            parser: tsparser,
+            parserOptions: { project: './tsconfig.json' },
+        },
+        plugins: {
+            '@typescript-eslint': tseslint,
+            'react-hooks': reactHooks,
+            'react-refresh': reactRefresh,
+        },
+        rules: {
+            ...tseslint.configs.recommended.rules,
+            'react-hooks/rules-of-hooks': 'error',
+            'react-hooks/exhaustive-deps': 'warn',
+            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-floating-promises': 'error',
+        },
+    },
+];</code></pre>
+
+<h3>.prettierrc</h3>
+<pre><code>{
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "tabWidth": 2,
+    "arrowParens": "always"
+}</code></pre>
+
+<h3>VS Code workspace settings</h3>
+<pre><code>// .vscode/settings.json
+{
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    }
+}</code></pre>
+
+<h3>npm scripts</h3>
+<pre><code>{
+    "scripts": {
+        "lint": "eslint . --ext .ts,.tsx",
+        "format": "prettier --write 'src/**/*.{ts,tsx,css}'",
+        "format:check": "prettier --check 'src/**/*.{ts,tsx,css}'"
+    }
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 38 ============== -->
+<h2 id="m38"><span class="module-tag">Module 38</span><br>Tailwind CSS</h2>
+
+<p><strong>Tailwind</strong> is a utility-first CSS framework: instead of writing CSS, you compose pre-built classes directly in JSX.</p>
+
+<h3>Install</h3>
+<pre><code>npm i -D tailwindcss @tailwindcss/vite     // Tailwind v4 (2024+)
+
+// vite.config.ts
+import tailwindcss from '@tailwindcss/vite';
+export default defineConfig({
+    plugins: [react(), tailwindcss()],
+});
+
+// src/index.css
+@import "tailwindcss";</code></pre>
+
+<h3>Use it</h3>
+<pre><code>function Button({ children }: { children: React.ReactNode }) {
+    return (
+        &lt;button className="
+            px-4 py-2 rounded-lg
+            bg-blue-600 text-white font-medium
+            hover:bg-blue-700 active:bg-blue-800
+            disabled:opacity-50 disabled:cursor-not-allowed
+            transition-colors
+        "&gt;
+            {children}
+        &lt;/button&gt;
+    );
+}</code></pre>
+
+<h3>Why utility-first?</h3>
+<ul>
+  <li>No naming bikesheds (<code>.btn-primary-large-icon</code>).</li>
+  <li>Stay in one file — no jumping to CSS.</li>
+  <li>Dead CSS impossible — purge eliminates unused classes.</li>
+  <li>Consistent design tokens (spacing, color, sizes from theme).</li>
+</ul>
+
+<h3>The "long string" problem</h3>
+<p>Long className strings get noisy. Three solutions:</p>
+
+<h4>1. Extract a component</h4>
+<pre><code>// Don't repeat 8 utility classes everywhere; make a Button component.</code></pre>
+
+<h4>2. clsx / cn — conditional classes</h4>
+<pre><code>import clsx from 'clsx';
+
+&lt;button
+    className={clsx(
+        'px-4 py-2 rounded-lg font-medium',
+        variant === 'primary' &amp;&amp; 'bg-blue-600 text-white',
+        variant === 'secondary' &amp;&amp; 'bg-gray-200 text-gray-900',
+        disabled &amp;&amp; 'opacity-50 cursor-not-allowed',
+    )}
+/&gt;</code></pre>
+
+<h4>3. tailwind-variants / cva — typed variants</h4>
+<pre><code>import { cva } from 'class-variance-authority';
+
+const button = cva('px-4 py-2 rounded-lg font-medium', {
+    variants: {
+        variant: {
+            primary: 'bg-blue-600 text-white hover:bg-blue-700',
+            secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
+            danger: 'bg-red-600 text-white hover:bg-red-700',
+        },
+        size: {
+            sm: 'text-sm px-3 py-1',
+            md: 'text-base',
+            lg: 'text-lg px-6 py-3',
+        },
+    },
+    defaultVariants: { variant: 'primary', size: 'md' },
+});
+
+&lt;button className={button({ variant: 'danger', size: 'lg' })}&gt;Delete&lt;/button&gt;</code></pre>
+
+<h3>Theming &amp; design tokens</h3>
+<pre><code>/* index.css */
+@theme {
+    --color-brand: #d82c20;
+    --color-brand-soft: #ffe2e0;
+    --font-display: "Inter", sans-serif;
+}
+
+/* Now classes like bg-brand, text-brand-soft, font-display work */</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 39 ============== -->
+<h2 id="m39"><span class="module-tag">Module 39</span><br>Radix UI &amp; shadcn/ui</h2>
+
+<h3>Radix UI</h3>
+<p><strong>Radix UI</strong> provides unstyled, accessible primitives: dropdowns, dialogs, popovers, tooltips, sliders. You bring the styles. They handle keyboard navigation, focus management, ARIA — all the hard stuff.</p>
+
+<pre><code>npm i @radix-ui/react-dialog
+
+import * as Dialog from '@radix-ui/react-dialog';
+
+&lt;Dialog.Root&gt;
+    &lt;Dialog.Trigger asChild&gt;&lt;button&gt;Open&lt;/button&gt;&lt;/Dialog.Trigger&gt;
+    &lt;Dialog.Portal&gt;
+        &lt;Dialog.Overlay className="fixed inset-0 bg-black/50" /&gt;
+        &lt;Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg"&gt;
+            &lt;Dialog.Title&gt;Confirm&lt;/Dialog.Title&gt;
+            &lt;Dialog.Description&gt;Are you sure?&lt;/Dialog.Description&gt;
+            &lt;Dialog.Close asChild&gt;&lt;button&gt;Close&lt;/button&gt;&lt;/Dialog.Close&gt;
+        &lt;/Dialog.Content&gt;
+    &lt;/Dialog.Portal&gt;
+&lt;/Dialog.Root&gt;</code></pre>
+
+<h3>shadcn/ui</h3>
+<p><strong>shadcn/ui</strong> isn't a library you install — it's a CLI that <em>copies</em> styled component code into your repo, built on Radix + Tailwind. You own the source.</p>
+
+<pre><code>npx shadcn@latest init
+npx shadcn@latest add button dialog dropdown-menu input
+
+// Now src/components/ui/button.tsx exists in your repo;
+// edit it however you want.</code></pre>
+
+<h3>Why this is the modern default</h3>
+<ul>
+  <li>Accessible by default (Radix).</li>
+  <li>Beautiful defaults (shadcn).</li>
+  <li>You own the code — no vendor lock-in.</li>
+  <li>Easy to customize for your brand.</li>
+  <li>Smaller bundles — only the components you use.</li>
+</ul>
+
+<h3>Other component libraries (when shadcn isn't right)</h3>
+<table>
+  <thead><tr><th>Library</th><th>Style</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Mantine</strong></td><td>Pre-styled, very feature-rich</td><td>Best when you want batteries included</td></tr>
+    <tr><td><strong>Chakra UI</strong></td><td>Style-prop API</td><td>Friendly DX, less popular in 2026</td></tr>
+    <tr><td><strong>Ant Design</strong></td><td>Enterprise look</td><td>Massive components, heavy</td></tr>
+    <tr><td><strong>Material UI (MUI)</strong></td><td>Google Material</td><td>Heavy, locked-in look</td></tr>
+    <tr><td><strong>Headless UI</strong></td><td>Like Radix but Tailwind Labs</td><td>Simpler set of primitives</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 40 ============== -->
+<h2 id="m40"><span class="module-tag">Module 40</span><br>Env &amp; Config</h2>
+
+<h3>Vite env vars</h3>
+<p>Variables prefixed with <code>VITE_</code> are exposed to client code. Everything else stays server-side (or just unused at build time).</p>
+
+<pre><code># .env (committed defaults)
+VITE_API_URL=http://localhost:5001
+
+# .env.local (gitignored — local overrides)
+VITE_API_URL=http://localhost:5001
+VITE_FEATURE_FLAG_NEW_DASHBOARD=true
+
+# .env.production
+VITE_API_URL=https://api.easyaudit.com</code></pre>
+
+<pre><code>// In code
+const apiUrl = import.meta.env.VITE_API_URL;
+const isDev = import.meta.env.DEV;
+const isProd = import.meta.env.PROD;</code></pre>
+
+<h3>Type-safe env</h3>
+<pre><code>// src/env.ts
+import { z } from 'zod';
+
+const envSchema = z.object({
+    VITE_API_URL: z.string().url(),
+    VITE_FEATURE_FLAG_NEW_DASHBOARD: z.string().optional()
+        .transform(v =&gt; v === 'true'),
+});
+
+export const env = envSchema.parse(import.meta.env);
+
+// Now `env.VITE_API_URL` is typed and validated at startup.</code></pre>
+
+<h3>Don't put secrets in client env</h3>
+<p>Anything in <code>VITE_*</code> ends up in the bundle, viewable in DevTools. <strong>Never put API keys, JWT secrets, or DB passwords there.</strong> Those belong on the server.</p>
+
+<h3>Runtime config (alternative to build-time)</h3>
+<p>If you want one build to deploy to multiple environments without rebuilds:</p>
+<pre><code>// public/config.json (replaced at deploy time per environment)
+{ "apiUrl": "https://api.example.com" }
+
+// In code
+const config = await fetch('/config.json').then(r =&gt; r.json());</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 41 ============== -->
+<h2 id="m41"><span class="module-tag">Module 41</span><br>Build &amp; Deploy</h2>
+
+<h3>Build output</h3>
+<pre><code>npm run build
+# dist/
+#   index.html
+#   assets/
+#     index-{hash}.js
+#     vendor-{hash}.js
+#     index-{hash}.css</code></pre>
+
+<p>Pure static files. The bundler hashes filenames so you can cache forever.</p>
+
+<h3>Deploy options</h3>
+<table>
+  <thead><tr><th>Where</th><th>How</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Vercel / Netlify</strong></td><td>Connect GitHub repo, auto-deploy on push</td><td>Easiest; free tier covers small apps</td></tr>
+    <tr><td><strong>Cloudflare Pages</strong></td><td>Same model, fast global edge</td><td>Excellent DX, generous free tier</td></tr>
+    <tr><td><strong>Static blob storage</strong></td><td>Azure Blob / S3 + CloudFront</td><td>Cheap, integrates with backend cloud</td></tr>
+    <tr><td><strong>Nginx in Docker</strong></td><td>Build, COPY dist into nginx image</td><td>Full control; needed for K8s</td></tr>
+    <tr><td><strong>GitHub Pages</strong></td><td>Push to gh-pages branch</td><td>Free, basic; no custom routing rewrites</td></tr>
+  </tbody>
+</table>
+
+<h3>nginx config for SPA</h3>
+<p>Single-page apps need fallback to <code>index.html</code> so client-side routes work on refresh.</p>
+<pre><code>server {
+    listen 80;
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Long-cache hashed assets
+    location ~* \.(js|css|woff2|svg|png|jpg)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+}</code></pre>
+
+<h3>Dockerfile for SPA</h3>
+<pre><code># Build stage
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# Serve stage
+FROM nginx:alpine AS runtime
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80</code></pre>
+
+<h3>CI build</h3>
+<pre><code># .github/workflows/build.yml
+name: build
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck     # tsc --noEmit
+      - run: npm test
+      - run: npm run build</code></pre>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part H — Testing</h2>
+  <p>Modules 42–45: what to test, with what tool</p>
+</div>
+
+<!-- ============== MODULE 42 ============== -->
+<h2 id="m42"><span class="module-tag">Module 42</span><br>Testing Philosophy</h2>
+
+<h3>The testing pyramid for frontend</h3>
+<pre class="diagram">         ┌─────────┐
+         │  E2E    │   few — full user flows in real browser (Playwright)
+         └─────────┘
+       ┌─────────────┐
+       │ Integration │  some — multiple components together,
+       │   tests     │  with mocked network (RTL + MSW)
+       └─────────────┘
+     ┌──────────────────┐
+     │   Unit tests     │  many — pure functions, hooks, utilities
+     └──────────────────┘</code></pre>
+
+<h3>Test what users do, not how it's built</h3>
+<p>Kent C. Dodds' rule: "the more your tests resemble the way your software is used, the more confidence they can give you." Don't test internal state or implementation details. Test what's rendered and what happens when users click.</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — testing implementation</h4>
+    <pre><code>const wrapper = mount(&lt;Counter /&gt;);
+expect(wrapper.state('count')).toBe(0);
+wrapper.instance().increment();
+expect(wrapper.state('count')).toBe(1);
+// Breaks if you refactor to hooks or rename state.</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — testing behavior</h4>
+    <pre><code>render(&lt;Counter /&gt;);
+expect(screen.getByText('0')).toBeInTheDocument();
+await userEvent.click(screen.getByRole('button', { name: /increment/i }));
+expect(screen.getByText('1')).toBeInTheDocument();</code></pre>
+  </div>
+</div>
+
+<h3>What to test (priority order)</h3>
+<ol>
+  <li>Critical user flows (login, checkout).</li>
+  <li>Business logic (validation rules, calculations).</li>
+  <li>Custom hooks and utilities.</li>
+  <li>Components with non-trivial logic.</li>
+  <li>Integration with APIs (mocked).</li>
+</ol>
+
+<h3>What you DON'T need to test</h3>
+<ul>
+  <li>Trivial components (a div with text).</li>
+  <li>Third-party library internals.</li>
+  <li>Type-checked-by-TypeScript stuff.</li>
+  <li>Visual styling (use visual regression tools instead).</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 43 ============== -->
+<h2 id="m43"><span class="module-tag">Module 43</span><br>Vitest + React Testing Library</h2>
+
+<h3>Setup</h3>
+<pre><code>npm i -D vitest @vitest/ui @testing-library/react @testing-library/user-event \
+    @testing-library/jest-dom jsdom
+
+// vite.config.ts
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+    plugins: [react()],
+    test: {
+        environment: 'jsdom',
+        setupFiles: './src/test/setup.ts',
+        globals: true,
+    },
+});
+
+// src/test/setup.ts
+import '@testing-library/jest-dom/vitest';</code></pre>
+
+<h3>First test</h3>
+<pre><code>// src/components/Counter.test.tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { Counter } from './Counter';
+
+describe('Counter', () =&gt; {
+    it('starts at 0', () =&gt; {
+        render(&lt;Counter /&gt;);
+        expect(screen.getByText('Count: 0')).toBeInTheDocument();
+    });
+
+    it('increments when clicked', async () =&gt; {
+        const user = userEvent.setup();
+        render(&lt;Counter /&gt;);
+
+        await user.click(screen.getByRole('button', { name: /increment/i }));
+
+        expect(screen.getByText('Count: 1')).toBeInTheDocument();
+    });
+});</code></pre>
+
+<h3>RTL queries — what to use</h3>
+<table>
+  <thead><tr><th>Priority</th><th>Query</th><th>What it tests</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><code>getByRole</code></td><td>Accessibility-first; how users find things</td></tr>
+    <tr><td>2</td><td><code>getByLabelText</code></td><td>Form fields by their label</td></tr>
+    <tr><td>3</td><td><code>getByPlaceholderText</code></td><td>If no label</td></tr>
+    <tr><td>4</td><td><code>getByText</code></td><td>Visible text content</td></tr>
+    <tr><td>5</td><td><code>getByDisplayValue</code></td><td>Form inputs by current value</td></tr>
+    <tr><td>6</td><td><code>getByAltText</code></td><td>Images</td></tr>
+    <tr><td>7</td><td><code>getByTitle</code></td><td>Title attribute</td></tr>
+    <tr><td>Last</td><td><code>getByTestId</code></td><td>Last-resort escape hatch</td></tr>
+  </tbody>
+</table>
+
+<h3>Variants</h3>
+<ul>
+  <li><code>getBy*</code> — throws if not found</li>
+  <li><code>queryBy*</code> — returns null if not found (use for assert "not in document")</li>
+  <li><code>findBy*</code> — async, retries until found or times out</li>
+  <li><code>getAllBy*</code>, <code>queryAllBy*</code>, <code>findAllBy*</code> — multiple matches</li>
+</ul>
+
+<h3>userEvent vs fireEvent</h3>
+<p>Always prefer <code>userEvent</code> — it simulates real user interactions (focus, type, click events in correct order). <code>fireEvent</code> is lower-level.</p>
+
+<h3>Testing hooks</h3>
+<pre><code>import { renderHook, act } from '@testing-library/react';
+
+it('useToggle', () =&gt; {
+    const { result } = renderHook(() =&gt; useToggle());
+    expect(result.current.value).toBe(false);
+
+    act(() =&gt; { result.current.toggle(); });
+    expect(result.current.value).toBe(true);
+});</code></pre>
+
+<h3>Async &amp; loading states</h3>
+<pre><code>it('shows loaded data', async () =&gt; {
+    render(&lt;UserProfile id={42} /&gt;);
+
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+
+    expect(await screen.findByText('Alice')).toBeInTheDocument();
+    expect(screen.queryByText(/loading/i)).not.toBeInTheDocument();
+});</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 44 ============== -->
+<h2 id="m44"><span class="module-tag">Module 44</span><br>MSW for API Mocking</h2>
+
+<p><strong>MSW (Mock Service Worker)</strong> intercepts network requests at the network level. Same mocks work in tests AND in browser dev — your app makes real <code>fetch</code> calls, MSW catches them.</p>
+
+<pre><code>npm i -D msw
+
+// src/test/handlers.ts
+import { http, HttpResponse } from 'msw';
+
+export const handlers = [
+    http.get('/api/users/:id', ({ params }) =&gt; {
+        const id = Number(params.id);
+        if (id === 42) {
+            return HttpResponse.json({ id: 42, name: 'Alice', email: 'a@b.com' });
+        }
+        return new HttpResponse(null, { status: 404 });
+    }),
+
+    http.post('/api/users', async ({ request }) =&gt; {
+        const body = await request.json();
+        return HttpResponse.json({ id: 99, ...body }, { status: 201 });
+    }),
+
+    http.get('/api/users', () =&gt; HttpResponse.json([
+        { id: 1, name: 'Alice' },
+        { id: 2, name: 'Bob' },
+    ])),
+];
+
+// src/test/server.ts
+import { setupServer } from 'msw/node';
+import { handlers } from './handlers';
+export const server = setupServer(...handlers);
+
+// src/test/setup.ts
+import { afterAll, afterEach, beforeAll } from 'vitest';
+import { server } from './server';
+
+beforeAll(() =&gt; server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() =&gt; server.resetHandlers());
+afterAll(() =&gt; server.close());</code></pre>
+
+<h3>Per-test override</h3>
+<pre><code>it('handles 500', async () =&gt; {
+    server.use(
+        http.get('/api/users', () =&gt; new HttpResponse(null, { status: 500 }))
+    );
+
+    render(&lt;UsersList /&gt;);
+    expect(await screen.findByText(/error/i)).toBeInTheDocument();
+});</code></pre>
+
+<h3>Why MSW beats fetch mocks</h3>
+<ul>
+  <li>You don't mock the function — you mock the network. Real <code>fetch</code> still runs.</li>
+  <li>Same mocks work in dev (browser): tell developers no backend needed.</li>
+  <li>Catches contract drift — if your code changes the URL, MSW reports unhandled.</li>
+  <li>Lets you test loading/error/success paths simply by overriding handlers.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 45 ============== -->
+<h2 id="m45"><span class="module-tag">Module 45</span><br>Playwright E2E</h2>
+
+<p><strong>Playwright</strong> drives a real browser. Best for critical end-to-end flows you can't fake.</p>
+
+<pre><code>npm init playwright@latest
+
+// e2e/login.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('user can log in', async ({ page }) =&gt; {
+    await page.goto('/login');
+
+    await page.getByLabel('Email').fill('alice@example.com');
+    await page.getByLabel('Password').fill('Secret123!');
+    await page.getByRole('button', { name: /log in/i }).click();
+
+    await expect(page).toHaveURL('/dashboard');
+    await expect(page.getByText('Welcome, Alice')).toBeVisible();
+});</code></pre>
+
+<h3>Powerful features</h3>
+<ul>
+  <li>Auto-waits for elements (no <code>sleep</code>).</li>
+  <li>Multiple browsers (Chromium, Firefox, WebKit).</li>
+  <li>Mobile viewports built-in.</li>
+  <li>Network mocking, geolocation, clock manipulation.</li>
+  <li>Trace viewer — replay failed runs frame by frame.</li>
+  <li>Codegen — record actions in a browser, get test code.</li>
+</ul>
+
+<h3>What to E2E-test</h3>
+<ul>
+  <li>Login + auth flow.</li>
+  <li>Critical happy paths (place order, post comment).</li>
+  <li>Cross-page workflows.</li>
+</ul>
+
+<h3>What NOT to E2E-test</h3>
+<ul>
+  <li>Edge cases (do that in unit/integration).</li>
+  <li>Validation rules.</li>
+  <li>Anything you can test faster with RTL.</li>
+</ul>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part I — Performance</h2>
+  <p>Modules 46–49: bundle size, re-renders, memoization, Web Vitals</p>
+</div>
+
+<!-- ============== MODULE 46 ============== -->
+<h2 id="m46"><span class="module-tag">Module 46</span><br>Bundle Size &amp; Code Splitting</h2>
+
+<h3>Measure first</h3>
+<pre><code>npm i -D rollup-plugin-visualizer
+
+// vite.config.ts
+import { visualizer } from 'rollup-plugin-visualizer';
+export default defineConfig({
+    plugins: [react(), visualizer({ open: true, gzipSize: true })],
+});
+
+npm run build       # opens an interactive treemap of your bundle</code></pre>
+
+<h3>Common bundle bloat sources</h3>
+<table>
+  <thead><tr><th>Culprit</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Importing entire lodash</td><td><code>import debounce from 'lodash/debounce'</code> or use lodash-es</td></tr>
+    <tr><td>Moment.js</td><td>Switch to date-fns / Day.js / native Intl</td></tr>
+    <tr><td>Charting libs</td><td>Lazy-load chart pages</td></tr>
+    <tr><td>Editor libs (Excalidraw, Monaco)</td><td>Lazy-load when needed</td></tr>
+    <tr><td>Polyfills you don't need</td><td>Set <code>browserslist</code> to modern targets</td></tr>
+  </tbody>
+</table>
+
+<h3>Code splitting via React.lazy</h3>
+<pre><code>import { lazy, Suspense } from 'react';
+
+const ReportsPage = lazy(() =&gt; import('./pages/ReportsPage'));
+const ExcalidrawEditor = lazy(() =&gt; import('./pages/ExcalidrawEditor'));
+
+&lt;Routes&gt;
+    &lt;Route path="/reports" element={
+        &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+            &lt;ReportsPage /&gt;
+        &lt;/Suspense&gt;
+    } /&gt;
+&lt;/Routes&gt;</code></pre>
+
+<p>Each lazy import becomes a separate chunk that loads only when needed.</p>
+
+<h3>Manual chunks for vendors</h3>
+<pre><code>// vite.config.ts
+build: {
+    rollupOptions: {
+        output: {
+            manualChunks: {
+                'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+                'react-query': ['@tanstack/react-query'],
+                'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
+            },
+        },
+    },
+},</code></pre>
+
+<h3>Tree shaking</h3>
+<p>Bundlers strip unused exports. Help them:</p>
+<ul>
+  <li>Use ES modules (<code>import</code>/<code>export</code>), not CommonJS.</li>
+  <li>Avoid side-effectful module imports.</li>
+  <li>Mark your package as <code>"sideEffects": false</code> in package.json (when applicable).</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 47 ============== -->
+<h2 id="m47"><span class="module-tag">Module 47</span><br>React Re-renders — How &amp; When</h2>
+
+<h3>When does a component re-render?</h3>
+<ol>
+  <li>Its state changes.</li>
+  <li>Its parent re-renders (and it doesn't bail out).</li>
+  <li>Its context value changes (and it consumes that context).</li>
+</ol>
+
+<h3>Important: re-render ≠ DOM update</h3>
+<p>Re-rendering means React calls your component function. The actual DOM only changes if the diff finds differences. So most re-renders are cheap. Don't optimize what you can't measure.</p>
+
+<h3>The cascade</h3>
+<pre><code>function App() {
+    const [count, setCount] = useState(0);
+    return (
+        &lt;div&gt;
+            &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;
+            &lt;ExpensiveTree /&gt;     {/* re-runs every click! */}
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<p>Every click on the button re-renders the whole <code>App</code>, including <code>ExpensiveTree</code>. Three fixes:</p>
+
+<h4>Fix 1 — Move state down</h4>
+<pre><code>function App() {
+    return (
+        &lt;div&gt;
+            &lt;Counter /&gt;             // state lives here
+            &lt;ExpensiveTree /&gt;       // unaffected
+        &lt;/div&gt;
+    );
+}
+function Counter() {
+    const [count, setCount] = useState(0);
+    return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;;
+}</code></pre>
+
+<h4>Fix 2 — Lift content up via children prop</h4>
+<pre><code>function App() {
+    return &lt;Counter&gt;&lt;ExpensiveTree /&gt;&lt;/Counter&gt;;
+}
+function Counter({ children }: { children: React.ReactNode }) {
+    const [count, setCount] = useState(0);
+    return (
+        &lt;div&gt;
+            &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;
+            {children}        {/* same element ref each render — won't re-render */}
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<h4>Fix 3 — React.memo</h4>
+<pre><code>const ExpensiveTree = React.memo(function ExpensiveTree() { ... });
+// Won't re-render unless its PROPS change (shallow compare).</code></pre>
+
+<h3>The Profiler</h3>
+<p>Open React DevTools → Profiler tab. Record an interaction; it shows each render's duration and why. The fastest way to find expensive re-renders.</p>
+
+<hr>
+
+<!-- ============== MODULE 48 ============== -->
+<h2 id="m48"><span class="module-tag">Module 48</span><br>memo / useMemo / useCallback (the right way)</h2>
+
+<h3>The trio</h3>
+<table>
+  <thead><tr><th>API</th><th>Skips re-render of</th><th>Cost if misused</th></tr></thead>
+  <tbody>
+    <tr><td><code>React.memo(C)</code></td><td>Component <code>C</code> when props are reference-equal</td><td>Adds shallow-compare overhead</td></tr>
+    <tr><td><code>useMemo(fn, deps)</code></td><td>—</td><td>Adds memo overhead; useless if deps churn</td></tr>
+    <tr><td><code>useCallback(fn, deps)</code></td><td>—</td><td>Same; only helps if consumer is memoized</td></tr>
+  </tbody>
+</table>
+
+<h3>The "useless memo" pitfall</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — memo broken by inline objects/fns</h4>
+    <pre><code>const Child = React.memo(ChildImpl);
+
+function Parent() {
+    return (
+        &lt;Child
+            data={{ a: 1 }}                {/* new object each render */}
+            onClick={() =&gt; doStuff()}      {/* new function each render */}
+        /&gt;
+    );
+}
+// Child re-renders anyway. Memo did nothing.</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — stable references</h4>
+    <pre><code>const Child = React.memo(ChildImpl);
+
+function Parent() {
+    const data = useMemo(() =&gt; ({ a: 1 }), []);
+    const onClick = useCallback(() =&gt; doStuff(), []);
+    return &lt;Child data={data} onClick={onClick} /&gt;;
+}</code></pre>
+  </div>
+</div>
+
+<h3>When to actually use them</h3>
+<ul>
+  <li><strong>useMemo</strong>: an expensive computation that you'd rather not redo.</li>
+  <li><strong>useCallback</strong>: passing a function to a memoized child or as a hook dep.</li>
+  <li><strong>React.memo</strong>: a component that's expensive AND its parent re-renders often.</li>
+</ul>
+
+<h3>The React Compiler</h3>
+<p>The React team is shipping an automatic memoizing compiler (in beta in 2026). When stable, it'll remove the need for most useMemo/useCallback/memo by hand. Until then: profile, don't pre-optimize.</p>
+
+<hr>
+
+<!-- ============== MODULE 49 ============== -->
+<h2 id="m49"><span class="module-tag">Module 49</span><br>Web Vitals</h2>
+
+<p>Google's Core Web Vitals are the metrics that affect search rankings AND user perception.</p>
+
+<table>
+  <thead><tr><th>Metric</th><th>What</th><th>Good</th><th>Improve by</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>LCP</strong> — Largest Contentful Paint</td>
+      <td>Time to the largest visible element</td>
+      <td>&lt; 2.5 s</td>
+      <td>Smaller hero image, preconnect, server-side render</td>
+    </tr>
+    <tr>
+      <td><strong>INP</strong> — Interaction to Next Paint</td>
+      <td>Responsiveness to clicks/typing</td>
+      <td>&lt; 200 ms</td>
+      <td>Fewer/smaller renders, useTransition, debounce, web workers</td>
+    </tr>
+    <tr>
+      <td><strong>CLS</strong> — Cumulative Layout Shift</td>
+      <td>Unexpected element movement</td>
+      <td>&lt; 0.1</td>
+      <td>Reserve space for images/ads/skeletons; avoid late-loading fonts</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Measuring</h3>
+<pre><code>npm i web-vitals
+
+// main.tsx
+import { onCLS, onLCP, onINP, onFCP, onTTFB } from 'web-vitals';
+
+const send = (metric) =&gt; navigator.sendBeacon('/api/metrics', JSON.stringify(metric));
+onCLS(send); onLCP(send); onINP(send); onFCP(send); onTTFB(send);</code></pre>
+
+<h3>Quick wins</h3>
+<ul>
+  <li><strong>Lazy-load below-the-fold images</strong>: <code>&lt;img loading="lazy" /&gt;</code></li>
+  <li><strong>Set width/height on images</strong> — eliminates CLS.</li>
+  <li><strong>Use modern image formats</strong>: WebP, AVIF.</li>
+  <li><strong>Preconnect</strong> to API origins: <code>&lt;link rel="preconnect" href="https://api.example.com"&gt;</code></li>
+  <li><strong>Compress text assets</strong> — gzip/brotli at the CDN.</li>
+  <li><strong>Use a CDN</strong> — closer to users.</li>
+  <li><strong>Defer non-critical JS</strong> — analytics, chat widgets.</li>
+  <li><strong>Avoid big synchronous tasks</strong> — split with <code>requestIdleCallback</code> or move to a Web Worker.</li>
+</ul>
+
+<h3>Lighthouse</h3>
+<p>Run in Chrome DevTools → Lighthouse tab. Gives a score + actionable recommendations. Run on production builds, not dev.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part J — Patterns &amp; Architecture</h2>
+  <p>Modules 50–54: how to organize a real React app</p>
+</div>
+
+<!-- ============== MODULE 50 ============== -->
+<h2 id="m50"><span class="module-tag">Module 50</span><br>Folder Structure</h2>
+
+<h3>The two main approaches</h3>
+
+<h4>1. Folder-by-type (small apps)</h4>
+<pre class="diagram">src/
+├── components/
+│   ├── Button.tsx
+│   ├── Card.tsx
+│   └── Modal.tsx
+├── hooks/
+│   ├── useAuth.ts
+│   └── useDebounce.ts
+├── pages/
+│   ├── HomePage.tsx
+│   └── UserPage.tsx
+├── services/
+│   └── api.ts
+└── types/
+    └── User.ts</code></pre>
+
+<p>Fine until ~30 components. After that, files of the same feature scatter across folders.</p>
+
+<h4>2. Folder-by-feature (recommended for medium+ apps)</h4>
+<pre class="diagram">src/
+├── features/
+│   ├── auth/
+│   │   ├── api.ts
+│   │   ├── hooks.ts            // useAuth, useLogin
+│   │   ├── LoginForm.tsx
+│   │   ├── LoginPage.tsx
+│   │   ├── schema.ts           // Zod validation
+│   │   └── types.ts
+│   ├── users/
+│   │   ├── api.ts
+│   │   ├── hooks.ts            // useUsers, useUser, useUpdateUser
+│   │   ├── UserList.tsx
+│   │   ├── UserDetail.tsx
+│   │   ├── UserForm.tsx
+│   │   └── types.ts
+│   └── orders/
+│       └── ...
+├── shared/
+│   ├── ui/                     // generic Button, Card, Modal
+│   ├── hooks/                  // generic useDebounce, useToggle
+│   ├── lib/                    // axios instance, query client, etc.
+│   └── types/
+├── routes/
+│   └── router.tsx
+├── App.tsx
+└── main.tsx</code></pre>
+
+<h3>Why feature folders win</h3>
+<ul>
+  <li>You add a feature, you add a folder. Cohesive.</li>
+  <li>Deleting a feature is one folder removal.</li>
+  <li>Onboarding: "where's the user code?" → one place.</li>
+  <li>Cross-feature imports become explicit signals (and you can lint them).</li>
+</ul>
+
+<h3>Cross-feature dependencies</h3>
+<p>When feature A imports from feature B, that's a coupling smell. Either:</p>
+<ul>
+  <li>The thing isn't really feature-specific → move it to <code>shared/</code>.</li>
+  <li>Or there's a real dependency (Orders depends on Users) — make it explicit, only import the public API.</li>
+</ul>
+
+<h3>Public API per feature (advanced)</h3>
+<pre><code>// features/users/index.ts — only export what's intended for outside use
+export { UserList } from './UserList';
+export { useUsers, useUser } from './hooks';
+export type { User } from './types';
+
+// Other features import only via the index
+import { useUsers } from '@/features/users';</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 51 ============== -->
+<h2 id="m51"><span class="module-tag">Module 51</span><br>Component Patterns</h2>
+
+<h3>Container vs Presentational (legacy but useful)</h3>
+<p>Older pattern: split components into "smart" containers (data, logic) and "dumb" presentational (just render props). With hooks, the line blurs — but the principle holds: keep render and logic separated where possible.</p>
+
+<h3>Headless components</h3>
+<p>A component that exposes behavior + state via props (no rendering decisions). The user composes the look. Radix is built this way.</p>
+
+<h3>Compound components</h3>
+<pre><code>function Tabs({ children }: { children: React.ReactNode }) {
+    const [active, setActive] = useState(0);
+    return (
+        &lt;TabsContext.Provider value={{ active, setActive }}&gt;
+            &lt;div className="tabs"&gt;{children}&lt;/div&gt;
+        &lt;/TabsContext.Provider&gt;
+    );
+}
+
+Tabs.List = function TabList({ children }: any) {
+    return &lt;div className="tab-list" role="tablist"&gt;{children}&lt;/div&gt;;
+};
+
+Tabs.Tab = function Tab({ index, children }: { index: number; children: React.ReactNode }) {
+    const { active, setActive } = useContext(TabsContext);
+    return (
+        &lt;button role="tab" aria-selected={active === index} onClick={() =&gt; setActive(index)}&gt;
+            {children}
+        &lt;/button&gt;
+    );
+};
+
+Tabs.Panel = function Panel({ index, children }: any) {
+    const { active } = useContext(TabsContext);
+    return active === index ? &lt;div role="tabpanel"&gt;{children}&lt;/div&gt; : null;
+};
+
+// Use
+&lt;Tabs&gt;
+    &lt;Tabs.List&gt;
+        &lt;Tabs.Tab index={0}&gt;Profile&lt;/Tabs.Tab&gt;
+        &lt;Tabs.Tab index={1}&gt;Settings&lt;/Tabs.Tab&gt;
+    &lt;/Tabs.List&gt;
+    &lt;Tabs.Panel index={0}&gt;Profile content&lt;/Tabs.Panel&gt;
+    &lt;Tabs.Panel index={1}&gt;Settings content&lt;/Tabs.Panel&gt;
+&lt;/Tabs&gt;</code></pre>
+
+<h3>Slots (named children)</h3>
+<p>Already covered in Module 15 — pass <code>header</code>, <code>sidebar</code>, etc. as named props.</p>
+
+<h3>Render prop / function-as-children</h3>
+<p>Older but still used by some libraries. Mostly replaced by hooks.</p>
+
+<h3>Provider pattern</h3>
+<p>Wrap children in a context provider; expose a <code>useThing()</code> hook. The standard pattern for ambient state.</p>
+
+<hr>
+
+<!-- ============== MODULE 52 ============== -->
+<h2 id="m52"><span class="module-tag">Module 52</span><br>Composition</h2>
+
+<p>Whenever you're tempted to add a prop to handle a "what if" case, ask: "could the caller pass children/JSX instead?"</p>
+
+<h3>Wrap, don't extend</h3>
+<pre><code>// Good — composition
+function PrimaryButton(props: ButtonProps) {
+    return &lt;Button {...props} variant="primary" /&gt;;
+}
+
+function SubmitButton(props: ButtonProps) {
+    return &lt;Button {...props} type="submit" variant="primary" /&gt;;
+}
+
+function IconButton({ icon, ...rest }: { icon: React.ReactNode } &amp; ButtonProps) {
+    return &lt;Button {...rest}&gt;{icon}{rest.children}&lt;/Button&gt;;
+}</code></pre>
+
+<h3>Inversion of control via children</h3>
+<p>Instead of: "I'll render content for you in this slot, controlled by 20 props" — pass the content as children. The caller has all the control they need.</p>
+
+<h3>Reducing prop bloat</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — feature flags as props</h4>
+    <pre><code>&lt;Modal
+    title="..."
+    showHeader
+    showFooter
+    showCloseButton
+    closeButtonText="Close"
+    confirmButtonText="OK"
+    onConfirm={...}
+    showCancel
+    cancelButtonText="Cancel"
+    onCancel={...}
+/&gt;</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — children/composition</h4>
+    <pre><code>&lt;Modal&gt;
+    &lt;Modal.Header&gt;Title&lt;/Modal.Header&gt;
+    &lt;Modal.Body&gt;Are you sure?&lt;/Modal.Body&gt;
+    &lt;Modal.Footer&gt;
+        &lt;Button onClick={onCancel}&gt;Cancel&lt;/Button&gt;
+        &lt;Button onClick={onConfirm} variant="danger"&gt;Delete&lt;/Button&gt;
+    &lt;/Modal.Footer&gt;
+&lt;/Modal&gt;</code></pre>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 53 ============== -->
+<h2 id="m53"><span class="module-tag">Module 53</span><br>Error Boundaries &amp; Suspense</h2>
+
+<h3>Error boundaries</h3>
+<p>Catch render errors in a subtree and show a fallback. React doesn't yet have a hook for this — class component is required.</p>
+<pre><code>import { Component, ReactNode } from 'react';
+
+type Props = { fallback: ReactNode; children: ReactNode };
+type State = { hasError: boolean; error?: Error };
+
+export class ErrorBoundary extends Component&lt;Props, State&gt; {
+    state: State = { hasError: false };
+
+    static getDerivedStateFromError(error: Error): State {
+        return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, info: React.ErrorInfo) {
+        // Log to your error tracker (Sentry, Rollbar, App Insights)
+        console.error('Render error', error, info);
+    }
+
+    render() {
+        return this.state.hasError ? this.props.fallback : this.props.children;
+    }
+}
+
+// Use
+&lt;ErrorBoundary fallback={&lt;p&gt;Something went wrong.&lt;/p&gt;}&gt;
+    &lt;Routes /&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+
+<p>Or use <code>react-error-boundary</code> npm package — provides hooks and reset behavior.</p>
+
+<div class="callout warn">
+  <strong>Error boundaries DON'T catch:</strong> errors in event handlers, async errors, server-rendering errors, or errors thrown in the boundary itself. For those, use try/catch or React Query's onError.
+</div>
+
+<h3>Suspense</h3>
+<p>Pause rendering until something is ready. Used for code-splitting (<code>React.lazy</code>) and increasingly for data:</p>
+<pre><code>&lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+    &lt;LazyDashboard /&gt;
+&lt;/Suspense&gt;</code></pre>
+
+<p>React Query has <code>useSuspenseQuery</code> for Suspense-style data fetching:</p>
+<pre><code>function UserPage() {
+    const { data } = useSuspenseQuery({
+        queryKey: ['user', id],
+        queryFn: () =&gt; fetchUser(id),
+    });
+    return &lt;h1&gt;{data.name}&lt;/h1&gt;;       // data is non-nullable; no loading branch
+}
+
+// Wrap in Suspense + ErrorBoundary
+&lt;ErrorBoundary fallback={&lt;ErrorMsg /&gt;}&gt;
+    &lt;Suspense fallback={&lt;Spinner /&gt;}&gt;
+        &lt;UserPage /&gt;
+    &lt;/Suspense&gt;
+&lt;/ErrorBoundary&gt;</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 54 ============== -->
+<h2 id="m54"><span class="module-tag">Module 54</span><br>Accessibility (a11y)</h2>
+
+<p>The web is for everyone. A11y is non-negotiable.</p>
+
+<h3>Use semantic HTML first</h3>
+<p><code>&lt;button&gt;</code> beats <code>&lt;div onClick&gt;</code>. <code>&lt;nav&gt;</code> beats <code>&lt;div className="nav"&gt;</code>. Browsers and screen readers know what semantic elements mean.</p>
+
+<h3>Always-on rules</h3>
+<ul>
+  <li>Every form input has a <code>&lt;label&gt;</code> linked via <code>htmlFor</code>.</li>
+  <li>Every image has <code>alt</code> (empty string for decorative).</li>
+  <li>Buttons have visible text or <code>aria-label</code>.</li>
+  <li>Color isn't the only signal (icons + text, not just red).</li>
+  <li>Visible focus rings (don't <code>outline: none</code> without replacement).</li>
+  <li>Heading hierarchy: one <code>h1</code>, then <code>h2</code>, <code>h3</code>...no skipping.</li>
+  <li>Keyboard navigation works (Tab, Enter, Escape).</li>
+</ul>
+
+<h3>ARIA — only when semantic HTML can't</h3>
+<pre><code>// Don't add ARIA where semantic works
+&lt;div role="button" tabIndex={0} onClick={...}&gt;Click&lt;/div&gt;   // bad
+&lt;button onClick={...}&gt;Click&lt;/button&gt;                        // good
+
+// ARIA for things HTML can't express
+&lt;button aria-expanded={isOpen} aria-controls="menu-1"&gt;Menu&lt;/button&gt;
+&lt;ul id="menu-1" hidden={!isOpen}&gt; ... &lt;/ul&gt;</code></pre>
+
+<h3>Useful libraries</h3>
+<ul>
+  <li><strong>Radix UI</strong> — accessible primitives by default.</li>
+  <li><strong>react-aria</strong> (Adobe) — alternative accessible primitives.</li>
+  <li><strong>eslint-plugin-jsx-a11y</strong> — catches obvious mistakes at lint time.</li>
+  <li><strong>axe DevTools</strong> — browser extension to audit pages.</li>
+</ul>
+
+<h3>Quick test</h3>
+<ol>
+  <li>Unplug your mouse — can you do everything with keyboard?</li>
+  <li>Run axe DevTools on each page.</li>
+  <li>Try a screen reader (VoiceOver on Mac, NVDA on Windows) on a critical flow.</li>
+</ol>
+
+<h3>Focus management</h3>
+<p>When opening a dialog, move focus to it. When closing, return focus to the trigger. Radix does this automatically; if you build your own, use <code>react-focus-lock</code>.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part K — Clean Code</h2>
+  <p>Modules 55–58: idiomatic, readable, maintainable React</p>
+</div>
+
+<!-- ============== MODULE 55 ============== -->
+<h2 id="m55"><span class="module-tag clean">Module 55</span><br>Naming</h2>
+
+<h3>Conventions</h3>
+<table>
+  <thead><tr><th>What</th><th>Casing</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>Component</td><td>PascalCase</td><td><code>UserCard</code></td></tr>
+    <tr><td>File for component</td><td>PascalCase</td><td><code>UserCard.tsx</code></td></tr>
+    <tr><td>Hook</td><td>camelCase, prefix <code>use</code></td><td><code>useDebounce</code></td></tr>
+    <tr><td>Function</td><td>camelCase</td><td><code>formatDate</code></td></tr>
+    <tr><td>Type / Interface</td><td>PascalCase</td><td><code>UserCardProps</code></td></tr>
+    <tr><td>Constant</td><td>SCREAMING_SNAKE</td><td><code>MAX_FILE_SIZE</code></td></tr>
+    <tr><td>Boolean prop</td><td>camelCase, predicate</td><td><code>isOpen</code>, <code>hasIcon</code></td></tr>
+    <tr><td>Event handler</td><td><code>handle*</code> internally, <code>on*</code> on prop</td><td><code>handleClick</code> / <code>onClick</code></td></tr>
+    <tr><td>Folder</td><td>kebab-case for features</td><td><code>features/user-management/</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Be specific</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Bad</h4>
+    <pre><code>const data = useQuery(...);          // data of what?
+function Item({ d }) { ... }          // d?
+const handler = () =&gt; { ... };        // handler for what?
+&lt;Modal show={x} /&gt;                    // boolean noun?</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good</h4>
+    <pre><code>const { data: users } = useQuery(...);
+function UserListItem({ user }) { ... }
+const handleSubmit = () =&gt; { ... };
+&lt;Modal isOpen={isModalOpen} /&gt;</code></pre>
+  </div>
+</div>
+
+<h3>Default exports vs named</h3>
+<p>Most modern teams prefer <strong>named exports</strong>:</p>
+<ul>
+  <li>Find-references works perfectly.</li>
+  <li>Renames are tracked.</li>
+  <li>No "default" import sometimes named differently in different files.</li>
+  <li>Force one export style across the codebase.</li>
+</ul>
+<pre><code>// Prefer
+export function Button() { ... }
+import { Button } from './Button';
+
+// Avoid (except for lazy() and a few framework conventions like Next.js pages)
+export default function Button() { ... }
+import Button from './Button';</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 56 ============== -->
+<h2 id="m56"><span class="module-tag clean">Module 56</span><br>Component Size</h2>
+
+<p>Same as functions in any language: small. If a component is &gt; 200 lines, it's almost certainly doing too much.</p>
+
+<h3>Signs a component is too big</h3>
+<ul>
+  <li>Multiple <code>useState</code> for unrelated concerns.</li>
+  <li>Many <code>useEffect</code>s with different responsibilities.</li>
+  <li>Conditional render trees that are themselves complex.</li>
+  <li>You scroll to find a closing tag.</li>
+  <li>Hard to write a clear description of what it does.</li>
+</ul>
+
+<h3>How to split</h3>
+
+<h4>1. Extract child components by section</h4>
+<pre><code>// Before — one giant Profile component
+function Profile() {
+    return (
+        &lt;div&gt;
+            { /* avatar, edit form, posts list, comment list */ }
+        &lt;/div&gt;
+    );
+}
+
+// After
+function Profile() {
+    return (
+        &lt;div&gt;
+            &lt;ProfileHeader /&gt;
+            &lt;ProfileEditForm /&gt;
+            &lt;ProfilePostsList /&gt;
+            &lt;ProfileCommentsList /&gt;
+        &lt;/div&gt;
+    );
+}</code></pre>
+
+<h4>2. Extract logic into hooks</h4>
+<pre><code>// Move 50 lines of state + effects into:
+function useProfileEditing(userId: number) {
+    const { data: user } = useUser(userId);
+    const { mutate: save } = useUpdateUser();
+    const [draft, setDraft] = useState(user);
+    // ...
+    return { draft, setDraft, save };
+}</code></pre>
+
+<h4>3. Replace switch/big-if with sub-components</h4>
+<pre><code>// Bad
+function Notification({ type, ...props }) {
+    if (type === 'success') return ...;
+    if (type === 'error') return ...;
+    if (type === 'warning') return ...;
+}
+
+// Better — separate components, choose at the call site or a small mapper
+const NotificationByType = { success: SuccessNotification, error: ErrorNotification, ... };
+function Notification({ type, ...props }) {
+    const Component = NotificationByType[type];
+    return &lt;Component {...props} /&gt;;
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 57 ============== -->
+<h2 id="m57"><span class="module-tag clean">Module 57</span><br>Code Smells &amp; Refactoring</h2>
+
+<table>
+  <thead><tr><th>Smell</th><th>What it suggests</th><th>Refactor</th></tr></thead>
+  <tbody>
+    <tr><td>useEffect doing data fetch</td><td>Server state in local state</td><td>Replace with React Query</td></tr>
+    <tr><td>Massive useState collection</td><td>Should be useReducer or useState in form lib</td><td>useReducer / RHF</td></tr>
+    <tr><td>Prop drilling 3+ levels</td><td>Misplaced state</td><td>Lift up, or Context, or Zustand</td></tr>
+    <tr><td>Context with everything</td><td>Re-render storms</td><td>Split contexts; switch to Zustand</td></tr>
+    <tr><td>Long className strings repeated</td><td>Missing abstraction</td><td>Extract Button/Card; use cva</td></tr>
+    <tr><td>Index as key in dynamic list</td><td>Reordering bugs</td><td>Stable id key</td></tr>
+    <tr><td>Inline arrow handlers in lists of memoized items</td><td>Memo broken</td><td>useCallback or hoist</td></tr>
+    <tr><td>Same effect cleanup pattern in many components</td><td>Hidden hook waiting</td><td>Extract custom hook</td></tr>
+    <tr><td>any everywhere</td><td>Type avoidance</td><td>Use unknown + narrow, or fix the actual type</td></tr>
+    <tr><td>Big switch on type field</td><td>Discriminated union opportunity</td><td>Type the union; split components</td></tr>
+    <tr><td>Conditional hook calls</td><td>Breaks rules of hooks</td><td>Always call; conditionalize inside</td></tr>
+    <tr><td>useMemo/useCallback everywhere</td><td>Cargo cult</td><td>Profile; remove unless needed</td></tr>
+    <tr><td>State mirrors props</td><td>Sync nightmare</td><td>Compute from props or use key to reset</td></tr>
+    <tr><td>Components importing each other recursively</td><td>Wrong split</td><td>Hoist shared parts; rethink boundaries</td></tr>
+  </tbody>
+</table>
+
+<h3>Effect-replacement examples</h3>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — effect to derive state</h4>
+    <pre><code>const [filtered, setFiltered] = useState&lt;Item[]&gt;([]);
+useEffect(() =&gt; {
+    setFiltered(items.filter(i =&gt; i.active));
+}, [items]);</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — derive at render</h4>
+    <pre><code>const filtered = items.filter(i =&gt; i.active);
+// (or useMemo if items is huge)</code></pre>
+  </div>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Bad — effect to fetch on mount</h4>
+    <pre><code>const [user, setUser] = useState(null);
+const [loading, setLoading] = useState(true);
+useEffect(() =&gt; {
+    fetch(`/api/${id}`)
+        .then(r =&gt; r.json()).then(setUser)
+        .finally(() =&gt; setLoading(false));
+}, [id]);</code></pre>
+  </div>
+  <div class="good">
+    <h4>Good — React Query</h4>
+    <pre><code>const { data: user, isLoading } = useQuery({
+    queryKey: ['user', id],
+    queryFn: () =&gt; fetchUser(id),
+});</code></pre>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 58 ============== -->
+<h2 id="m58"><span class="module-tag clean">Module 58</span><br>Code Reviews &amp; Industry Practices</h2>
+
+<h3>What good React PRs look like</h3>
+<ul>
+  <li>One feature or one fix.</li>
+  <li>Tests for non-trivial logic.</li>
+  <li>No unrelated formatting changes (Prettier already runs on save).</li>
+  <li>Screenshots/GIFs for UI changes.</li>
+  <li>Self-reviewed first.</li>
+</ul>
+
+<h3>Things to flag in review</h3>
+<ul>
+  <li>Missing keys on lists.</li>
+  <li>Missing dep array, or suppressed exhaustive-deps.</li>
+  <li>State that should be derived.</li>
+  <li>Server data via useEffect (should be React Query).</li>
+  <li><code>any</code>, <code>!</code> non-null assertions, <code>as</code> casts without reason.</li>
+  <li>Missing loading/error/empty states.</li>
+  <li>Inline event handlers that re-create big trees.</li>
+  <li>Missing accessibility (no labels, no alt, role abuse).</li>
+  <li>Magic numbers without constants/comments.</li>
+  <li>Untested user-facing logic.</li>
+</ul>
+
+<h3>What NOT to bikeshed</h3>
+<ul>
+  <li>Code style — Prettier decides.</li>
+  <li>Linting issues — ESLint decides.</li>
+  <li>Personal preferences not codified anywhere.</li>
+</ul>
+
+<h3>Pre-commit hooks</h3>
+<pre><code>npm i -D husky lint-staged
+npx husky init
+
+// .lintstagedrc
+{
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{css,md,json}": "prettier --write"
+}
+
+// .husky/pre-commit
+npx lint-staged</code></pre>
+
+<h3>CI essentials</h3>
+<pre><code>name: ci
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: 'npm' }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck       # tsc --noEmit
+      - run: npm test -- --coverage
+      - run: npm run build</code></pre>
+
+<h3>Useful project conventions</h3>
+<ul>
+  <li>One component per file.</li>
+  <li>Hooks live in <code>hooks.ts</code> or co-located with their feature.</li>
+  <li>API helpers in <code>api.ts</code> per feature.</li>
+  <li>Zod schemas in <code>schema.ts</code> per feature.</li>
+  <li>Avoid <code>index.ts</code> barrel files for large directories — they hurt tree-shaking and bundle analysis.</li>
+  <li>Prefix internal-only utilities with <code>_</code> or place under <code>_internal/</code>.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 59 ============== -->
+<h2 id="m59"><span class="module-tag">Module 59</span><br>Glossary</h2>
+
+<dl class="glossary">
+  <dt>JSX</dt><dd>JavaScript syntax extension that lets you write HTML-like markup in JS.</dd>
+  <dt>Component</dt><dd>A function that takes props and returns JSX.</dd>
+  <dt>Props</dt><dd>Read-only inputs to a component, passed by the parent.</dd>
+  <dt>State</dt><dd>Component-owned data that triggers re-render when changed.</dd>
+  <dt>Hook</dt><dd>A function starting with <code>use</code> that lets components hook into React state &amp; lifecycle.</dd>
+  <dt>Reconciliation</dt><dd>React's diff algorithm — compares the new tree to the old and patches the DOM.</dd>
+  <dt>Virtual DOM</dt><dd>The in-memory representation React diffs against — internal detail, mostly.</dd>
+  <dt>Fiber</dt><dd>React's internal data structure for the work-in-progress tree (since React 16).</dd>
+  <dt>Concurrent rendering</dt><dd>React's ability to interrupt and reprioritize renders.</dd>
+  <dt>Suspense</dt><dd>Component that pauses a subtree while data/code loads.</dd>
+  <dt>Error boundary</dt><dd>Component that catches render errors in its subtree.</dd>
+  <dt>Effect</dt><dd>Side-effectful work declared via <code>useEffect</code>; runs after render.</dd>
+  <dt>Render</dt><dd>One execution of a component's function.</dd>
+  <dt>Re-render</dt><dd>Subsequent execution of the function due to state/prop/context change.</dd>
+  <dt>Memoization</dt><dd>Caching a result to skip recomputation. <code>useMemo</code>, <code>React.memo</code>.</dd>
+  <dt>Reference equality</dt><dd>Two values are <code>===</code> only if they're the same object/array/function.</dd>
+  <dt>Key</dt><dd>A unique identifier React uses to track items across renders in lists.</dd>
+  <dt>Ref</dt><dd>A mutable container for a value that doesn't trigger re-render. <code>useRef</code>.</dd>
+  <dt>Context</dt><dd>Mechanism to pass values through the tree without prop drilling.</dd>
+  <dt>Portal</dt><dd>Rendering children into a different DOM subtree (modals, tooltips).</dd>
+  <dt>Hydration</dt><dd>Attaching React event handlers to server-rendered HTML.</dd>
+  <dt>SSR / SSG / CSR</dt><dd>Server-side, static-site, client-side rendering modes.</dd>
+  <dt>HMR</dt><dd>Hot Module Replacement — live-update modules without losing state.</dd>
+  <dt>Bundler</dt><dd>Tool that combines modules into deployable assets (Vite, Webpack, esbuild).</dd>
+  <dt>Tree shaking</dt><dd>Removing unused exports from the final bundle.</dd>
+  <dt>Code splitting</dt><dd>Breaking the bundle into chunks loaded on demand.</dd>
+  <dt>Tailwind</dt><dd>Utility-first CSS framework.</dd>
+  <dt>Zod</dt><dd>TypeScript-first schema validation.</dd>
+  <dt>React Hook Form</dt><dd>Performant form library using uncontrolled inputs + refs.</dd>
+  <dt>TanStack Query</dt><dd>Server-state library (caching, refetch, mutations). Formerly React Query.</dd>
+  <dt>Zustand</dt><dd>Tiny global state library with selector-based subscriptions.</dd>
+  <dt>SWR</dt><dd>Alternative server-state library by Vercel; similar idea to React Query.</dd>
+  <dt>Concurrent</dt><dd>React features that allow rendering to be interrupted (useTransition, useDeferredValue).</dd>
+  <dt>RSC</dt><dd>React Server Components — components that run only on the server (Next.js, etc.).</dd>
+  <dt>MSW</dt><dd>Mock Service Worker — intercepts network requests for testing &amp; dev.</dd>
+  <dt>RTL</dt><dd>React Testing Library.</dd>
+  <dt>cva</dt><dd>class-variance-authority — typed variants for utility classes.</dd>
+  <dt>cn</dt><dd>Common helper combining <code>clsx</code> + <code>tailwind-merge</code>.</dd>
+</dl>
+
+<hr>
+
+<!-- ============== MODULE 60 ============== -->
+<h2 id="m60"><span class="module-tag">Module 60</span><br>Practice Exercises</h2>
+
+<div class="exercise">
+  <h4>Exercise 1: Counter with reset and step</h4>
+  <ol>
+    <li>Build a Counter with +/-/Reset and a step input (1, 5, 10).</li>
+    <li>Persist count to localStorage via a custom <code>useLocalStorage</code> hook.</li>
+    <li>Type everything strictly with TypeScript.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 2: Todo list with filter</h4>
+  <ol>
+    <li>Add/toggle/delete todos.</li>
+    <li>Filter: all / active / done — store filter in URL search params.</li>
+    <li>Items count and "complete all" toggle.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 3: Github user search with React Query</h4>
+  <ol>
+    <li>Fetch users from <code>https://api.github.com/users?since=…</code>.</li>
+    <li>Debounced search input.</li>
+    <li>Loading / error / empty states.</li>
+    <li>Detail page on row click using a nested route.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 4: Form with Zod + RHF</h4>
+  <ol>
+    <li>Signup form: email, password, confirm password, age.</li>
+    <li>Zod schema with cross-field check (passwords match).</li>
+    <li>Async validation: email available?</li>
+    <li>Submit button shows loading state.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 5: Component library starter</h4>
+  <ol>
+    <li>Build Button with cva variants (primary/secondary/danger; sm/md/lg).</li>
+    <li>Build Modal using Radix Dialog + Tailwind.</li>
+    <li>Build Toast with sonner.</li>
+    <li>Document with a Storybook-like sandbox page.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 6: Test what you built</h4>
+  <ol>
+    <li>Set up Vitest + RTL + MSW.</li>
+    <li>Write tests for the todo list (add/toggle/filter).</li>
+    <li>Write tests for the search page using MSW handlers.</li>
+    <li>One Playwright E2E for full signup flow.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 7: Performance audit</h4>
+  <ol>
+    <li>Add rollup-plugin-visualizer; identify the biggest dependency.</li>
+    <li>Lazy-load any pages over 50 KB gzipped.</li>
+    <li>Run Lighthouse on production build; record LCP/INP/CLS.</li>
+    <li>Apply two fixes; remeasure.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 8: Refactor a tangled component</h4>
+  <ol>
+    <li>Find any open-source React component over 300 lines on GitHub.</li>
+    <li>Extract logic into hooks.</li>
+    <li>Split presentational pieces.</li>
+    <li>Compare line counts and readability before/after.</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 61 ============== -->
+<h2 id="m61"><span class="module-tag">Module 61</span><br>Interview Questions</h2>
+
+<div class="qa"><div class="q">Q: What does React do that vanilla JS doesn't?</div>
+<div>It maintains a declarative tree of UI as a function of state, then efficiently patches the DOM via reconciliation. You describe what the UI should be; React figures out what to change.</div></div>
+
+<div class="qa"><div class="q">Q: Why must list items have unique <code>key</code>s?</div>
+<div>Keys let React identify items across renders. Without stable keys, items might be re-created instead of moved, losing focus, animations, and component state — and rendering becomes O(n²) in the worst case.</div></div>
+
+<div class="qa"><div class="q">Q: Difference between controlled and uncontrolled inputs?</div>
+<div>Controlled — React holds the value in state and renders it. Uncontrolled — DOM holds the value; React reads via ref. React Hook Form uses uncontrolled internally for performance.</div></div>
+
+<div class="qa"><div class="q">Q: What are the rules of hooks?</div>
+<div>Only call hooks at the top level (no loops/conditions/nested fns) and only from React functions or other hooks. The plugin <code>react-hooks/rules-of-hooks</code> enforces this.</div></div>
+
+<div class="qa"><div class="q">Q: Why is React's component pure?</div>
+<div>For a given input (props, state, context) the same JSX should be produced. Side effects belong in <code>useEffect</code> or event handlers. Purity allows React to safely re-render and to move work between renders.</div></div>
+
+<div class="qa"><div class="q">Q: Differences: useState vs useReducer?</div>
+<div>useState is per-piece; useReducer is one state object updated through actions. Use reducer when state has many shapes/actions or when transitions need to be testable in isolation.</div></div>
+
+<div class="qa"><div class="q">Q: Why prefer React Query over useEffect for data?</div>
+<div>It handles caching, deduplication, refetch on focus/reconnect, loading/error states, optimistic updates, and request cancellation. With useEffect you re-write all of that and it never quite works the same.</div></div>
+
+<div class="qa"><div class="q">Q: What's a stale closure in useEffect?</div>
+<div>A closure captures variables from the render in which it was defined. If your effect's deps array misses a value, the effect uses the old value forever — silent stale-state bugs. ESLint's exhaustive-deps catches them.</div></div>
+
+<div class="qa"><div class="q">Q: When does a component re-render?</div>
+<div>When its own state changes, when its parent re-renders (and it doesn't bail out via memo), or when context it consumes changes.</div></div>
+
+<div class="qa"><div class="q">Q: When does React.memo help?</div>
+<div>When a component is expensive, its parent re-renders often, and its props are reference-equal across renders. Pair with useMemo/useCallback for object/function props or move state down to avoid the cascade.</div></div>
+
+<div class="qa"><div class="q">Q: Difference between useMemo and useCallback?</div>
+<div>useMemo caches a value; useCallback caches a function. <code>useCallback(fn, deps)</code> is shorthand for <code>useMemo(() =&gt; fn, deps)</code>.</div></div>
+
+<div class="qa"><div class="q">Q: Why are mutations bad for React state?</div>
+<div>React detects changes by reference equality. Mutating an array/object in place doesn't change its reference, so React skips the re-render. Always create new objects/arrays for state updates.</div></div>
+
+<div class="qa"><div class="q">Q: What is Suspense for?</div>
+<div>Pause rendering of a subtree until a resource (lazy import, data) is ready, showing a fallback. Lets React coordinate loading states across many components.</div></div>
+
+<div class="qa"><div class="q">Q: Why do effects sometimes run twice in dev?</div>
+<div>StrictMode intentionally mounts → unmounts → remounts in development to expose missing cleanups. Real production behavior runs once. If your effect breaks under StrictMode, you have a cleanup bug.</div></div>
+
+<div class="qa"><div class="q">Q: What's the difference between <code>type</code> and <code>interface</code>?</div>
+<div>Both describe object shapes. Interfaces auto-merge across files (declaration merging) and read more naturally for class-like contracts. Types can also represent unions, intersections, primitives, mapped/conditional types. Modern code uses both interchangeably for objects.</div></div>
+
+<div class="qa"><div class="q">Q: What is type narrowing?</div>
+<div>The compiler refining a union type as you check it (<code>typeof</code>, <code>in</code>, equality, custom type guards). Lets you write code that's safe with each member of a union.</div></div>
+
+<div class="qa"><div class="q">Q: When would you use a discriminated union?</div>
+<div>When a value has different shapes depending on a field. The "discriminant" lets the compiler narrow precisely. Used heavily for state machines, action types, props with mode flags.</div></div>
+
+<div class="qa"><div class="q">Q: What's <code>as const</code> for?</div>
+<div>Tells TypeScript to infer the narrowest possible literal types and mark properties readonly. Good for option lists, action types, configs that should be const.</div></div>
+
+<div class="qa"><div class="q">Q: When NOT to use Context?</div>
+<div>For server data (use React Query), for state that changes frequently (re-render storms), or for things that just two components share (lift state up instead).</div></div>
+
+<div class="qa"><div class="q">Q: What is hydration?</div>
+<div>Attaching React event handlers and state to HTML rendered on the server. Mostly relevant in Next.js / SSR setups; pure-CSR Vite apps don't have it.</div></div>
+
+<div class="qa"><div class="q">Q: How do you style React apps?</div>
+<div>Modern stack: Tailwind utility classes for most things, cva for variant components, semantic tokens for theming. CSS-in-JS (styled-components, emotion) is on its way out for new projects.</div></div>
+
+<div class="qa"><div class="q">Q: How do you handle errors in React?</div>
+<div>Render errors → ErrorBoundary. Async/event errors → try/catch and report to a tracker. API errors → React Query's onError + a toast. Unhandled rejection &amp; window.onerror → global handlers reporting to Sentry/App Insights.</div></div>
+
+<div class="qa"><div class="q">Q: Why is useState's initial value sometimes a function?</div>
+<div>Because the value passed directly is computed on every render even though it's only used the first time. Pass a function (lazy initializer) for expensive computations to run only once.</div></div>
+
+<div class="qa"><div class="q">Q: What's the best default for testing React?</div>
+<div>Vitest + React Testing Library + MSW + Playwright for E2E. Test user-visible behavior, not implementation details.</div></div>
+
+<hr>
+
+<!-- ===================== EASYAUDIT PROJECT SECTION ===================== -->
+
+<div class="project-section">
+<h2 id="m62" style="margin-top:0; border:none;"><span class="module-tag project">Module 62 — Project</span><br>EasyAudit audit-frontend Architecture Review</h2>
+
+<h3>Stack at a glance</h3>
+<ul>
+  <li><strong>React 19 + Vite 8 + TypeScript 5.8</strong> (strict, <code>verbatimModuleSyntax</code>, <code>erasableSyntaxOnly</code>)</li>
+  <li><strong>React Router 7</strong> with lazy-loaded routes per domain</li>
+  <li><strong>TanStack Query v5</strong> with localStorage persister + cross-tab BroadcastChannel</li>
+  <li><strong>React Hook Form 7 + Zod 3</strong> via <code>zodResolver</code></li>
+  <li><strong>Radix UI + shadcn-style components</strong> (style: new-york)</li>
+  <li><strong>Tailwind CSS v4</strong> (config inline in <code>src/index.css</code> via <code>@theme inline</code>)</li>
+  <li><strong>Axios singleton</strong> wrapped by <code>ApiService</code> with token refresh + 401 queueing</li>
+  <li><strong>SignalR</strong> for realtime</li>
+  <li><strong>Playwright</strong> for E2E (no unit/component tests yet)</li>
+  <li><strong>ESLint + dependency-cruiser</strong> enforcing domain boundaries</li>
+</ul>
+
+<h3>Architectural strengths (this is a mature codebase)</h3>
+<table>
+  <thead><tr><th>What</th><th>Why it's good</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Domain-driven layout (<code>app</code>, <code>central</code>, <code>account</code>, <code>task</code>, <code>shared</code>)</td>
+      <td>Cohesion: changes stay local. Boundaries lint-enforced — drift is impossible without explicit override</td>
+    </tr>
+    <tr>
+      <td>Strict ESLint <code>no-restricted-imports</code> + <code>dependency-cruiser</code></td>
+      <td>Catches "account → task" coupling at PR time. Better than discipline alone</td>
+    </tr>
+    <tr>
+      <td><code>createQueryKeys</code> factory + per-entity hook conventions</td>
+      <td>Cache invalidation surface is small and predictable</td>
+    </tr>
+    <tr>
+      <td><code>handleMutationError</code> in every mutation</td>
+      <td>Consistent toast UX; no scattered error handling</td>
+    </tr>
+    <tr>
+      <td>Permission-gated UI via <code>&lt;WithPermission&gt;</code> and <code>useCan*</code> hooks</td>
+      <td>Centralized authorization checks; less drift between server and client gating</td>
+    </tr>
+    <tr>
+      <td>Service layer (<code>*.service.ts</code> + <code>ApiService</code>)</td>
+      <td>Components never touch axios; makes refactors and mocking painless</td>
+    </tr>
+    <tr>
+      <td>Lazy + Suspense for routes; per-page skeletons</td>
+      <td>Initial bundle stays small; loading UX is consistent</td>
+    </tr>
+    <tr>
+      <td>Cross-tab cache sync via <code>BroadcastChannel</code></td>
+      <td>Logout in one tab logs out everywhere — small touches that matter</td>
+    </tr>
+    <tr>
+      <td>Theme tokens (OKLCH) in <code>@theme inline</code></td>
+      <td>Tailwind v4 idiomatic; light/dark with class variant; no runtime CSS-in-JS overhead</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Real improvement opportunities</h3>
+
+<table>
+  <thead><tr><th>Area</th><th>Observation</th><th>Suggested change</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Backend casing leakage</td>
+      <td>Frontend types preserve <code>strXxxGUID</code>, <code>bolXxx</code>, <code>intXxx</code>, <code>dtXxx</code> — every component reads non-idiomatic names</td>
+      <td>Optional: add a thin <em>mapper</em> at the service-boundary that converts to camelCase. Domain code stays clean. (Not free — requires consistency across many services.) Decide explicitly, then do it everywhere or nowhere.</td>
+    </tr>
+    <tr>
+      <td>No unit/component tests</td>
+      <td>Only Playwright E2E exists. Critical hooks (mutations, permission helpers, formatters) and complex forms (invoice with tax) lack fast feedback</td>
+      <td>Add Vitest + RTL + MSW. Start with utilities (<code>formatting.ts</code>, <code>api-error.ts</code>, <code>pagination-utils.ts</code>) and the permission helpers — pure logic, easy wins</td>
+    </tr>
+    <tr>
+      <td>Persisted query cache (24 h)</td>
+      <td>Cache survives across deploys; users may see stale schema after a backend version bump</td>
+      <td>Include build version in <code>buster</code> on the persister so a new build invalidates everything</td>
+    </tr>
+    <tr>
+      <td>Heavy dependencies</td>
+      <td>Excalidraw, Tiptap, xlsx, Recharts, react-joyride/driver.js together push tens of MB</td>
+      <td>Verify all are inside lazy-loaded routes (Excalidraw especially). Run <code>rollup-plugin-visualizer</code> per release to track bundle drift</td>
+    </tr>
+    <tr>
+      <td>No <code>@tanstack/react-query-devtools</code> in dev?</td>
+      <td>Listed in devDependencies but verify it's actually mounted</td>
+      <td>Mount conditionally in dev — invaluable for cache debugging</td>
+    </tr>
+    <tr>
+      <td>Default <code>staleTime: 0</code></td>
+      <td>Every component mount refetches — latency cost; sometimes intentional</td>
+      <td>Per-query: bump <code>staleTime</code> for slow-changing data (master lookups, currencies, designations) to 5–30 min</td>
+    </tr>
+    <tr>
+      <td>Page count in <code>account/pages</code> is very large</td>
+      <td>Many forms repeat similar patterns (form + skeleton + import). Smell: missing abstraction</td>
+      <td>Extract a generic <code>ResourceFormPage&lt;T&gt;</code> or hooks for common resource workflows. Watch for duplicated submit handlers</td>
+    </tr>
+    <tr>
+      <td>Feature-folder co-location</td>
+      <td>Pages have nested <code>components/</code> sub-folders, which is good. But file naming alternates kebab + PascalCase</td>
+      <td>Pick one and document. CLAUDE.md already documents the rule; ensure it's enforced (a custom ESLint rule or just CI check)</td>
+    </tr>
+    <tr>
+      <td>No bundle-size budget</td>
+      <td>Nothing fails the build if a chunk grows past a threshold</td>
+      <td>Add <code>vite-plugin-bundlesize</code> or a custom CI step. Set alert at chunks &gt; 250 KB gzipped</td>
+    </tr>
+    <tr>
+      <td>Web Vitals not measured</td>
+      <td>No <code>web-vitals</code> emit visible</td>
+      <td>Wire web-vitals → POST to a backend endpoint or a metrics service. LCP/INP/CLS in production tells you what users actually feel</td>
+    </tr>
+    <tr>
+      <td>Error tracking</td>
+      <td>Errors caught by RouteErrorBoundary are logged but not reported to a remote service</td>
+      <td>Integrate Sentry or App Insights. Critical for a user-facing app</td>
+    </tr>
+    <tr>
+      <td>i18n catalogs</td>
+      <td>i18next-http-backend pulls translations at runtime — missing-key behavior?</td>
+      <td>Configure missing-key reporting; lock fallback language; consider a CI check that fails on untranslated keys</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>What's NOT a problem</h3>
+<p>Things that might look like smells but are intentional and good in this codebase:</p>
+<ul>
+  <li><strong>No Redux/Zustand</strong> — React Query + Context handles all of it. Don't add one.</li>
+  <li><strong>Mixed kebab/Pascal file naming</strong> — documented; consistent within each domain.</li>
+  <li><strong>Backend casing preserved</strong> — explicit decision; mapping has costs too.</li>
+  <li><strong>Context for auth/user-rights</strong> — these are genuinely tree-scoped and don't churn often.</li>
+  <li><strong>Tailwind v4 inline config</strong> — modern best practice.</li>
+</ul>
+
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m63" style="margin-top:0; border:none;"><span class="module-tag project">Module 63 — Project</span><br>Refactoring Plan for audit-frontend</h2>
+
+<p>The codebase is already mature. Refactoring should be <em>incremental</em> and <em>respect the conventions in CLAUDE.md</em>. Here's a phased plan tied to actual ROI.</p>
+
+<h3>Phase 1 — Observability &amp; safety (1 week, low risk)</h3>
+<ol>
+  <li><strong>Bundle visualization in CI.</strong> Add <code>rollup-plugin-visualizer</code> behind a build flag; archive HTML as a CI artifact per build. Spot regressions before they ship.</li>
+  <li><strong>Web Vitals reporting.</strong> Add the snippet from Module 49 to <code>src/app/main.tsx</code>; POST metrics to a backend endpoint or a metrics service.</li>
+  <li><strong>Error tracking.</strong> Integrate Sentry (or App Insights). Wire up <code>RouteErrorBoundary</code>'s <code>componentDidCatch</code> to call <code>captureException</code>. Tag releases with the build SHA.</li>
+  <li><strong>Build version cache buster.</strong> In <code>query-provider.tsx</code> persister config, set <code>buster: __BUILD_ID__</code> (Vite-injected). New build → fresh cache.</li>
+  <li><strong>Mount React Query Devtools in dev only.</strong> Invaluable; near-zero cost.</li>
+</ol>
+
+<h3>Phase 2 — Stale-time tuning (3–5 days, low risk, high impact)</h3>
+<p>Default <code>staleTime: 0</code> means every nav refetches everything. Most data isn't that volatile.</p>
+<pre><code>// Per-domain hook overrides
+export const useCountries = () =&gt; useQuery({
+    queryKey: countryQueryKeys.lists(),
+    queryFn: () =&gt; countryService.getCountries(),
+    staleTime: 30 * 60_000,      // 30 min — countries don't change
+});
+
+export const useCurrencies = () =&gt; useQuery({
+    queryKey: currencyQueryKeys.lists(),
+    queryFn: () =&gt; currencyService.getCurrencies(),
+    staleTime: 30 * 60_000,
+});
+
+// Master lookups, designations, roles, modules — all candidates.</code></pre>
+
+<p>For each list query, ask: "would a 5–10 minute delay matter to the user?" If no, raise <code>staleTime</code>. Measurable network reduction.</p>
+
+<h3>Phase 3 — Component testing infrastructure (1–2 weeks)</h3>
+<p>Currently only Playwright. Adding Vitest + RTL + MSW gives you fast feedback on logic.</p>
+<pre><code>npm i -D vitest @vitest/ui jsdom \
+    @testing-library/react @testing-library/user-event \
+    @testing-library/jest-dom msw
+
+// vite.config.ts — add test config (Module 43)
+// src/test/setup.ts — MSW server + jest-dom matchers</code></pre>
+
+<p>Suggested test targets, in priority order:</p>
+<ol>
+  <li><code>src/shared/lib/utils/*</code> — formatting, dates, files, errors. Pure functions. Fast wins.</li>
+  <li><code>src/shared/lib/permissions.ts</code> — <code>canAccess</code>, <code>canAccessOtherPermission</code>. Auth logic.</li>
+  <li>Token refresh interceptor in <code>shared/lib/api/token-refresh.ts</code>. Concurrency-sensitive — easy to break.</li>
+  <li><code>handleMutationError</code> + <code>extractErrorDetails</code>. Tested against real backend error shapes.</li>
+  <li>The most-used custom hooks: <code>use-debounce</code>, <code>use-list-page-state</code>, <code>use-list-preferences</code>.</li>
+  <li>Validation schemas for critical forms (account, invoice).</li>
+</ol>
+
+<p>Don't try to test every component. Test pure logic and integration points where bugs are expensive.</p>
+
+<h3>Phase 4 — Reduce repetition in CRUD pages (2–4 weeks, incremental)</h3>
+<p>Looking at <code>account/pages/*</code>: many entities follow the same shape (List → Form → Skeleton → Import). The patterns are duplicated by hand. Extract incrementally:</p>
+
+<h4>1. A standardized list-page hook</h4>
+<pre><code>// shared/hooks/use-list-page.ts
+export function useListPage&lt;T, P&gt;(opts: {
+    queryKey: readonly unknown[];
+    fetcher: (params: P) =&gt; Promise&lt;StandardPagedResponse&lt;T&gt;&gt;;
+    initialParams: P;
+}) {
+    const [params, setParams] = useListPageState&lt;P&gt;(opts.initialParams);
+    const query = useQuery({
+        queryKey: [...opts.queryKey, params],
+        queryFn: () =&gt; opts.fetcher(params),
+        placeholderData: keepPreviousData,
+    });
+    return { params, setParams, ...query };
+}</code></pre>
+
+<h4>2. A standardized form-page wrapper</h4>
+<p>Extract: skeleton render, dirty-form prompt, save+navigate, permission gate, error handling. Many <code>*Form.tsx</code> files would shrink by 30–50%.</p>
+
+<h4>3. A standardized "Import" page builder</h4>
+<p>The Excel import pages (<code>JournalVoucherImport</code>, <code>ItemImport</code>, <code>OpeningBalanceImport</code>) likely repeat header rows, sample-template download, errors-table. Extract a generic <code>ResourceImportPage&lt;T, R&gt;</code>.</p>
+
+<h3>Phase 5 — Bundle hygiene (ongoing)</h3>
+<ul>
+  <li>Confirm Excalidraw is only loaded in its specific page. If not, lazy-import the editor module (not the wrapper).</li>
+  <li>For Tiptap, audit which extensions are actually used; drop unused.</li>
+  <li>Replace <code>xlsx</code> with the lighter <code>exceljs</code> if you only need basic export.</li>
+  <li>Replace <code>react-joyride</code> + <code>driver.js</code> — pick one tour library.</li>
+  <li>Add a <strong>per-PR bundle-diff comment</strong> via a CI action.</li>
+</ul>
+
+<h3>Phase 6 — Boundary mapping at the service layer (optional, 2–3 weeks)</h3>
+<p>If the team agrees, introduce a thin <em>mapper</em> per service:</p>
+<pre><code>// account/services/bank.service.ts
+const toBank = (raw: BankApi): Bank =&gt; ({
+    id: raw.strBankGUID,
+    name: raw.strBankName,
+    isActive: raw.bolIsActive,
+    createdAt: new Date(raw.dtCreatedDate),
+    // ...
+});
+
+const toBankApi = (b: BankCreate): BankApi =&gt; ({
+    strBankName: b.name,
+    bolIsActive: b.isActive,
+    // ...
+});
+
+export const bankService = {
+    getBanks: (p?: BankParams) =&gt;
+        ApiService.get&lt;BankApi[]&gt;(URL, p).then(arr =&gt; arr.map(toBank)),
+    createBank: (data: BankCreate) =&gt;
+        ApiService.post&lt;BankApi&gt;(URL, toBankApi(data)).then(toBank),
+    // ...
+};</code></pre>
+
+<p>Cost: real work, must be done per service. Benefit: components and types use idiomatic camelCase; backend can rename fields safely behind the mapper. Decide as a team — half-done is worse than not done.</p>
+
+<h3>What NOT to do</h3>
+<ul>
+  <li><strong>Don't introduce Redux/Zustand</strong> — React Query + Context handles state here. CLAUDE.md is explicit; respect it.</li>
+  <li><strong>Don't switch routing libraries.</strong> React Router 7 is current and battle-tested in this app.</li>
+  <li><strong>Don't migrate to Next.js or RSC</strong> for this project unless there's a strong product reason. Vite SPA + the existing infrastructure works.</li>
+  <li><strong>Don't add CSS-in-JS.</strong> Tailwind is the established convention.</li>
+  <li><strong>Don't break domain boundaries.</strong> If you genuinely need to share something across <code>account</code>/<code>task</code>, move it to <code>shared</code> with care.</li>
+</ul>
+
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m64" style="margin-top:0; border:none;"><span class="module-tag project">Module 64 — Project</span><br>Testing Strategy for audit-frontend</h2>
+
+<h3>Three-tier strategy</h3>
+
+<table>
+  <thead><tr><th>Tier</th><th>Tool</th><th>What to test</th><th>Speed</th></tr></thead>
+  <tbody>
+    <tr>
+      <td>Unit (pure logic)</td>
+      <td>Vitest</td>
+      <td>Utilities, formatters, validators, permission helpers, hooks with no React render</td>
+      <td>milliseconds</td>
+    </tr>
+    <tr>
+      <td>Component / integration</td>
+      <td>Vitest + RTL + MSW</td>
+      <td>Forms, list pages, hooks with QueryClient, modals — with mocked network</td>
+      <td>seconds</td>
+    </tr>
+    <tr>
+      <td>End-to-end</td>
+      <td>Playwright (already there)</td>
+      <td>Login, create-account-end-to-end, invoice happy path, permission-denied flows</td>
+      <td>minutes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Setup additions for Vitest</h3>
+<pre><code>// vite.config.ts — add test config block
+export default defineConfig({
+    plugins: [react(), tailwindcss()],
+    test: {
+        environment: 'jsdom',
+        setupFiles: './src/test/setup.ts',
+        globals: true,
+        coverage: { reporter: ['text', 'html'], exclude: ['**/*.test.*'] },
+    },
+});
+
+// src/test/setup.ts
+import '@testing-library/jest-dom/vitest';
+import { afterAll, afterEach, beforeAll } from 'vitest';
+import { server } from './mock-server';
+
+beforeAll(() =&gt; server.listen({ onUnhandledRequest: 'error' }));
+afterEach(() =&gt; server.resetHandlers());
+afterAll(() =&gt; server.close());
+
+// src/test/mock-server.ts
+import { setupServer } from 'msw/node';
+import { handlers } from './handlers';
+export const server = setupServer(...handlers);
+
+// src/test/handlers.ts
+import { http, HttpResponse } from 'msw';
+import { environment } from '@/config/environment';
+
+export const handlers = [
+    http.get(`${environment.baseUrl}/api/Bank`, () =&gt;
+        HttpResponse.json({ statusCode: 200, message: 'OK', data: [
+            { strBankGUID: 'g-1', strBankName: 'HDFC', bolIsActive: true },
+        ] })),
+];</code></pre>
+
+<h3>Sample tests</h3>
+
+<h4>1. Pure utility</h4>
+<pre><code>// src/shared/lib/utils/formatting.test.ts
+import { describe, it, expect } from 'vitest';
+import { formatTimeToAmPm, formatDateTime } from './formatting';
+
+describe('formatTimeToAmPm', () =&gt; {
+    it('converts 14:30 → 2:30 PM', () =&gt; {
+        expect(formatTimeToAmPm('14:30')).toBe('2:30 PM');
+    });
+    it('returns empty for undefined', () =&gt; {
+        expect(formatTimeToAmPm(undefined)).toBe('');
+    });
+});</code></pre>
+
+<h4>2. Permission helper</h4>
+<pre><code>// src/shared/lib/permissions.test.ts
+import { describe, it, expect } from 'vitest';
+import { canAccess, ModuleBase, Actions } from './permissions';
+
+describe('canAccess', () =&gt; {
+    const menus = [{ module: ModuleBase.Bank, actions: [Actions.VIEW, Actions.SAVE] }];
+
+    it('allows view when granted', () =&gt; {
+        expect(canAccess(menus, ModuleBase.Bank, Actions.VIEW)).toBe(true);
+    });
+    it('denies delete when not granted', () =&gt; {
+        expect(canAccess(menus, ModuleBase.Bank, Actions.DELETE)).toBe(false);
+    });
+});</code></pre>
+
+<h4>3. React Query hook with MSW</h4>
+<pre><code>// src/account/hooks/use-banks.test.tsx
+import { describe, it, expect } from 'vitest';
+import { renderHook, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useBanks } from './use-banks';
+
+const wrapper = ({ children }: { children: React.ReactNode }) =&gt; {
+    const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    return &lt;QueryClientProvider client={qc}&gt;{children}&lt;/QueryClientProvider&gt;;
+};
+
+describe('useBanks', () =&gt; {
+    it('fetches and returns banks', async () =&gt; {
+        const { result } = renderHook(() =&gt; useBanks(), { wrapper });
+        await waitFor(() =&gt; expect(result.current.isSuccess).toBe(true));
+        expect(result.current.data).toHaveLength(1);
+        expect(result.current.data?.[0].strBankName).toBe('HDFC');
+    });
+});</code></pre>
+
+<h4>4. Form component (RHF + Zod)</h4>
+<pre><code>// src/account/pages/bank/BankForm.test.tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { BankForm } from './BankForm';
+
+describe('BankForm', () =&gt; {
+    it('shows validation error when name is empty', async () =&gt; {
+        const user = userEvent.setup();
+        render(&lt;BankForm /&gt;, { wrapper: TestProviders });
+
+        await user.click(screen.getByRole('button', { name: /save/i }));
+
+        expect(await screen.findByText(/bank name is required/i)).toBeInTheDocument();
+    });
+});</code></pre>
+
+<h3>Coverage targets</h3>
+<table>
+  <thead><tr><th>Layer</th><th>Target</th></tr></thead>
+  <tbody>
+    <tr><td><code>shared/lib/utils/*</code></td><td>90%</td></tr>
+    <tr><td><code>shared/lib/permissions.ts</code></td><td>100%</td></tr>
+    <tr><td><code>shared/lib/api/*</code> (incl. token-refresh)</td><td>80%</td></tr>
+    <tr><td>Validations (Zod schemas)</td><td>80%</td></tr>
+    <tr><td>Hooks per domain</td><td>50% (focus on mutations)</td></tr>
+    <tr><td>Forms with non-trivial logic</td><td>Cover happy path + main error</td></tr>
+    <tr><td>Pages</td><td>Mostly E2E in Playwright</td></tr>
+  </tbody>
+</table>
+
+<h3>Test what brings the most value</h3>
+<ol>
+  <li><strong>The auth/token-refresh flow</strong> — concurrency-sensitive, security-critical.</li>
+  <li><strong>Permission helpers</strong> — anything that gates UI must be verified.</li>
+  <li><strong>Validation schemas</strong> — catch regressions on rules that protect data quality.</li>
+  <li><strong>Mutation hooks</strong> — verify cache invalidation patterns work.</li>
+  <li><strong>Critical Playwright flows</strong> — login, OTP, organization switch, create invoice end-to-end. You already have Playwright; expand it.</li>
+</ol>
+
+<h3>Testing principles</h3>
+<ul>
+  <li>Test what users do, not implementation. Use accessible queries (<code>getByRole</code>, <code>getByLabelText</code>).</li>
+  <li>One behavior per test.</li>
+  <li>No real network — MSW intercepts. No real timers — use <code>vi.useFakeTimers()</code> when needed.</li>
+  <li>Keep test files next to the code (e.g. <code>BankForm.test.tsx</code> next to <code>BankForm.tsx</code>) — easier to find and maintain.</li>
+  <li>Snapshot tests are fragile — avoid except for stable static markup.</li>
+</ul>
+
+</div>
+
+<hr>
+
+<!-- ============== MODULE 65 ============== -->
+<h2 id="m65"><span class="module-tag">Module 65</span><br>Resources &amp; Roadmap</h2>
+
+<h3>Free official resources</h3>
+<ul>
+  <li><strong>react.dev</strong> — official React docs, exceptionally good</li>
+  <li><strong>react.dev/learn</strong> — interactive tutorial</li>
+  <li><strong>react.dev/reference/react</strong> — API reference</li>
+  <li><strong>tanstack.com/query/latest</strong> — React Query docs</li>
+  <li><strong>react-hook-form.com</strong> — RHF docs</li>
+  <li><strong>zod.dev</strong> — Zod docs</li>
+  <li><strong>typescriptlang.org/docs</strong> — TypeScript handbook</li>
+  <li><strong>tailwindcss.com</strong> — Tailwind docs</li>
+  <li><strong>ui.shadcn.com</strong> — shadcn components</li>
+  <li><strong>radix-ui.com/primitives</strong> — Radix primitives</li>
+  <li><strong>web.dev</strong> — performance &amp; best practices</li>
+</ul>
+
+<h3>Books</h3>
+<ul>
+  <li><em>Effective TypeScript</em> — Dan Vanderkam</li>
+  <li><em>TypeScript in 50 Lessons</em> — Stefan Baumgartner</li>
+  <li><em>The Road to React</em> — Robin Wieruch</li>
+  <li><em>Fluent React</em> — Tejas Kumar</li>
+  <li><em>Refactoring UI</em> — Adam Wathan &amp; Steve Schoger (Tailwind authors)</li>
+  <li><em>Inclusive Components</em> — Heydon Pickering</li>
+</ul>
+
+<h3>YouTube channels &amp; blogs</h3>
+<ul>
+  <li><strong>Theo - t3.gg</strong> — modern React stack opinions</li>
+  <li><strong>Jack Herrington</strong> — React/TS deep dives</li>
+  <li><strong>Matt Pocock</strong> — TypeScript (Total TypeScript)</li>
+  <li><strong>Kent C. Dodds</strong> — testing, patterns</li>
+  <li><strong>Josh Comeau's blog</strong> — React, animations, CSS</li>
+  <li><strong>TkDodo's blog</strong> — React Query author's deep posts</li>
+  <li><strong>Lee Robinson</strong> — Next.js / Vercel</li>
+</ul>
+
+<h3>Tools to know</h3>
+<ul>
+  <li><strong>VS Code</strong> + extensions: ESLint, Prettier, Tailwind CSS IntelliSense, Error Lens, Pretty TypeScript Errors</li>
+  <li><strong>React DevTools</strong> + Profiler — required</li>
+  <li><strong>TanStack Query Devtools</strong> — required if you use React Query</li>
+  <li><strong>Storybook</strong> or <strong>Ladle</strong> — component playgrounds</li>
+  <li><strong>Chromatic</strong> — visual regression on top of Storybook</li>
+  <li><strong>Lighthouse</strong> + <strong>WebPageTest</strong> — perf audits</li>
+  <li><strong>Why Did You Render</strong> — find unnecessary re-renders in dev</li>
+</ul>
+
+<h3>30/60/90 learning roadmap</h3>
+
+<h4>Days 1–30 — Foundations</h4>
+<ul>
+  <li>JS &amp; TS fluency: walk Modules 1–8 with daily 30-minute exercises.</li>
+  <li>Build the Counter and Todo from Module 60.</li>
+  <li>Read <em>The Road to React</em> through hooks chapter.</li>
+  <li>Read react.dev "Learn React" front to back.</li>
+</ul>
+
+<h4>Days 31–60 — Real apps</h4>
+<ul>
+  <li>Build the Github user search with React Query (Exercise 3).</li>
+  <li>Master React Hook Form + Zod via the signup form (Exercise 4).</li>
+  <li>Set up Vitest + RTL + MSW; write tests for what you've built.</li>
+  <li>Read TkDodo's React Query articles end-to-end.</li>
+  <li>Read <em>Effective TypeScript</em>, items 1–30.</li>
+</ul>
+
+<h4>Days 61–90 — Architecture &amp; performance</h4>
+<ul>
+  <li>Take an existing audit-frontend feature and re-implement it in your own scratch app from scratch — feel the conventions.</li>
+  <li>Bundle audit + Lighthouse run on your scratch app; apply fixes.</li>
+  <li>Add Sentry, web-vitals, and MSW-backed component tests.</li>
+  <li>Read <em>Fluent React</em> for the rendering internals chapter.</li>
+  <li>Start Phase 1 of the audit-frontend roadmap (Module 63) on a real branch.</li>
+</ul>
+
+<h3>What to learn next</h3>
+<ul>
+  <li><strong>React Server Components</strong> &amp; Next.js — different model; useful even if you don't migrate</li>
+  <li><strong>React Compiler</strong> — auto-memoization (when stable)</li>
+  <li><strong>Suspense for data</strong> — pair with <code>useSuspenseQuery</code></li>
+  <li><strong>Animation deeply</strong> — Framer Motion / Motion-One; you already use Framer Motion</li>
+  <li><strong>Accessibility deeply</strong> — WCAG, screen readers, focus management</li>
+  <li><strong>Web Workers / OffscreenCanvas</strong> for CPU-bound UI tasks</li>
+  <li><strong>SignalR &amp; realtime patterns</strong> — already in the stack; deeper coverage</li>
+</ul>
+
+<hr>
+
+<footer style="text-align:center; color: var(--muted); font-size: 0.9em; margin-top: 64px;">
+  The Complete React + TypeScript Course — including the EasyAudit audit-frontend review &amp; refactoring plan (Modules 62–64).
+</footer>
+
+</main>
+
+</div>
+</body>
+</html>

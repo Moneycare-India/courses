@@ -1,0 +1,2490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Apache Kafka Course — From Zero to Production</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0969da;
+    --accent-soft: #ddf4ff;
+    --border: #d0d7de;
+    --code-bg: #1e1e1e;
+    --code-fg: #e6e6e6;
+    --inline-code-bg: #eef2f5;
+    --inline-code-fg: #d6336c;
+    --table-head: #f6f8fa;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9c74f;
+    --tip-bg: #e3fcec;
+    --tip-border: #2da44e;
+    --warn-bg: #ffeef0;
+    --warn-border: #cf222e;
+    --info-bg: #ddf4ff;
+    --info-border: #0969da;
+    --sidebar-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+  aside.sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    font-size: 0.9em;
+  }
+  aside.sidebar h2 {
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 24px 0 8px;
+    padding: 0;
+    border: none;
+  }
+  aside.sidebar h2:first-child { margin-top: 0; }
+  aside.sidebar a {
+    display: block;
+    padding: 4px 8px;
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    line-height: 1.35;
+  }
+  aside.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+  aside.sidebar .brand {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  aside.sidebar .brand-sub {
+    font-size: 0.8em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  main {
+    max-width: 920px;
+    padding: 48px 48px 96px;
+  }
+  header.title {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  header.title h1 {
+    margin: 0 0 8px 0;
+    font-size: 2.2em;
+    line-height: 1.2;
+  }
+  header.title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.05em;
+  }
+  .module-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  h2 {
+    margin-top: 64px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 1.6em;
+  }
+  h3 {
+    margin-top: 36px;
+    font-size: 1.25em;
+  }
+  h4 {
+    margin-top: 24px;
+    font-size: 1.05em;
+    color: var(--accent);
+  }
+  p, li { font-size: 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--inline-code-bg);
+    color: var(--inline-code-fg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.5;
+    font-size: 0.9em;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 0.93em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--table-head);
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .callout {
+    border-left: 4px solid var(--callout-border);
+    background: var(--callout-bg);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .callout.tip {
+    border-color: var(--tip-border);
+    background: var(--tip-bg);
+  }
+  .callout.warn {
+    border-color: var(--warn-border);
+    background: var(--warn-bg);
+  }
+  .callout.info {
+    border-color: var(--info-border);
+    background: var(--info-bg);
+  }
+  .callout strong { color: inherit; }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  pre.diagram {
+    background: #f6f8fa;
+    color: #24292f;
+    border: 1px solid var(--border);
+    font-size: 0.82em;
+  }
+  details {
+    background: #f6f8fa;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+  }
+  details[open] summary { margin-bottom: 8px; }
+  .exercise {
+    background: #f0f7ff;
+    border: 1px solid #a1c4ed;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .exercise h4 {
+    margin-top: 0;
+    color: var(--accent);
+  }
+  .qa {
+    margin: 12px 0;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #f6f8fa;
+    border-radius: 4px;
+  }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .glossary dt {
+    font-weight: 700;
+    color: var(--accent);
+    margin-top: 14px;
+  }
+  .glossary dd {
+    margin: 4px 0 0 0;
+    padding-left: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.sidebar {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+    main { padding: 32px 24px 80px; max-width: none; }
+  }
+  @media print {
+    aside.sidebar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { max-width: none; padding: 0; }
+    pre, .callout, details, .exercise, .qa { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+<!-- VS Code-style syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/vs2015.min.css">
+<style>
+  /* Keep our pre layout; hljs only colorizes tokens */
+  pre code.hljs { padding: 0; background: transparent; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+      hljs.configure({ cssSelector: 'pre code', ignoreUnescapedHTML: true });
+      hljs.highlightAll();
+    }
+  });
+</script>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">Apache Kafka</div>
+  <div class="brand-sub">The Complete Course</div>
+
+  <h2>Foundations</h2>
+  <a href="#m1">1. What &amp; Why of Kafka</a>
+  <a href="#m2">2. When (Not) to Use Kafka</a>
+  <a href="#m3">3. The Mental Model</a>
+  <a href="#m4">4. Core Vocabulary</a>
+  <a href="#m5">5. End-to-End Message Flow</a>
+
+  <h2>Internals</h2>
+  <a href="#m6">6. Cluster Architecture</a>
+  <a href="#m7">7. Storage Internals</a>
+  <a href="#m8">8. Replication &amp; ISR</a>
+  <a href="#m9">9. Log Compaction</a>
+
+  <h2>Producers &amp; Consumers</h2>
+  <a href="#m10">10. Producers Deep Dive</a>
+  <a href="#m11">11. Consumers Deep Dive</a>
+  <a href="#m12">12. Delivery Semantics</a>
+  <a href="#m13">13. Transactions &amp; Exactly-Once</a>
+
+  <h2>Configuration</h2>
+  <a href="#m14">14. Topic Configuration</a>
+  <a href="#m15">15. Broker Configuration</a>
+
+  <h2>Hands-On</h2>
+  <a href="#m16">16. Docker Setup</a>
+  <a href="#m17">17. CLI Tools Reference</a>
+  <a href="#m18">18. Code: Java</a>
+  <a href="#m19">19. Code: Python</a>
+  <a href="#m20">20. Code: Node.js</a>
+  <a href="#m21">21. Code: .NET</a>
+
+  <h2>Ecosystem</h2>
+  <a href="#m22">22. Schema Registry &amp; Avro</a>
+  <a href="#m23">23. Kafka Connect</a>
+  <a href="#m24">24. Kafka Streams</a>
+  <a href="#m25">25. ksqlDB</a>
+
+  <h2>Production</h2>
+  <a href="#m26">26. Security</a>
+  <a href="#m27">27. Monitoring</a>
+  <a href="#m28">28. Performance Tuning</a>
+  <a href="#m29">29. Operations</a>
+  <a href="#m30">30. Multi-Cluster &amp; MirrorMaker</a>
+
+  <h2>Patterns &amp; Practice</h2>
+  <a href="#m31">31. Architectural Patterns</a>
+  <a href="#m32">32. Common Mistakes</a>
+  <a href="#m33">33. Kafka vs Alternatives</a>
+  <a href="#m34">34. Glossary</a>
+  <a href="#m35">35. Practice Exercises</a>
+  <a href="#m36">36. Interview Questions</a>
+  <a href="#m37">37. Resources &amp; Roadmap</a>
+</aside>
+
+<main>
+
+<header class="title">
+  <h1>The Complete Apache Kafka Course</h1>
+  <p>From "What is Kafka?" to producing, consuming, scaling, securing, and operating it in production. 37 modules. Pure Kafka — code samples in Java, Python, Node.js, and .NET.</p>
+</header>
+
+<!-- =================================================== -->
+<!-- MODULE 1 -->
+<!-- =================================================== -->
+<h2 id="m1"><span class="module-tag">Module 1</span><br>What &amp; Why of Kafka</h2>
+
+<h3>What is Kafka?</h3>
+<p><strong>Apache Kafka</strong> is a distributed, durable, high-throughput <strong>event streaming platform</strong>. In one sentence: it's a system where producers <em>write</em> events into ordered logs called topics, and many independent consumers can <em>read</em> those events at their own pace, while Kafka guarantees ordering per partition, durability via replication, and horizontal scalability.</p>
+
+<p>It's open source (Apache 2.0 license) and was originally built at LinkedIn in 2010 by Jay Kreps, Neha Narkhede, and Jun Rao. They later founded <strong>Confluent</strong>, the company behind much of Kafka's commercial ecosystem. Kafka was donated to the Apache Software Foundation in 2011 and became a top-level project in 2012.</p>
+
+<p>The name "Kafka" was picked by Jay Kreps because the system is "a writing system" and he liked Franz Kafka's writing — there's no acronym, no deep technical meaning.</p>
+
+<h3>What problem does Kafka solve?</h3>
+<p>Before Kafka, integrating N systems with M systems meant N×M point-to-point connections — a tangled mess where each producer knew about each consumer. Kafka introduced a single <em>backbone</em>: every system writes to Kafka, every system reads from Kafka. N+M instead of N×M.</p>
+
+<pre class="diagram">Without Kafka (N×M coupling)             With Kafka (N+M)
+
+  App A ──┬──► DB                           App A ──►┐
+          ├──► Search                        App B ──►├─► Kafka ─►┌──► DB
+          └──► Analytics                     App C ──►┘            ├──► Search
+  App B ──┬──► DB                                                  ├──► Analytics
+          ├──► Search                                              └──► Cache
+          └──► Cache
+  App C ──┬──► Search
+          └──► Analytics</pre>
+
+<h3>Common use cases</h3>
+<ul>
+  <li><strong>Asynchronous service communication</strong> — replace synchronous HTTP between microservices.</li>
+  <li><strong>Activity tracking</strong> — clickstreams, page views, user actions.</li>
+  <li><strong>Log aggregation</strong> — centralize logs from many services into a search store.</li>
+  <li><strong>Metrics &amp; monitoring</strong> — pipe metrics from thousands of agents.</li>
+  <li><strong>Stream processing</strong> — real-time analytics, fraud detection, anomaly detection.</li>
+  <li><strong>Event sourcing</strong> — store every state change as an immutable event.</li>
+  <li><strong>Database replication / Change Data Capture (CDC)</strong> — stream DB row changes to other systems.</li>
+  <li><strong>IoT data ingestion</strong> — millions of sensors producing telemetry.</li>
+</ul>
+
+<h3>Who uses Kafka?</h3>
+<p>Netflix, LinkedIn, Uber, Airbnb, Walmart, PayPal, Goldman Sachs, Twitter (X), Pinterest, Spotify, Shopify, and tens of thousands of others. LinkedIn alone processes over 7 trillion messages per day on Kafka.</p>
+
+<h3>Kafka's headline numbers</h3>
+<ul>
+  <li>Throughput: millions of messages/sec on commodity hardware.</li>
+  <li>Latency: low single-digit milliseconds end-to-end.</li>
+  <li>Storage: petabytes per cluster (logs are flat files on disk).</li>
+  <li>Retention: configurable from minutes to forever.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 2 -->
+<!-- =================================================== -->
+<h2 id="m2"><span class="module-tag">Module 2</span><br>When (Not) to Use Kafka</h2>
+
+<h3>Kafka is a great fit when…</h3>
+<ul>
+  <li>You have <strong>multiple consumers</strong> for the same data (each consuming independently).</li>
+  <li>You need <strong>high throughput</strong> (10k+ msg/sec).</li>
+  <li>You need to <strong>replay</strong> events (e.g., reprocess last week's data with new code).</li>
+  <li>You need <strong>durable</strong> message storage with strict ordering per key.</li>
+  <li>You're decoupling services that change independently.</li>
+  <li>You're doing real-time stream processing.</li>
+</ul>
+
+<h3>Kafka is overkill / wrong choice when…</h3>
+<ul>
+  <li>You need a <strong>request-response RPC</strong> pattern (use HTTP/gRPC).</li>
+  <li>You only have <strong>one producer and one consumer</strong> with a few hundred messages/day (use a SQL queue table or RabbitMQ).</li>
+  <li>You need <strong>long-delay scheduled messages</strong> ("send this in 7 days") — Kafka doesn't have native delays. Use a scheduler.</li>
+  <li>You need <strong>per-message TTL</strong> or <strong>priority queues</strong> — Kafka has neither natively.</li>
+  <li>You need <strong>complex routing</strong> (topic-exchange, headers-exchange) — RabbitMQ is built for this.</li>
+  <li>Your team is small and has no infrastructure capacity — Kafka has real ops overhead.</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Reality check:</strong> Kafka is not a drop-in replacement for a "queue". It's an event log. If your mental model is "I put a job, a worker takes it and the job is gone," consider RabbitMQ, AWS SQS, Redis Streams, or a simple DB-backed queue first.
+</div>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 3 -->
+<!-- =================================================== -->
+<h2 id="m3"><span class="module-tag">Module 3</span><br>The Mental Model</h2>
+
+<p>Picture a <strong>shared notebook</strong> that's append-only:</p>
+<ul>
+  <li>Anyone can <strong>write</strong> a new line at the bottom (producers).</li>
+  <li>Anyone can <strong>read</strong> any line, starting from wherever they left off (consumers).</li>
+  <li>Lines are <strong>never erased</strong> until a configured time/size cutoff (retention).</li>
+  <li>Every line gets a permanent, sequential <strong>line number</strong> (offset).</li>
+  <li>Reading a line <strong>does not delete it</strong>. Multiple readers see the same line.</li>
+</ul>
+
+<p>The crucial difference from a traditional message queue:</p>
+
+<table>
+  <thead><tr><th>Trait</th><th>Traditional Queue (RabbitMQ, SQS)</th><th>Kafka (Log)</th></tr></thead>
+  <tbody>
+    <tr><td>Storage model</td><td>Messages deleted after consumption</td><td>Append-only log; messages stay until retention expires</td></tr>
+    <tr><td>Multiple consumers</td><td>Each message goes to one</td><td>Each consumer group reads independently</td></tr>
+    <tr><td>Replay</td><td>Generally no</td><td>Yes — rewind offsets</td></tr>
+    <tr><td>Ordering</td><td>Generally per queue</td><td>Per partition</td></tr>
+    <tr><td>Throughput</td><td>10k–100k msg/sec</td><td>1M+ msg/sec</td></tr>
+    <tr><td>Routing</td><td>Rich (exchanges, headers)</td><td>Simple (topic + partition key)</td></tr>
+  </tbody>
+</table>
+
+<p>Once "log, not queue" clicks in your head, every other Kafka concept becomes easier.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 4 -->
+<!-- =================================================== -->
+<h2 id="m4"><span class="module-tag">Module 4</span><br>Core Vocabulary</h2>
+
+<h3>Event / Message / Record</h3>
+<p>A single immutable fact: "user 42 logged in at 2026-05-07 10:31 UTC". A Kafka record has:</p>
+<ul>
+  <li><strong>Key</strong> (optional bytes) — used to choose a partition. Same key → same partition → ordered.</li>
+  <li><strong>Value</strong> (bytes) — the actual payload (JSON, Avro, Protobuf, plain text).</li>
+  <li><strong>Headers</strong> (optional key-value pairs) — metadata like trace IDs, content type.</li>
+  <li><strong>Timestamp</strong> — set by producer or broker.</li>
+  <li><strong>Offset</strong> — assigned by broker on write; unique per partition.</li>
+</ul>
+
+<h3>Topic</h3>
+<p>A named, ordered stream of records. Examples: <code>orders</code>, <code>user.signups</code>, <code>iot.telemetry</code>. Topics live forever; you can produce and consume at any time.</p>
+
+<h3>Partition</h3>
+<p>A topic is split into 1 or more partitions. Each partition is an ordered, immutable, append-only sequence of records on a specific broker's disk. Partitions are the unit of <strong>parallelism</strong> and <strong>distribution</strong>.</p>
+
+<pre class="diagram">Topic "orders" (4 partitions)
+
+P0:  [r0][r1][r2][r3][r4]                    ◄── on broker A
+P1:  [r0][r1][r2]                            ◄── on broker B
+P2:  [r0][r1][r2][r3][r4][r5][r6]            ◄── on broker C
+P3:  [r0][r1][r2][r3]                        ◄── on broker A</pre>
+
+<h3>Offset</h3>
+<p>The position of a record within a partition. Strictly increasing per partition (P0 offset 7, P1 offset 7 are unrelated). Once assigned, never changes.</p>
+
+<h3>Producer</h3>
+<p>Client that publishes records into topics. Picks the partition (via key hash, round-robin, or custom logic).</p>
+
+<h3>Consumer</h3>
+<p>Client that subscribes to one or more topics and reads records. Tracks its own progress via committed offsets.</p>
+
+<h3>Consumer Group</h3>
+<p>A set of consumer instances sharing a <code>group.id</code>. Kafka assigns each partition to exactly one consumer in the group. This is how you scale processing horizontally.</p>
+
+<h3>Broker</h3>
+<p>A single Kafka server. Holds partitions, serves producer writes and consumer reads, replicates data to other brokers.</p>
+
+<h3>Cluster</h3>
+<p>A group of brokers that work together. Identified by a unique cluster ID. Production clusters are typically 3–30 brokers.</p>
+
+<h3>Controller</h3>
+<p>One broker in the cluster is elected as the <strong>controller</strong>. Responsible for leader elections, partition reassignment, and cluster-wide metadata. With KRaft mode, controllers are dedicated nodes.</p>
+
+<h3>Replica / Leader / Follower</h3>
+<p>Each partition has 1 leader replica and N–1 follower replicas. All reads/writes go to the leader; followers replicate from the leader.</p>
+
+<h3>ISR (In-Sync Replicas)</h3>
+<p>The set of replicas (including leader) that are caught up with the leader. Only ISR members are eligible to be promoted to leader if the current leader fails.</p>
+
+<h3>Retention</h3>
+<p>How long Kafka keeps records. Configured per topic via <code>retention.ms</code> (time) or <code>retention.bytes</code> (size). Default is 7 days.</p>
+
+<h3>Log Compaction</h3>
+<p>Alternative retention mode: keep at least the latest record for each key. Older records for the same key are deleted in background. Used for stateful streams (e.g., user profiles by userId).</p>
+
+<h3>Zookeeper / KRaft</h3>
+<p>Old Kafka (≤ 2.x) used Apache <strong>Zookeeper</strong> to manage cluster metadata. Modern Kafka (≥ 3.3) uses <strong>KRaft</strong> (Kafka Raft) — Kafka manages its own metadata via the Raft consensus algorithm, no Zookeeper needed. Zookeeper is being removed entirely in Kafka 4.0.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 5 -->
+<!-- =================================================== -->
+<h2 id="m5"><span class="module-tag">Module 5</span><br>End-to-End Message Flow</h2>
+
+<p>Walk through the full lifecycle of one record:</p>
+
+<pre class="diagram">┌────────────┐                                          ┌────────────┐
+│  Producer  │                                          │  Consumer  │
+└─────┬──────┘                                          └─────▲──────┘
+      │ 1. Build record (key, value, headers)                 │
+      │ 2. Serialize key + value to bytes                     │
+      │ 3. Choose partition (hash(key) % N)                   │
+      │ 4. Add to in-memory batch buffer                      │
+      │ 5. Send batch to leader broker (with acks setting)    │
+      ▼                                                       │
+┌──────────────────────────────────────────────────────────┐  │
+│                       Kafka Broker                       │  │
+│  6. Append batch to partition's log file (sequential I/O)│  │
+│  7. Followers fetch and replicate                        │  │
+│  8. Once `acks` is satisfied, ACK the producer           │  │
+│  9. Return offset to producer                            │  │
+│ 10. Consumer's fetch request arrives, polling partition  │  │
+│ 11. Broker returns records starting at last fetched      │  │
+└─────┬────────────────────────────────────────────────────┘  │
+      │                                                        │
+      └────────────────────────────────────────────────────────┤
+                                                               │ 12. Deserialize value
+                                                               │ 13. Process record
+                                                               │ 14. Commit offset back to Kafka
+                                                               ▼</pre>
+
+<p>Key things to internalize:</p>
+<ul>
+  <li>Producer never talks to followers directly — only the leader of each target partition.</li>
+  <li>Disk writes are sequential appends — that's why Kafka is so fast.</li>
+  <li>Consumers <strong>poll</strong> brokers (Kafka does not push). The poll-based model is what enables backpressure.</li>
+  <li>Offsets are committed by the consumer, stored in an internal topic <code>__consumer_offsets</code>.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 6 -->
+<!-- =================================================== -->
+<h2 id="m6"><span class="module-tag">Module 6</span><br>Cluster Architecture</h2>
+
+<p>A Kafka cluster typically has these components:</p>
+
+<pre class="diagram">┌─────────────────────────────────────────────────────────────────┐
+│                       Kafka Cluster                             │
+│                                                                 │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐      │
+│  │ Broker 1 │   │ Broker 2 │   │ Broker 3 │   │ Broker 4 │      │
+│  │          │   │          │   │          │   │          │      │
+│  │ P0 (L)   │◄─►│ P0 (F)   │   │ P0 (F)   │   │          │      │
+│  │ P1 (F)   │   │ P1 (L)   │◄─►│ P1 (F)   │   │          │      │
+│  │ P2 (F)   │   │ P2 (F)   │   │ P2 (L)   │   │ P2 (F)   │      │
+│  │          │   │          │   │ P3 (F)   │   │ P3 (L)   │      │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘      │
+│       ▲                                                         │
+│       │                                                         │
+│  ┌────┴────────────────────────────────┐                        │
+│  │  Controllers (KRaft) or Zookeeper   │                        │
+│  │  - Cluster metadata                 │                        │
+│  │  - Leader election                  │                        │
+│  │  - Partition assignment             │                        │
+│  └─────────────────────────────────────┘                        │
+└─────────────────────────────────────────────────────────────────┘
+
+(L) = Leader replica, (F) = Follower replica</pre>
+
+<h3>Broker responsibilities</h3>
+<ul>
+  <li>Accept producer writes for partitions it leads.</li>
+  <li>Replicate data to followers.</li>
+  <li>Serve consumer fetches for partitions it leads (or follower-fetch on rack-aware setups).</li>
+  <li>Track ISR membership.</li>
+  <li>Participate in elections.</li>
+</ul>
+
+<h3>Controller responsibilities</h3>
+<ul>
+  <li>Store cluster metadata (topics, partitions, configs, ACLs).</li>
+  <li>Detect broker failures and trigger leader re-election.</li>
+  <li>Coordinate partition reassignment when topics are scaled.</li>
+  <li>Manage topic creation, deletion, config updates.</li>
+</ul>
+
+<h3>KRaft mode (modern)</h3>
+<p>In KRaft mode, a small set of brokers (usually 3 or 5) act as a Raft quorum that holds the metadata log. They're called <strong>controller nodes</strong>. They can be dedicated or shared with regular brokers. The metadata itself is stored as another Kafka log, replicated via Raft.</p>
+
+<h3>Why KRaft replaced Zookeeper</h3>
+<ul>
+  <li>One system to operate instead of two.</li>
+  <li>Metadata changes (topic creation, etc.) propagate faster.</li>
+  <li>Clusters can scale to millions of partitions, not just hundreds of thousands.</li>
+  <li>Faster controller failover (seconds instead of tens of seconds).</li>
+</ul>
+
+<div class="callout info">
+  <strong>Recommendation for new clusters in 2026:</strong> always use KRaft. Zookeeper-based clusters work but are end-of-life as of Kafka 4.0.
+</div>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 7 -->
+<!-- =================================================== -->
+<h2 id="m7"><span class="module-tag">Module 7</span><br>Storage Internals</h2>
+
+<p>This is where Kafka's performance reputation comes from. Understanding storage helps you tune retention, sizing, and recovery.</p>
+
+<h3>Logs and segments</h3>
+<p>Each partition is stored on disk as a directory like <code>orders-0/</code> (topic name + partition id). Inside that directory, the partition log is split into <strong>segments</strong> — fixed-size files (default 1 GB each).</p>
+
+<pre class="diagram">/var/lib/kafka/logs/orders-0/
+├── 00000000000000000000.log        ◄── records
+├── 00000000000000000000.index      ◄── offset → file position
+├── 00000000000000000000.timeindex  ◄── timestamp → offset
+├── 00000000000000098234.log        ◄── next segment, starts at offset 98234
+├── 00000000000000098234.index
+├── 00000000000000098234.timeindex
+└── leader-epoch-checkpoint</pre>
+
+<p>Why segments? So old data can be deleted by simply unlinking whole files — far cheaper than rewriting the log.</p>
+
+<h3>The active segment</h3>
+<p>Only the latest segment is being written to (the "active" segment). All older segments are read-only. When the active segment hits <code>segment.bytes</code> or <code>segment.ms</code>, it's "rolled" — closed and a new segment is created.</p>
+
+<h3>Indexes</h3>
+<p>Each segment has two sparse indexes:</p>
+<ul>
+  <li><strong>Offset index</strong> — maps logical offset → byte position in the .log file. Sparse: an entry every <code>index.interval.bytes</code> (default 4096 bytes).</li>
+  <li><strong>Timestamp index</strong> — maps timestamp → offset. Used for <code>seekToTimestamp</code> consumer operations.</li>
+</ul>
+
+<h3>Why Kafka is so fast on disk</h3>
+<ul>
+  <li><strong>Sequential I/O</strong> — appends only. SSDs and spinning disks are both very fast at sequential writes.</li>
+  <li><strong>Zero-copy</strong> reads via <code>sendfile</code> syscall — data goes directly from kernel page cache to socket without copying into Kafka's user space.</li>
+  <li><strong>Page cache</strong> — Linux caches recent reads; "hot" consumers read from RAM, never touch disk.</li>
+  <li><strong>Batching &amp; compression</strong> — producers send batches; broker writes the batch as one append.</li>
+</ul>
+
+<h3>Retention &amp; cleanup</h3>
+<p>Two cleanup policies:</p>
+<ul>
+  <li><strong>delete</strong> (default) — drop whole segments older than <code>retention.ms</code> or beyond <code>retention.bytes</code>.</li>
+  <li><strong>compact</strong> — keep at least the latest record per key (see Module 9).</li>
+  <li><strong>compact,delete</strong> — both, combined.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 8 -->
+<!-- =================================================== -->
+<h2 id="m8"><span class="module-tag">Module 8</span><br>Replication &amp; ISR</h2>
+
+<p>Kafka's durability guarantee comes from replication. Every partition has a <strong>replication factor</strong> (RF) — typically 3 in production.</p>
+
+<h3>How replication works</h3>
+<ol>
+  <li>One replica is the <strong>leader</strong>; the rest are <strong>followers</strong>.</li>
+  <li>Producer sends record to leader.</li>
+  <li>Leader appends to its log.</li>
+  <li>Each follower issues a fetch request to the leader (just like a consumer would). Followers pull, leader doesn't push.</li>
+  <li>Followers append, then send a fetch with their new "high water mark" so the leader knows they're caught up.</li>
+  <li>The leader maintains the <strong>ISR set</strong> — followers caught up within <code>replica.lag.time.max.ms</code> (default 30s).</li>
+</ol>
+
+<h3>The High Water Mark (HWM)</h3>
+<p>Consumers can only see records that have been replicated to all ISR members. This boundary is the <strong>high water mark</strong>. Records past the HWM exist on the leader but aren't visible until replication catches up. This prevents consumers from seeing data that could be lost in a leader failover.</p>
+
+<pre class="diagram">Leader log:    [r0][r1][r2][r3][r4][r5][r6][r7]
+                                       ^ HWM = 5
+                                       └── visible to consumers up to r5
+                                          r6 and r7 not yet replicated to all ISR
+
+Consumers see: [r0][r1][r2][r3][r4][r5]</pre>
+
+<h3>Leader failover</h3>
+<p>If the leader broker dies:</p>
+<ol>
+  <li>The controller detects it (no heartbeat for <code>broker.session.timeout.ms</code>).</li>
+  <li>The controller picks a new leader from the ISR set (preferring the "preferred replica" if it's in ISR).</li>
+  <li>Producers/consumers refresh metadata, reconnect to the new leader.</li>
+</ol>
+
+<h3>Min in-sync replicas</h3>
+<p><code>min.insync.replicas</code> (topic config) — the minimum number of replicas that must be in ISR for the leader to accept writes when the producer uses <code>acks=all</code>. Typical: RF=3, min.insync.replicas=2. This means you can lose 1 replica and still write, but not 2.</p>
+
+<h3>Unclean leader election</h3>
+<p>If <code>unclean.leader.election.enable=true</code> and ISR becomes empty, Kafka will elect an out-of-sync replica as leader. This restores availability but <em>loses data</em>. The default is <code>false</code> — prefer correctness over availability.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 9 -->
+<!-- =================================================== -->
+<h2 id="m9"><span class="module-tag">Module 9</span><br>Log Compaction</h2>
+
+<p>Sometimes you want Kafka to keep the <strong>latest value per key</strong>, forever. Example: a topic of user profiles, keyed by <code>userId</code>. You only care about each user's current state, not the history.</p>
+
+<p>Set <code>cleanup.policy=compact</code> on the topic. Kafka runs a background "log cleaner" that periodically rewrites old segments, keeping only the most recent record per key.</p>
+
+<pre class="diagram">Before compaction:
+  [k=alice, v=v1][k=bob, v=v1][k=alice, v=v2][k=carol, v=v1][k=alice, v=v3][k=bob, v=v2]
+
+After compaction:
+  [k=carol, v=v1][k=alice, v=v3][k=bob, v=v2]</pre>
+
+<h3>Tombstones</h3>
+<p>To "delete" a key in a compacted topic, produce a record with <code>value=null</code>. The compactor keeps the tombstone for <code>delete.retention.ms</code> (so consumers can see the deletion), then removes both the tombstone and prior values for that key.</p>
+
+<h3>Use cases for compaction</h3>
+<ul>
+  <li>Materialized state (current user profiles, account balances).</li>
+  <li>Kafka Streams' internal state stores use compacted topics.</li>
+  <li>Configuration broadcasting.</li>
+  <li>Database CDC where you only care about latest row state.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 10 -->
+<!-- =================================================== -->
+<h2 id="m10"><span class="module-tag">Module 10</span><br>Producers Deep Dive</h2>
+
+<h3>Producer pipeline</h3>
+<pre class="diagram">send(record)
+   │
+   ▼
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│  Serializer  │───►│  Partitioner │───►│  Record      │
+│ (key & value)│    │              │    │  Accumulator │
+└──────────────┘    └──────────────┘    └──────┬───────┘
+                                               │
+                                               ▼
+                                       ┌──────────────┐
+                                       │ Sender Thread│  ──► to brokers
+                                       │ (batches by  │
+                                       │  partition)  │
+                                       └──────────────┘</pre>
+
+<h3>Key producer configs</h3>
+<table>
+  <thead><tr><th>Config</th><th>Default</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>bootstrap.servers</code></td><td>—</td><td>Initial brokers to discover the cluster. Provide 2–3 for redundancy.</td></tr>
+    <tr><td><code>acks</code></td><td><code>all</code> (≥3.0)</td><td><code>0</code> = fire-and-forget. <code>1</code> = leader only. <code>all</code> = all ISR.</td></tr>
+    <tr><td><code>enable.idempotence</code></td><td><code>true</code> (≥3.0)</td><td>Producer attaches a sequence number; broker dedupes retries. No duplicate writes.</td></tr>
+    <tr><td><code>retries</code></td><td><code>2147483647</code></td><td>Retry transient errors automatically.</td></tr>
+    <tr><td><code>max.in.flight.requests.per.connection</code></td><td>5</td><td>How many unacked batches can be in flight per broker. Must be ≤5 for idempotence.</td></tr>
+    <tr><td><code>linger.ms</code></td><td>0</td><td>Wait this long collecting records before sending — batching wins throughput.</td></tr>
+    <tr><td><code>batch.size</code></td><td>16384</td><td>Max bytes per batch per partition.</td></tr>
+    <tr><td><code>compression.type</code></td><td>none</td><td><code>gzip</code>, <code>snappy</code>, <code>lz4</code>, <code>zstd</code>. Compress at producer; broker stores compressed.</td></tr>
+    <tr><td><code>buffer.memory</code></td><td>33554432</td><td>Total memory for unsent batches. If full, <code>send()</code> blocks.</td></tr>
+    <tr><td><code>request.timeout.ms</code></td><td>30000</td><td>How long to wait for broker response.</td></tr>
+    <tr><td><code>delivery.timeout.ms</code></td><td>120000</td><td>Hard upper bound: from <code>send()</code> to success or fail.</td></tr>
+  </tbody>
+</table>
+
+<h3>Partitioner strategies</h3>
+<ul>
+  <li><strong>DefaultPartitioner</strong>: if key is set, <code>hash(key) % numPartitions</code>; if not, <strong>sticky partitioning</strong> (pick a random partition, stay there until batch is sent — improves batching).</li>
+  <li><strong>UniformStickyPartitioner</strong>: similar, used in older versions.</li>
+  <li><strong>Custom</strong>: implement <code>Partitioner</code> for routing logic.</li>
+</ul>
+
+<h3>Idempotent producer</h3>
+<p>With <code>enable.idempotence=true</code>:</p>
+<ol>
+  <li>Producer registers with a Producer ID (PID) on first send.</li>
+  <li>Each record gets a sequence number per partition.</li>
+  <li>Broker tracks the highest sequence per (PID, partition) and rejects duplicates.</li>
+</ol>
+<p>This eliminates duplicates from producer retries. <strong>It does not</strong> protect against application-level retries (e.g., if your code calls <code>send()</code> twice for the same business event).</p>
+
+<h3>Async vs sync send</h3>
+<pre><code>// Async (fast, recommended)
+producer.send(record, (metadata, exception) -&gt; {
+    if (exception != null) handleError(exception);
+});
+
+// Sync (slow, only when you really must wait)
+RecordMetadata md = producer.send(record).get();</code></pre>
+
+<h3>Common producer pitfalls</h3>
+<ul>
+  <li>Calling <code>send()</code> in a loop without batching — fix with <code>linger.ms=5–20</code>.</li>
+  <li>Forgetting to <code>flush()</code> or <code>close()</code> on shutdown — buffered records lost.</li>
+  <li>Using sync sends for high-volume — kills throughput.</li>
+  <li>Using key=null when ordering matters — round-robin breaks ordering.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 11 -->
+<!-- =================================================== -->
+<h2 id="m11"><span class="module-tag">Module 11</span><br>Consumers Deep Dive</h2>
+
+<h3>Consumer poll loop</h3>
+<pre><code>while (running) {
+    ConsumerRecords records = consumer.poll(Duration.ofMillis(500));
+    for (ConsumerRecord r : records) {
+        process(r);
+    }
+    consumer.commitSync();   // or commitAsync()
+}</code></pre>
+
+<p>Kafka uses a <strong>pull</strong> model. The consumer polls; the broker doesn't push. This gives the consumer flow control.</p>
+
+<h3>Consumer group coordination</h3>
+<p>When consumers join/leave a group, Kafka does a <strong>rebalance</strong>:</p>
+<ol>
+  <li>One broker is the <strong>group coordinator</strong> for this group (chosen by hash of group.id).</li>
+  <li>One consumer in the group is elected the <strong>group leader</strong>. It computes the assignment.</li>
+  <li>The coordinator distributes the assignment to all members.</li>
+  <li>Each consumer starts fetching from its assigned partitions.</li>
+</ol>
+
+<h3>Rebalance protocols</h3>
+<ul>
+  <li><strong>Eager rebalancing</strong> (legacy): all consumers stop, surrender assignments, get new ones, resume. "Stop the world." Causes latency spikes.</li>
+  <li><strong>Cooperative rebalancing</strong> (incremental, default in newer versions): only consumers losing partitions pause briefly; everyone else keeps going. Much smoother.</li>
+  <li><strong>Static membership</strong> (<code>group.instance.id</code>): consumers identify themselves with a stable ID; transient restarts don't trigger rebalances.</li>
+</ul>
+
+<h3>Key consumer configs</h3>
+<table>
+  <thead><tr><th>Config</th><th>Default</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td><code>group.id</code></td><td>—</td><td>Consumer group identifier.</td></tr>
+    <tr><td><code>auto.offset.reset</code></td><td><code>latest</code></td><td>Where to start when no offset committed: <code>earliest</code>, <code>latest</code>, or <code>none</code> (error).</td></tr>
+    <tr><td><code>enable.auto.commit</code></td><td><code>true</code></td><td>If true, commits every <code>auto.commit.interval.ms</code>. Risky — turn off and commit yourself.</td></tr>
+    <tr><td><code>max.poll.records</code></td><td>500</td><td>Max records returned per <code>poll()</code>.</td></tr>
+    <tr><td><code>max.poll.interval.ms</code></td><td>300000</td><td>If you don't call <code>poll()</code> within this, you get kicked out.</td></tr>
+    <tr><td><code>session.timeout.ms</code></td><td>45000</td><td>Heartbeat timeout. Coordinator kicks you out if no heartbeat.</td></tr>
+    <tr><td><code>heartbeat.interval.ms</code></td><td>3000</td><td>How often to heartbeat. Should be ≤1/3 of session timeout.</td></tr>
+    <tr><td><code>fetch.min.bytes</code></td><td>1</td><td>Don't return until this much data — increases batching.</td></tr>
+    <tr><td><code>fetch.max.wait.ms</code></td><td>500</td><td>But don't wait longer than this for fetch.min.bytes.</td></tr>
+    <tr><td><code>isolation.level</code></td><td><code>read_uncommitted</code></td><td><code>read_committed</code> hides records from aborted transactions.</td></tr>
+  </tbody>
+</table>
+
+<h3>Offset management</h3>
+<p>Three ways to commit:</p>
+<ul>
+  <li><strong>Auto-commit</strong> — Kafka commits every <code>auto.commit.interval.ms</code>. Easy but can lose messages on crash.</li>
+  <li><strong>Sync commit</strong> — <code>commitSync()</code>. Blocks, retries, durable. Slower.</li>
+  <li><strong>Async commit</strong> — <code>commitAsync()</code>. Non-blocking, doesn't retry by default. Fastest, riskier.</li>
+</ul>
+
+<p><strong>Recommended pattern</strong>: <code>commitAsync()</code> in the loop, <code>commitSync()</code> on shutdown.</p>
+
+<h3>Manual partition assignment</h3>
+<p>Skip groups entirely with <code>consumer.assign(partitions)</code>. Useful for batch jobs or when you need full control. No rebalancing, no auto-offset-reset.</p>
+
+<h3>Seeking</h3>
+<pre><code>consumer.seek(partition, offset);              // jump to specific offset
+consumer.seekToBeginning(partitions);           // rewind
+consumer.seekToEnd(partitions);                 // skip to live tail
+consumer.offsetsForTimes(timestampMap);         // find offset by timestamp</code></pre>
+
+<h3>Common consumer pitfalls</h3>
+<ul>
+  <li>Auto-commit + slow processing → messages "committed" before processed → lost on crash.</li>
+  <li>Processing taking longer than <code>max.poll.interval.ms</code> → kicked out → rebalance storm.</li>
+  <li>Not closing the consumer → no graceful leave → 45s wait for the group to rebalance.</li>
+  <li>Sharing a consumer across threads — <strong>not thread-safe</strong>.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 12 -->
+<!-- =================================================== -->
+<h2 id="m12"><span class="module-tag">Module 12</span><br>Delivery Semantics</h2>
+
+<p>Three possible guarantees. Pick what your use case needs:</p>
+
+<h3>At-most-once</h3>
+<p>Records may be lost, never duplicated. Achieved by committing the offset <em>before</em> processing.</p>
+<pre><code>poll → commit offset → process record
+                       (if crash here, record is lost)</code></pre>
+<p>Use when: dropping data is OK, duplicates are unacceptable. Rare in practice.</p>
+
+<h3>At-least-once (default)</h3>
+<p>Records may be duplicated, never lost. Achieved by committing offset <em>after</em> processing.</p>
+<pre><code>poll → process record → commit offset
+       (if crash here, record is re-delivered)</code></pre>
+<p>Use when: you can dedupe downstream or the operation is idempotent (e.g., upsert by primary key).</p>
+
+<h3>Exactly-once</h3>
+<p>Records processed once, no duplicates, no losses. Requires:</p>
+<ul>
+  <li>Idempotent producer.</li>
+  <li>Transactional producer + consumer (next module).</li>
+  <li>Or: at-least-once + downstream idempotency by message ID.</li>
+</ul>
+
+<div class="callout">
+  <strong>Hard truth:</strong> end-to-end exactly-once across <em>all systems</em> (Kafka → DB, Kafka → external API) is hard. Kafka-to-Kafka exactly-once works via transactions. Kafka-to-DB exactly-once requires the <strong>transactional outbox pattern</strong> or 2PC alternatives.
+</div>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 13 -->
+<!-- =================================================== -->
+<h2 id="m13"><span class="module-tag">Module 13</span><br>Transactions &amp; Exactly-Once</h2>
+
+<p>Kafka transactions let you atomically write to multiple topics/partitions <strong>and</strong> commit consumer offsets together. Either everything is visible, or nothing.</p>
+
+<h3>Transactional producer setup</h3>
+<pre><code>props.put("transactional.id", "my-app-v1");  // unique per producer instance
+props.put("enable.idempotence", "true");      // implied by transactional.id
+
+producer.initTransactions();
+
+producer.beginTransaction();
+try {
+    producer.send(record1);
+    producer.send(record2);
+    producer.sendOffsetsToTransaction(offsets, consumerGroupMetadata);
+    producer.commitTransaction();
+} catch (Exception e) {
+    producer.abortTransaction();
+}</code></pre>
+
+<h3>How it works internally</h3>
+<ol>
+  <li>Producer registers a <code>transactional.id</code>; gets a Producer ID (PID) and epoch.</li>
+  <li>Each record in the transaction is marked with PID + epoch.</li>
+  <li>On commit, the broker writes a <strong>commit marker</strong>; on abort, an <strong>abort marker</strong>.</li>
+  <li>Consumers with <code>isolation.level=read_committed</code> skip records from aborted transactions and don't see in-progress ones.</li>
+</ol>
+
+<h3>Consume-process-produce loop with EOS</h3>
+<p>The classic pattern: consume from topic A, transform, produce to topic B, commit consumer offset — all atomically.</p>
+<pre><code>while (true) {
+    ConsumerRecords records = consumer.poll(...);
+    producer.beginTransaction();
+    for (ConsumerRecord r : records) {
+        producer.send(transform(r));
+    }
+    producer.sendOffsetsToTransaction(consumer.endOffsets(...), consumer.groupMetadata());
+    producer.commitTransaction();
+}</code></pre>
+
+<h3>Limitations</h3>
+<ul>
+  <li>Only Kafka-to-Kafka. Doesn't extend to external sinks.</li>
+  <li>~10–20% throughput cost vs non-transactional.</li>
+  <li>Transactions have a max duration (<code>transaction.timeout.ms</code>, default 60s).</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 14 -->
+<!-- =================================================== -->
+<h2 id="m14"><span class="module-tag">Module 14</span><br>Topic Configuration Reference</h2>
+
+<table>
+  <thead><tr><th>Config</th><th>Default</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>num.partitions</code></td><td>1</td><td>Number of partitions. Choose carefully — increasing later breaks key-based ordering.</td></tr>
+    <tr><td><code>replication.factor</code></td><td>1</td><td>Number of replicas. 3 in production.</td></tr>
+    <tr><td><code>retention.ms</code></td><td>604800000 (7d)</td><td>Time-based retention.</td></tr>
+    <tr><td><code>retention.bytes</code></td><td>-1 (unlimited)</td><td>Size-based retention per partition.</td></tr>
+    <tr><td><code>segment.bytes</code></td><td>1073741824 (1GB)</td><td>Segment file size.</td></tr>
+    <tr><td><code>segment.ms</code></td><td>604800000 (7d)</td><td>Force-roll segment after this time.</td></tr>
+    <tr><td><code>cleanup.policy</code></td><td>delete</td><td><code>delete</code>, <code>compact</code>, or <code>compact,delete</code>.</td></tr>
+    <tr><td><code>min.insync.replicas</code></td><td>1</td><td>Min ISR for <code>acks=all</code> writes.</td></tr>
+    <tr><td><code>compression.type</code></td><td>producer</td><td>Override producer compression.</td></tr>
+    <tr><td><code>max.message.bytes</code></td><td>1048588 (~1MB)</td><td>Largest single record.</td></tr>
+    <tr><td><code>delete.retention.ms</code></td><td>86400000 (1d)</td><td>How long to keep tombstones in compacted topics.</td></tr>
+    <tr><td><code>min.compaction.lag.ms</code></td><td>0</td><td>How long records stay before compaction can touch them.</td></tr>
+    <tr><td><code>unclean.leader.election.enable</code></td><td>false</td><td>Allow non-ISR replica to become leader (lossy).</td></tr>
+  </tbody>
+</table>
+
+<h3>How to choose partitions</h3>
+<ul>
+  <li><strong>Throughput</strong>: estimate target MB/sec. A single partition handles 10–25 MB/sec write reliably. Divide.</li>
+  <li><strong>Consumers</strong>: you can't have more parallel consumers (in one group) than partitions.</li>
+  <li><strong>Ordering</strong>: more partitions = less per-key contention but harder to maintain global order.</li>
+  <li><strong>Don't go overboard</strong>: each partition has overhead (file handles, replication traffic, controller memory). Thousands per broker is fine; tens of thousands stresses the cluster.</li>
+</ul>
+
+<p><strong>Rule of thumb</strong>: start with 6–12 partitions for most topics. Easy to under-partition; hard to fix over-partitioning later.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 15 -->
+<!-- =================================================== -->
+<h2 id="m15"><span class="module-tag">Module 15</span><br>Broker Configuration</h2>
+
+<p>Set in <code>server.properties</code>. The most important:</p>
+
+<pre><code># Identity
+node.id=1
+process.roles=broker,controller     # KRaft mode
+controller.quorum.voters=1@host1:9093,2@host2:9093,3@host3:9093
+
+# Network
+listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+advertised.listeners=PLAINTEXT://broker1.mycorp.com:9092
+
+# Log
+log.dirs=/var/lib/kafka/logs
+num.partitions=6
+default.replication.factor=3
+min.insync.replicas=2
+
+# Retention
+log.retention.hours=168           # 7 days
+log.segment.bytes=1073741824      # 1 GB
+
+# Performance
+num.network.threads=8
+num.io.threads=16
+socket.send.buffer.bytes=102400
+socket.receive.buffer.bytes=102400
+num.recovery.threads.per.data.dir=4
+
+# Replication
+replica.lag.time.max.ms=30000
+unclean.leader.election.enable=false
+
+# Group coordinator
+offsets.topic.replication.factor=3
+transaction.state.log.replication.factor=3
+transaction.state.log.min.isr=2
+
+# Auto topic creation (turn off in production)
+auto.create.topics.enable=false
+delete.topic.enable=true</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 16 -->
+<!-- =================================================== -->
+<h2 id="m16"><span class="module-tag">Module 16</span><br>Hands-On: Docker Setup</h2>
+
+<p>Save this <code>docker-compose.yml</code>:</p>
+
+<pre><code>version: '3.8'
+services:
+  kafka:
+    image: bitnami/kafka:3.7
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    volumes:
+      - kafka-data:/bitnami/kafka
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8080:8080"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+    depends_on:
+      - kafka
+
+volumes:
+  kafka-data:</code></pre>
+
+<p>Commands:</p>
+<pre><code>docker compose up -d
+docker compose logs -f kafka
+docker compose down                 # stop
+docker compose down -v              # stop + delete data</code></pre>
+
+<p>Open <code>http://localhost:8080</code> for the web UI. Use it to:</p>
+<ul>
+  <li>Create topics</li>
+  <li>Browse messages</li>
+  <li>See consumer groups and lag</li>
+  <li>Produce test messages</li>
+</ul>
+
+<h3>3-broker local cluster (advanced)</h3>
+<details>
+<summary>Click to expand multi-broker setup</summary>
+<pre><code>version: '3.8'
+services:
+  kafka1:
+    image: bitnami/kafka:3.7
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    ports: [ "19092:9092" ]
+
+  kafka2:
+    image: bitnami/kafka:3.7
+    environment:
+      - KAFKA_CFG_NODE_ID=2
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka2:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    ports: [ "29092:9092" ]
+
+  kafka3:
+    image: bitnami/kafka:3.7
+    environment:
+      - KAFKA_CFG_NODE_ID=3
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka3:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    ports: [ "39092:9092" ]</code></pre>
+</details>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 17 -->
+<!-- =================================================== -->
+<h2 id="m17"><span class="module-tag">Module 17</span><br>CLI Tools Reference</h2>
+
+<p>Kafka ships with shell scripts in <code>bin/</code> (or <code>bin/windows/</code>). Inside the Bitnami container they're in <code>/opt/bitnami/kafka/bin/</code>.</p>
+
+<p>To exec into the container: <code>docker exec -it &lt;container&gt; bash</code></p>
+
+<h3>kafka-topics.sh</h3>
+<pre><code># List topics
+kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+# Create topic
+kafka-topics.sh --bootstrap-server localhost:9092 --create \
+  --topic orders --partitions 6 --replication-factor 1
+
+# Describe topic
+kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic orders
+
+# Increase partitions (cannot decrease!)
+kafka-topics.sh --bootstrap-server localhost:9092 --alter \
+  --topic orders --partitions 12
+
+# Delete topic
+kafka-topics.sh --bootstrap-server localhost:9092 --delete --topic orders</code></pre>
+
+<h3>kafka-console-producer.sh</h3>
+<pre><code>kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders
+&gt; hello
+&gt; another message
+&gt; ^D
+
+# With keys
+kafka-console-producer.sh --bootstrap-server localhost:9092 --topic orders \
+  --property "parse.key=true" --property "key.separator=:"
+&gt; user-1:order-created</code></pre>
+
+<h3>kafka-console-consumer.sh</h3>
+<pre><code># Read from now
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders
+
+# Read from beginning
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders --from-beginning
+
+# Show keys
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders \
+  --from-beginning --property print.key=true --property key.separator=" -- "
+
+# Use a consumer group
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic orders \
+  --group my-group</code></pre>
+
+<h3>kafka-consumer-groups.sh</h3>
+<pre><code># List groups
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+
+# Describe (shows lag!)
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group my-group
+
+# Reset offsets
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group \
+  --topic orders --reset-offsets --to-earliest --execute
+
+# Reset to specific offset
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group \
+  --topic orders --reset-offsets --to-offset 1000 --execute
+
+# Reset to timestamp
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group my-group \
+  --topic orders --reset-offsets --to-datetime 2026-05-01T00:00:00.000 --execute
+
+# Delete group
+kafka-consumer-groups.sh --bootstrap-server localhost:9092 --delete --group my-group</code></pre>
+
+<h3>kafka-configs.sh</h3>
+<pre><code># Get topic configs
+kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics \
+  --entity-name orders --describe
+
+# Set topic config
+kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics \
+  --entity-name orders --alter --add-config retention.ms=86400000
+
+# Remove
+kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics \
+  --entity-name orders --alter --delete-config retention.ms</code></pre>
+
+<h3>kafka-reassign-partitions.sh</h3>
+<p>Used to move partitions between brokers. Generate plan, execute, verify. (Module 29.)</p>
+
+<h3>kafka-acls.sh</h3>
+<p>Manage ACLs (Module 26).</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 18 -->
+<!-- =================================================== -->
+<h2 id="m18"><span class="module-tag">Module 18</span><br>Code Examples — Java</h2>
+
+<h3>Maven dependency</h3>
+<pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;org.apache.kafka&lt;/groupId&gt;
+  &lt;artifactId&gt;kafka-clients&lt;/artifactId&gt;
+  &lt;version&gt;3.7.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+
+<h3>Producer</h3>
+<pre><code>import org.apache.kafka.clients.producer.*;
+import java.util.Properties;
+
+public class SimpleProducer {
+    public static void main(String[] args) throws Exception {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("acks", "all");
+        props.put("enable.idempotence", "true");
+        props.put("linger.ms", "10");
+        props.put("compression.type", "snappy");
+
+        try (Producer&lt;String, String&gt; producer = new KafkaProducer&lt;&gt;(props)) {
+            for (int i = 0; i &lt; 100; i++) {
+                ProducerRecord&lt;String, String&gt; record =
+                    new ProducerRecord&lt;&gt;("orders", "user-" + i, "order data " + i);
+
+                producer.send(record, (metadata, exception) -&gt; {
+                    if (exception != null) exception.printStackTrace();
+                    else System.out.printf("Sent to partition %d offset %d%n",
+                        metadata.partition(), metadata.offset());
+                });
+            }
+            producer.flush();
+        }
+    }
+}</code></pre>
+
+<h3>Consumer</h3>
+<pre><code>import org.apache.kafka.clients.consumer.*;
+import java.time.Duration;
+import java.util.*;
+
+public class SimpleConsumer {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("group.id", "order-processor");
+        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.put("auto.offset.reset", "earliest");
+        props.put("enable.auto.commit", "false");
+
+        try (KafkaConsumer&lt;String, String&gt; consumer = new KafkaConsumer&lt;&gt;(props)) {
+            consumer.subscribe(Collections.singletonList("orders"));
+
+            Runtime.getRuntime().addShutdownHook(new Thread(consumer::wakeup));
+
+            try {
+                while (true) {
+                    ConsumerRecords&lt;String, String&gt; records = consumer.poll(Duration.ofMillis(500));
+                    for (ConsumerRecord&lt;String, String&gt; record : records) {
+                        System.out.printf("p=%d off=%d k=%s v=%s%n",
+                            record.partition(), record.offset(), record.key(), record.value());
+                    }
+                    consumer.commitAsync();
+                }
+            } catch (WakeupException e) {
+                // graceful shutdown
+            } finally {
+                consumer.commitSync();
+            }
+        }
+    }
+}</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 19 -->
+<!-- =================================================== -->
+<h2 id="m19"><span class="module-tag">Module 19</span><br>Code Examples — Python</h2>
+
+<h3>Install</h3>
+<pre><code>pip install confluent-kafka</code></pre>
+
+<h3>Producer</h3>
+<pre><code>from confluent_kafka import Producer
+import json
+
+conf = {
+    'bootstrap.servers': 'localhost:9092',
+    'acks': 'all',
+    'enable.idempotence': True,
+    'linger.ms': 10,
+    'compression.type': 'snappy',
+}
+
+producer = Producer(conf)
+
+def delivery(err, msg):
+    if err:
+        print(f'Delivery failed: {err}')
+    else:
+        print(f'Delivered to {msg.topic()}[{msg.partition()}]@{msg.offset()}')
+
+for i in range(100):
+    payload = json.dumps({'order_id': i, 'amount': 99.99}).encode()
+    producer.produce('orders', key=f'user-{i}'.encode(), value=payload, callback=delivery)
+    producer.poll(0)
+
+producer.flush()</code></pre>
+
+<h3>Consumer</h3>
+<pre><code>from confluent_kafka import Consumer, KafkaError
+
+conf = {
+    'bootstrap.servers': 'localhost:9092',
+    'group.id': 'order-processor',
+    'auto.offset.reset': 'earliest',
+    'enable.auto.commit': False,
+}
+
+consumer = Consumer(conf)
+consumer.subscribe(['orders'])
+
+try:
+    while True:
+        msg = consumer.poll(1.0)
+        if msg is None:
+            continue
+        if msg.error():
+            print(f'Error: {msg.error()}')
+            continue
+
+        print(f'p={msg.partition()} off={msg.offset()} k={msg.key()} v={msg.value()}')
+        # process...
+        consumer.commit(msg, asynchronous=False)
+except KeyboardInterrupt:
+    pass
+finally:
+    consumer.close()</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 20 -->
+<!-- =================================================== -->
+<h2 id="m20"><span class="module-tag">Module 20</span><br>Code Examples — Node.js</h2>
+
+<h3>Install</h3>
+<pre><code>npm install kafkajs</code></pre>
+
+<h3>Producer</h3>
+<pre><code>const { Kafka, CompressionTypes } = require('kafkajs');
+
+const kafka = new Kafka({
+  clientId: 'order-app',
+  brokers: ['localhost:9092'],
+});
+
+const producer = kafka.producer({ idempotent: true });
+
+(async () =&gt; {
+  await producer.connect();
+  await producer.send({
+    topic: 'orders',
+    compression: CompressionTypes.Snappy,
+    messages: [
+      { key: 'user-1', value: JSON.stringify({ orderId: 1 }) },
+      { key: 'user-2', value: JSON.stringify({ orderId: 2 }) },
+    ],
+  });
+  await producer.disconnect();
+})();</code></pre>
+
+<h3>Consumer</h3>
+<pre><code>const { Kafka } = require('kafkajs');
+
+const kafka = new Kafka({ clientId: 'order-app', brokers: ['localhost:9092'] });
+const consumer = kafka.consumer({ groupId: 'order-processor' });
+
+(async () =&gt; {
+  await consumer.connect();
+  await consumer.subscribe({ topic: 'orders', fromBeginning: true });
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) =&gt; {
+      console.log(`p=${partition} off=${message.offset} k=${message.key} v=${message.value}`);
+      // KafkaJS auto-commits after eachMessage returns
+    },
+  });
+})();</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 21 -->
+<!-- =================================================== -->
+<h2 id="m21"><span class="module-tag">Module 21</span><br>Code Examples — .NET (C#)</h2>
+
+<h3>Install</h3>
+<pre><code>dotnet add package Confluent.Kafka --version 2.5.0</code></pre>
+
+<h3>Producer</h3>
+<pre><code>using Confluent.Kafka;
+
+var config = new ProducerConfig
+{
+    BootstrapServers = "localhost:9092",
+    Acks = Acks.All,
+    EnableIdempotence = true,
+    LingerMs = 10,
+    CompressionType = CompressionType.Snappy
+};
+
+using var producer = new ProducerBuilder&lt;string, string&gt;(config).Build();
+
+for (int i = 0; i &lt; 100; i++)
+{
+    var result = await producer.ProduceAsync("orders",
+        new Message&lt;string, string&gt; { Key = $"user-{i}", Value = $"order {i}" });
+    Console.WriteLine($"p={result.Partition} off={result.Offset}");
+}
+
+producer.Flush(TimeSpan.FromSeconds(10));</code></pre>
+
+<h3>Consumer</h3>
+<pre><code>using Confluent.Kafka;
+
+var config = new ConsumerConfig
+{
+    BootstrapServers = "localhost:9092",
+    GroupId = "order-processor",
+    AutoOffsetReset = AutoOffsetReset.Earliest,
+    EnableAutoCommit = false
+};
+
+using var consumer = new ConsumerBuilder&lt;string, string&gt;(config).Build();
+consumer.Subscribe("orders");
+
+var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (_, e) =&gt; { e.Cancel = true; cts.Cancel(); };
+
+try
+{
+    while (!cts.IsCancellationRequested)
+    {
+        var cr = consumer.Consume(cts.Token);
+        Console.WriteLine($"p={cr.Partition} off={cr.Offset} k={cr.Message.Key} v={cr.Message.Value}");
+        consumer.Commit(cr);
+    }
+}
+catch (OperationCanceledException) { }
+finally
+{
+    consumer.Close();
+}</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 22 -->
+<!-- =================================================== -->
+<h2 id="m22"><span class="module-tag">Module 22</span><br>Schema Registry &amp; Avro</h2>
+
+<p>Plain JSON works fine until two teams disagree on a field rename. Then production breaks. The fix is a <strong>Schema Registry</strong>.</p>
+
+<h3>What it does</h3>
+<ul>
+  <li>Stores schemas (Avro, Protobuf, or JSON Schema) versioned per topic.</li>
+  <li>Producer fetches/registers schema before publishing; the schema's ID is encoded in the first 5 bytes of every message.</li>
+  <li>Consumer reads the schema ID, fetches the matching schema, deserializes.</li>
+  <li>Enforces compatibility rules — rejects breaking schema changes at publish time.</li>
+</ul>
+
+<h3>Compatibility modes</h3>
+<table>
+  <thead><tr><th>Mode</th><th>Old data + new code</th><th>New data + old code</th></tr></thead>
+  <tbody>
+    <tr><td>BACKWARD (default)</td><td>✓</td><td>✗</td></tr>
+    <tr><td>FORWARD</td><td>✗</td><td>✓</td></tr>
+    <tr><td>FULL</td><td>✓</td><td>✓</td></tr>
+    <tr><td>NONE</td><td>—</td><td>—</td></tr>
+  </tbody>
+</table>
+
+<h3>Avro schema example</h3>
+<pre><code>{
+  "type": "record",
+  "name": "Order",
+  "namespace": "com.example",
+  "fields": [
+    { "name": "orderId", "type": "string" },
+    { "name": "userId",  "type": "string" },
+    { "name": "amount",  "type": "double" },
+    { "name": "currency","type": "string", "default": "USD" }
+  ]
+}</code></pre>
+
+<h3>Adding a field</h3>
+<p>Add fields with a <code>default</code> value to maintain BACKWARD compatibility — old records (without the field) deserialize using the default.</p>
+
+<h3>Avro vs Protobuf vs JSON Schema</h3>
+<ul>
+  <li><strong>Avro</strong>: compact binary, schema evolution by name. Best for streaming.</li>
+  <li><strong>Protobuf</strong>: compact, very fast. Field-tag based; renames are non-breaking.</li>
+  <li><strong>JSON Schema</strong>: human-readable, larger payloads.</li>
+</ul>
+
+<h3>Confluent Schema Registry quick start</h3>
+<pre><code># Add to docker-compose.yml
+schema-registry:
+  image: confluentinc/cp-schema-registry:7.6.0
+  ports: [ "8081:8081" ]
+  environment:
+    SCHEMA_REGISTRY_HOST_NAME: schema-registry
+    SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+    SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092</code></pre>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 23 -->
+<!-- =================================================== -->
+<h2 id="m23"><span class="module-tag">Module 23</span><br>Kafka Connect</h2>
+
+<p><strong>Kafka Connect</strong> is a framework for moving data between Kafka and external systems without writing code. You configure pre-built <strong>connectors</strong>:</p>
+
+<ul>
+  <li><strong>Source connectors</strong>: external system → Kafka (e.g., MySQL CDC, S3, MongoDB).</li>
+  <li><strong>Sink connectors</strong>: Kafka → external system (e.g., Elasticsearch, Snowflake, Postgres).</li>
+</ul>
+
+<h3>Why use it?</h3>
+<ul>
+  <li>No custom code for common integrations.</li>
+  <li>Built-in fault tolerance, restart-from-offset.</li>
+  <li>Distributed mode runs as a cluster of workers.</li>
+  <li>Hundreds of community + commercial connectors available (Confluent Hub).</li>
+</ul>
+
+<h3>Architecture</h3>
+<pre class="diagram">┌──────────────┐   ┌──────────────────┐   ┌────────┐   ┌──────────────────┐   ┌──────────────┐
+│  MySQL DB    │──►│ Debezium Source  │──►│ Kafka  │──►│ Elastic Sink     │──►│ Elasticsearch│
+│              │   │ Connector        │   │ topics │   │ Connector        │   │              │
+└──────────────┘   └──────────────────┘   └────────┘   └──────────────────┘   └──────────────┘</code></pre>
+
+<h3>Sample connector config (REST)</h3>
+<pre><code>POST http://connect:8083/connectors
+Content-Type: application/json
+
+{
+  "name": "mysql-orders-source",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+    "database.hostname": "mysql",
+    "database.port": "3306",
+    "database.user": "debezium",
+    "database.password": "...",
+    "database.server.id": "184054",
+    "topic.prefix": "mysql",
+    "database.include.list": "shop",
+    "table.include.list": "shop.orders"
+  }
+}</code></pre>
+
+<h3>Single Message Transforms (SMTs)</h3>
+<p>Lightweight in-flight transformations: rename fields, drop fields, cast types, route to different topics. Configured in connector config — no code.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 24 -->
+<!-- =================================================== -->
+<h2 id="m24"><span class="module-tag">Module 24</span><br>Kafka Streams</h2>
+
+<p><strong>Kafka Streams</strong> is a Java library (no separate cluster!) for building streaming applications that consume from Kafka, transform, and produce back to Kafka.</p>
+
+<h3>Why it's different from a regular consumer</h3>
+<ul>
+  <li>High-level DSL: <code>map</code>, <code>filter</code>, <code>groupBy</code>, <code>aggregate</code>, <code>join</code>, <code>windowedBy</code>.</li>
+  <li>Stateful operations backed by RocksDB + a compacted Kafka topic (so state survives restarts).</li>
+  <li>Exactly-once processing guarantees (Kafka-to-Kafka).</li>
+  <li>Auto-scales by consumer group rebalance.</li>
+</ul>
+
+<h3>Tiny example</h3>
+<pre><code>StreamsBuilder builder = new StreamsBuilder();
+
+KStream&lt;String, String&gt; orders = builder.stream("orders");
+
+KTable&lt;String, Long&gt; ordersPerUser = orders
+    .groupByKey()
+    .count(Materialized.as("orders-per-user"));
+
+ordersPerUser.toStream().to("orders-count", Produced.with(Serdes.String(), Serdes.Long()));
+
+KafkaStreams streams = new KafkaStreams(builder.build(), props);
+streams.start();</code></pre>
+
+<h3>Core abstractions</h3>
+<ul>
+  <li><strong>KStream</strong> — stream of records (each is a fact).</li>
+  <li><strong>KTable</strong> — changelog stream interpreted as a table (latest value per key).</li>
+  <li><strong>GlobalKTable</strong> — like KTable but each instance has the full table (for star-schema joins).</li>
+</ul>
+
+<h3>Windowing</h3>
+<p>Kafka Streams supports tumbling, hopping, sliding, and session windows for time-based aggregations.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 25 -->
+<!-- =================================================== -->
+<h2 id="m25"><span class="module-tag">Module 25</span><br>ksqlDB</h2>
+
+<p><strong>ksqlDB</strong> is a SQL-like layer on top of Kafka Streams. You write SQL; ksqlDB compiles to a Streams topology and runs it.</p>
+
+<pre><code>CREATE STREAM orders (
+    order_id VARCHAR,
+    user_id  VARCHAR,
+    amount   DOUBLE
+) WITH (KAFKA_TOPIC='orders', VALUE_FORMAT='AVRO');
+
+CREATE TABLE big_orders AS
+  SELECT user_id, COUNT(*) AS n, SUM(amount) AS total
+  FROM orders
+  WHERE amount &gt; 100
+  GROUP BY user_id
+  EMIT CHANGES;</code></pre>
+
+<p>Use it when: your team prefers SQL, ad-hoc queries on streams matter, or you don't want to deploy a separate Java app.</p>
+
+<p>Trade-off: less expressive than Streams' DSL/Processor API; another component to operate.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 26 -->
+<!-- =================================================== -->
+<h2 id="m26"><span class="module-tag">Module 26</span><br>Security</h2>
+
+<h3>Three layers</h3>
+<ol>
+  <li><strong>Encryption in transit</strong> — SSL/TLS on broker listeners.</li>
+  <li><strong>Authentication</strong> — who are you? Via SASL or mTLS.</li>
+  <li><strong>Authorization</strong> — what can you do? Via ACLs.</li>
+</ol>
+
+<h3>SSL setup (in transit)</h3>
+<pre><code># broker server.properties
+listeners=SSL://:9093
+ssl.keystore.location=/path/server.keystore.jks
+ssl.keystore.password=...
+ssl.key.password=...
+ssl.truststore.location=/path/server.truststore.jks
+ssl.truststore.password=...
+
+# client config
+security.protocol=SSL
+ssl.truststore.location=/path/client.truststore.jks
+ssl.truststore.password=...</code></pre>
+
+<h3>SASL authentication mechanisms</h3>
+<table>
+  <thead><tr><th>Mechanism</th><th>How</th><th>When</th></tr></thead>
+  <tbody>
+    <tr><td>SASL/PLAIN</td><td>Username + password over SSL</td><td>Simple internal use</td></tr>
+    <tr><td>SASL/SCRAM-SHA-256/512</td><td>Salted hash, no plaintext on wire</td><td>Recommended for username/password</td></tr>
+    <tr><td>SASL/GSSAPI (Kerberos)</td><td>Enterprise SSO</td><td>Active Directory shops</td></tr>
+    <tr><td>SASL/OAUTHBEARER</td><td>OAuth2 tokens</td><td>Cloud / OIDC integrations</td></tr>
+    <tr><td>mTLS</td><td>Client certs</td><td>Strong identity, no passwords</td></tr>
+  </tbody>
+</table>
+
+<h3>ACLs</h3>
+<pre><code># Allow user "alice" to produce to topic "orders"
+kafka-acls.sh --bootstrap-server localhost:9092 --add \
+  --allow-principal User:alice --producer --topic orders
+
+# Allow user "bob" to consume topic "orders" with group "shipping"
+kafka-acls.sh --bootstrap-server localhost:9092 --add \
+  --allow-principal User:bob --consumer --topic orders --group shipping
+
+# List ACLs
+kafka-acls.sh --bootstrap-server localhost:9092 --list</code></pre>
+
+<h3>Best practices</h3>
+<ul>
+  <li>Use SASL_SSL (auth + encryption).</li>
+  <li>Disable plaintext listeners in production.</li>
+  <li>Set <code>allow.everyone.if.no.acl.found=false</code>.</li>
+  <li>Per-app principals, not shared "kafka_user".</li>
+  <li>Rotate credentials regularly.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 27 -->
+<!-- =================================================== -->
+<h2 id="m27"><span class="module-tag">Module 27</span><br>Monitoring</h2>
+
+<p>Kafka exposes hundreds of <strong>JMX metrics</strong>. Pipe them into Prometheus or your APM via the JMX exporter.</p>
+
+<h3>The metrics that matter</h3>
+
+<h4>Cluster health</h4>
+<ul>
+  <li><code>kafka.server:type=ReplicaManager,name=UnderReplicatedPartitions</code> — should be 0.</li>
+  <li><code>kafka.server:type=ReplicaManager,name=UnderMinIsrPartitionCount</code> — should be 0.</li>
+  <li><code>kafka.controller:type=KafkaController,name=ActiveControllerCount</code> — exactly 1 across the cluster.</li>
+  <li><code>kafka.server:type=ReplicaManager,name=OfflinePartitionsCount</code> — should be 0.</li>
+</ul>
+
+<h4>Throughput</h4>
+<ul>
+  <li><code>BytesInPerSec</code>, <code>BytesOutPerSec</code> per topic and broker.</li>
+  <li><code>MessagesInPerSec</code>.</li>
+  <li><code>RequestsPerSec</code> by request type.</li>
+</ul>
+
+<h4>Latency</h4>
+<ul>
+  <li><code>RequestQueueTimeMs</code>, <code>LocalTimeMs</code>, <code>RemoteTimeMs</code>, <code>TotalTimeMs</code> for produce and fetch.</li>
+</ul>
+
+<h4>Consumer lag</h4>
+<ul>
+  <li><code>kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*</code> → <code>records-lag-max</code>.</li>
+  <li>External tools: Burrow (LinkedIn), Cruise Control, Kafka UI.</li>
+</ul>
+
+<h3>Logs to watch</h3>
+<ul>
+  <li><code>controller.log</code> — leader elections, broker failures.</li>
+  <li><code>state-change.log</code> — partition state transitions.</li>
+  <li><code>kafka-request.log</code> — slow requests.</li>
+</ul>
+
+<h3>Recommended dashboard stack</h3>
+<ul>
+  <li>JMX Exporter → Prometheus → Grafana.</li>
+  <li>Confluent Control Center (commercial) or Kafka UI (free) for browsing.</li>
+  <li>Burrow for consumer lag alerting.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 28 -->
+<!-- =================================================== -->
+<h2 id="m28"><span class="module-tag">Module 28</span><br>Performance Tuning</h2>
+
+<h3>Producer tuning</h3>
+<table>
+  <thead><tr><th>Setting</th><th>For throughput</th><th>For latency</th></tr></thead>
+  <tbody>
+    <tr><td><code>linger.ms</code></td><td>20–100</td><td>0–5</td></tr>
+    <tr><td><code>batch.size</code></td><td>64KB–1MB</td><td>16KB</td></tr>
+    <tr><td><code>compression.type</code></td><td>lz4 or zstd</td><td>none or lz4</td></tr>
+    <tr><td><code>acks</code></td><td>1 (or all if needed)</td><td>1</td></tr>
+    <tr><td><code>buffer.memory</code></td><td>64–256 MB</td><td>default</td></tr>
+  </tbody>
+</table>
+
+<h3>Consumer tuning</h3>
+<ul>
+  <li>Increase <code>max.poll.records</code> to amortize per-poll overhead.</li>
+  <li>Increase <code>fetch.min.bytes</code> + <code>fetch.max.wait.ms</code> for batch consumers.</li>
+  <li>Run as many consumer instances as partitions for full parallelism.</li>
+  <li>Process in parallel <em>within</em> a partition? Possible with care; preserve ordering manually.</li>
+</ul>
+
+<h3>Broker tuning</h3>
+<ul>
+  <li><strong>OS</strong>: increase <code>vm.max_map_count</code>, <code>fs.file-max</code>, <code>vm.swappiness=1</code>.</li>
+  <li><strong>Filesystem</strong>: ext4 or XFS. <code>noatime</code> mount option.</li>
+  <li><strong>Disk</strong>: prefer many small disks (one per <code>log.dirs</code> entry) for spread.</li>
+  <li><strong>Heap</strong>: 6–8 GB is usually plenty. Kafka uses page cache — give the OS plenty of RAM.</li>
+  <li><strong>GC</strong>: G1GC, with <code>-XX:MaxGCPauseMillis=20</code>.</li>
+</ul>
+
+<h3>Network tuning</h3>
+<ul>
+  <li><code>num.network.threads</code> ≈ number of cores.</li>
+  <li><code>num.io.threads</code> ≈ 2× number of disks.</li>
+  <li>Bump <code>socket.send.buffer.bytes</code> / <code>socket.receive.buffer.bytes</code> for high-latency networks.</li>
+</ul>
+
+<h3>Compression cheat sheet</h3>
+<table>
+  <thead><tr><th>Codec</th><th>Ratio</th><th>CPU</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>none</td><td>1.0</td><td>none</td><td>Test baseline</td></tr>
+    <tr><td>snappy</td><td>2–3×</td><td>low</td><td>Old default; balanced</td></tr>
+    <tr><td>lz4</td><td>2–3×</td><td>very low</td><td>Best for latency-sensitive</td></tr>
+    <tr><td>gzip</td><td>3–4×</td><td>high</td><td>Highest ratio, slow</td></tr>
+    <tr><td>zstd</td><td>3–5×</td><td>medium</td><td>Modern default — usually best</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 29 -->
+<!-- =================================================== -->
+<h2 id="m29"><span class="module-tag">Module 29</span><br>Operations</h2>
+
+<h3>Rolling restart of brokers</h3>
+<ol>
+  <li>Take broker out of leadership: <code>kafka-leader-election.sh --election-type preferred --all-topic-partitions</code>.</li>
+  <li>Stop broker; wait for ISR to stabilize (<code>UnderReplicatedPartitions=0</code>).</li>
+  <li>Restart broker.</li>
+  <li>Wait for ISR to fully catch up.</li>
+  <li>Move on to next broker.</li>
+</ol>
+
+<h3>Adding a broker</h3>
+<ol>
+  <li>Start a new broker with a unique <code>node.id</code> pointing at the same controllers.</li>
+  <li>It joins the cluster but holds <em>no</em> partitions.</li>
+  <li>Use <code>kafka-reassign-partitions.sh</code> to generate a balanced reassignment plan.</li>
+  <li>Execute the plan; verify completion.</li>
+</ol>
+
+<h3>Decommissioning a broker</h3>
+<ol>
+  <li>Generate a reassignment that moves all partitions off it.</li>
+  <li>Execute and verify.</li>
+  <li>Stop the broker.</li>
+</ol>
+
+<h3>Increasing partitions</h3>
+<pre><code>kafka-topics.sh --bootstrap-server ... --alter --topic orders --partitions 12</code></pre>
+<p><strong>Warning</strong>: this rebalances the key-to-partition mapping. Records previously sent for <code>userId=42</code> stay where they are; new ones go where the new hash lands. Ordering per key is broken across the boundary.</p>
+
+<h3>Backing up</h3>
+<ul>
+  <li><strong>MirrorMaker 2</strong> to a backup cluster (Module 30).</li>
+  <li>Snapshot log directories (with broker offline or use a tool like Kafka-Vault).</li>
+  <li>For compacted state, just replay from the source topic.</li>
+</ul>
+
+<h3>Disaster recovery checklist</h3>
+<ul>
+  <li>Replication factor ≥ 3 across racks/AZs.</li>
+  <li><code>min.insync.replicas=2</code> for critical topics.</li>
+  <li><code>unclean.leader.election.enable=false</code>.</li>
+  <li>Backup cluster via MirrorMaker.</li>
+  <li>Tested restore runbook.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 30 -->
+<!-- =================================================== -->
+<h2 id="m30"><span class="module-tag">Module 30</span><br>Multi-Cluster &amp; MirrorMaker</h2>
+
+<p>Reasons to run multiple clusters:</p>
+<ul>
+  <li>Geo-distribution (low-latency reads in each region).</li>
+  <li>Disaster recovery (warm standby in another region).</li>
+  <li>Environment isolation (prod, staging, dev).</li>
+  <li>Tenant isolation (per-customer cluster).</li>
+</ul>
+
+<h3>MirrorMaker 2 (MM2)</h3>
+<p>Replicates topics from a source cluster to a target cluster. Built on Kafka Connect.</p>
+
+<pre><code># mm2.properties
+clusters = us, eu
+us.bootstrap.servers = kafka-us:9092
+eu.bootstrap.servers = kafka-eu:9092
+
+us-&gt;eu.enabled = true
+us-&gt;eu.topics = orders, payments
+us-&gt;eu.groups = order-processor
+
+# Active-active
+eu-&gt;us.enabled = true
+eu-&gt;us.topics = orders, payments</code></pre>
+
+<p>Topics on the target are renamed: <code>orders</code> from cluster <code>us</code> appears as <code>us.orders</code> on cluster <code>eu</code>. This prevents loops in active-active.</p>
+
+<h3>Patterns</h3>
+<ul>
+  <li><strong>Active-Passive</strong>: producers always go to primary; secondary is replication only. On failover, consumers + producers cut over to secondary.</li>
+  <li><strong>Active-Active</strong>: producers in each region write locally; data is replicated both ways.</li>
+  <li><strong>Hub &amp; Spoke</strong>: regional clusters replicate to a central analytics cluster.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 31 -->
+<!-- =================================================== -->
+<h2 id="m31"><span class="module-tag">Module 31</span><br>Architectural Patterns</h2>
+
+<h3>Event-Driven Microservices</h3>
+<p>Each service publishes events about <em>what happened</em>; other services react. No direct service-to-service calls. Loose coupling, easy to add new services.</p>
+
+<h3>Event Sourcing</h3>
+<p>Store the state of an entity as the sequence of events that changed it. Rebuild state by replaying events. Kafka's append-only log fits perfectly. Combine with compaction for snapshots.</p>
+
+<h3>CQRS (Command Query Responsibility Segregation)</h3>
+<p>Commands write to one model (e.g., events into Kafka); queries read from a denormalized read model populated by Kafka consumers. Decouples write and read scaling.</p>
+
+<h3>Transactional Outbox</h3>
+<p>How to atomically write to your DB <em>and</em> Kafka:</p>
+<ol>
+  <li>In the same DB transaction, insert into your business tables AND into an <code>outbox</code> table.</li>
+  <li>A separate process (Debezium CDC, or a poller) reads <code>outbox</code> and publishes to Kafka.</li>
+  <li>If publish fails, retry — the row is still in <code>outbox</code>.</li>
+</ol>
+<p>This avoids the dual-write problem (DB succeeds but Kafka fails, or vice versa).</p>
+
+<h3>Saga Pattern</h3>
+<p>Long-running multi-service workflows (e.g., place order → reserve inventory → charge card → ship). Each step publishes an event; the next service reacts. On failure, compensating events undo prior steps. Implement as choreography (each service knows the next step) or orchestration (a central coordinator drives the saga).</p>
+
+<h3>Stream Enrichment</h3>
+<p>Join an event stream with a reference table (KTable or GlobalKTable) to add context. Example: enrich an order event with the customer's tier from a customer table.</p>
+
+<h3>Dead Letter Queue (DLQ)</h3>
+<p>When a message can't be processed after N retries, push it to a separate topic (e.g., <code>orders.dlq</code>) and commit the original. Inspect the DLQ later via tools or scheduled jobs.</p>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 32 -->
+<!-- =================================================== -->
+<h2 id="m32"><span class="module-tag">Module 32</span><br>Common Mistakes</h2>
+
+<table>
+  <thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Auto-commit + slow processing</td><td>Lost messages on crash</td><td><code>enable.auto.commit=false</code>, commit after processing</td></tr>
+    <tr><td>Same group.id for unrelated apps</td><td>Apps steal each other's partitions</td><td>One group.id per logical consumer</td></tr>
+    <tr><td>Too few partitions</td><td>Consumer can't scale</td><td>Plan partitions up front</td></tr>
+    <tr><td>Hot partition (low cardinality key)</td><td>One partition lags</td><td>Use higher-cardinality key</td></tr>
+    <tr><td>Treating Kafka as a database</td><td>OOM, slow queries</td><td>Use materialized views in real DBs</td></tr>
+    <tr><td>Long processing per message</td><td>Rebalance storms</td><td>Increase <code>max.poll.interval.ms</code> or shrink <code>max.poll.records</code></td></tr>
+    <tr><td>No idempotency</td><td>Duplicate side-effects on redelivery</td><td>Dedupe by message ID</td></tr>
+    <tr><td>JSON without versioning</td><td>Schema drift breaks consumers</td><td>Schema Registry + Avro/Protobuf</td></tr>
+    <tr><td>RF=1 in production</td><td>Data loss on broker failure</td><td>RF=3, min.insync.replicas=2</td></tr>
+    <tr><td>Unclean leader election enabled</td><td>Silent data loss</td><td>Disable it</td></tr>
+    <tr><td>Producer not flushed/closed</td><td>Buffered messages lost on shutdown</td><td>Always close()</td></tr>
+    <tr><td>Sharing one consumer across threads</td><td>Crashes / corruption</td><td>One consumer per thread</td></tr>
+    <tr><td>Not monitoring lag</td><td>Discover backlog after users complain</td><td>Burrow / Kafka UI / Grafana</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 33 -->
+<!-- =================================================== -->
+<h2 id="m33"><span class="module-tag">Module 33</span><br>Kafka vs Alternatives</h2>
+
+<table>
+  <thead>
+    <tr><th>System</th><th>Model</th><th>Strengths</th><th>Weaknesses vs Kafka</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>RabbitMQ</strong></td>
+      <td>Traditional broker (queue + exchanges)</td>
+      <td>Rich routing, priority queues, per-message TTL, low ops overhead</td>
+      <td>Lower throughput, no replay, smaller retention</td>
+    </tr>
+    <tr>
+      <td><strong>AWS SQS</strong></td>
+      <td>Managed simple queue</td>
+      <td>Zero ops, predictable cost</td>
+      <td>No replay, no ordering (FIFO option exists but limited), no fanout (need SNS)</td>
+    </tr>
+    <tr>
+      <td><strong>AWS Kinesis</strong></td>
+      <td>Kafka-like managed</td>
+      <td>Zero ops on AWS, IAM auth</td>
+      <td>Smaller ecosystem, fixed shard model, AWS-only</td>
+    </tr>
+    <tr>
+      <td><strong>Google Pub/Sub</strong></td>
+      <td>Managed pub/sub with at-least-once</td>
+      <td>Zero ops, global, push delivery</td>
+      <td>No partition ordering, no replay (well, limited)</td>
+    </tr>
+    <tr>
+      <td><strong>Apache Pulsar</strong></td>
+      <td>Tiered storage broker</td>
+      <td>Tiered storage, multi-tenancy, geo-replication built-in</td>
+      <td>Smaller ecosystem, more complex (BookKeeper)</td>
+    </tr>
+    <tr>
+      <td><strong>Redis Streams</strong></td>
+      <td>In-memory log</td>
+      <td>Microsecond latency, simple</td>
+      <td>Memory-bound, single-node (cluster is awkward), small retention</td>
+    </tr>
+    <tr>
+      <td><strong>NATS JetStream</strong></td>
+      <td>Lightweight log</td>
+      <td>Easy to operate, low resource use</td>
+      <td>Smaller ecosystem, less mature stream processing</td>
+    </tr>
+    <tr>
+      <td><strong>Apache RocketMQ</strong></td>
+      <td>Distributed log (Alibaba)</td>
+      <td>Strong in China, scheduled messages, transactions</td>
+      <td>Smaller ecosystem outside China</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Quick decision rule</h3>
+<ul>
+  <li>Need fanout, replay, high throughput, real ecosystem → <strong>Kafka</strong>.</li>
+  <li>Need rich routing, work queues, low scale → <strong>RabbitMQ</strong>.</li>
+  <li>Want zero ops on AWS → <strong>Kinesis</strong> or <strong>SQS+SNS</strong>.</li>
+  <li>Microsecond latency, in-memory only → <strong>Redis Streams</strong>.</li>
+  <li>Want tiered storage built-in → <strong>Pulsar</strong>.</li>
+</ul>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 34 -->
+<!-- =================================================== -->
+<h2 id="m34"><span class="module-tag">Module 34</span><br>Glossary</h2>
+
+<dl class="glossary">
+  <dt>ACK (Acknowledgement)</dt>
+  <dd>The confirmation a broker sends back to the producer after writing a record. Configured by <code>acks=0/1/all</code>.</dd>
+
+  <dt>ACL (Access Control List)</dt>
+  <dd>Permissions binding a principal (user) to allowed operations (read, write) on a resource (topic, group).</dd>
+
+  <dt>Active Segment</dt>
+  <dd>The newest segment file being written for a partition. All older segments are read-only.</dd>
+
+  <dt>Avro</dt>
+  <dd>A compact, schema-driven binary serialization format. Common in Kafka with Schema Registry.</dd>
+
+  <dt>Batch</dt>
+  <dd>A group of records the producer sends together to one partition. Improves throughput.</dd>
+
+  <dt>Broker</dt>
+  <dd>A single Kafka server. Hosts partition replicas.</dd>
+
+  <dt>Cluster</dt>
+  <dd>A set of brokers working together with a shared cluster ID.</dd>
+
+  <dt>Compaction</dt>
+  <dd>A retention strategy keeping the latest record per key.</dd>
+
+  <dt>Consumer</dt>
+  <dd>A client reading records from one or more topics.</dd>
+
+  <dt>Consumer Group</dt>
+  <dd>A set of consumers that share a <code>group.id</code> and split topic partitions.</dd>
+
+  <dt>Controller</dt>
+  <dd>The broker (or KRaft node) responsible for cluster metadata and leader elections.</dd>
+
+  <dt>DLQ (Dead Letter Queue)</dt>
+  <dd>A separate topic for messages that consistently fail processing.</dd>
+
+  <dt>Group Coordinator</dt>
+  <dd>The broker hosting the offsets and metadata for a particular consumer group.</dd>
+
+  <dt>HWM (High Water Mark)</dt>
+  <dd>The largest offset visible to consumers — replicated to all ISR.</dd>
+
+  <dt>Idempotent Producer</dt>
+  <dd>Producer that uses sequence numbers to prevent duplicate writes from retries.</dd>
+
+  <dt>ISR (In-Sync Replicas)</dt>
+  <dd>The set of replicas (including leader) caught up to the leader.</dd>
+
+  <dt>KRaft</dt>
+  <dd>Kafka Raft mode — replaces Zookeeper for metadata. Default since 3.3.</dd>
+
+  <dt>Leader</dt>
+  <dd>The replica handling reads and writes for a partition. One per partition.</dd>
+
+  <dt>Log</dt>
+  <dd>The on-disk structure of a partition: a sequence of segment files.</dd>
+
+  <dt>Offset</dt>
+  <dd>Sequential position of a record within a partition.</dd>
+
+  <dt>Partition</dt>
+  <dd>An ordered, append-only subset of a topic. The unit of parallelism.</dd>
+
+  <dt>Producer</dt>
+  <dd>A client publishing records to topics.</dd>
+
+  <dt>Rebalance</dt>
+  <dd>Re-distribution of partitions among consumers in a group when membership changes.</dd>
+
+  <dt>Replica</dt>
+  <dd>A copy of a partition on a specific broker.</dd>
+
+  <dt>Replication Factor</dt>
+  <dd>The number of replicas (including leader) per partition.</dd>
+
+  <dt>Retention</dt>
+  <dd>How long Kafka keeps records before deleting them.</dd>
+
+  <dt>Segment</dt>
+  <dd>A single file holding part of a partition's log.</dd>
+
+  <dt>Schema Registry</dt>
+  <dd>A service that stores and versions schemas, used to ensure producer/consumer compatibility.</dd>
+
+  <dt>Tombstone</dt>
+  <dd>A record with null value, used to delete a key in a compacted topic.</dd>
+
+  <dt>Topic</dt>
+  <dd>A named stream of records.</dd>
+
+  <dt>Transactional Producer</dt>
+  <dd>A producer using transactions to atomically commit writes across multiple partitions.</dd>
+
+  <dt>Zero-Copy</dt>
+  <dd>Linux <code>sendfile</code> syscall used by Kafka to skip user-space buffers when serving fetches.</dd>
+
+  <dt>Zookeeper</dt>
+  <dd>Legacy metadata service for Kafka. Replaced by KRaft.</dd>
+</dl>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 35 -->
+<!-- =================================================== -->
+<h2 id="m35"><span class="module-tag">Module 35</span><br>Practice Exercises</h2>
+
+<div class="exercise">
+  <h4>Exercise 1: First topic and CLI round-trip</h4>
+  <ol>
+    <li>Spin up the single-broker docker-compose from Module 16.</li>
+    <li>Create a topic <code>practice</code> with 3 partitions, RF=1.</li>
+    <li>Use the console producer to send 5 messages with keys.</li>
+    <li>Use the console consumer to read them <code>--from-beginning</code>.</li>
+    <li>Verify which partition each message landed in. (Hint: <code>--property print.partition=true</code>.)</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 2: Consumer groups and parallelism</h4>
+  <ol>
+    <li>Create a topic with 4 partitions.</li>
+    <li>Open 2 terminal windows, run console-consumer with the same <code>--group</code> in each.</li>
+    <li>Produce 20 messages.</li>
+    <li>Confirm each consumer gets ~half. Stop one consumer and confirm the other now gets all.</li>
+    <li>Start a third consumer in the same group. What happens? Now a fourth? A fifth?</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 3: Ordering with keys</h4>
+  <ol>
+    <li>Create a topic with 3 partitions.</li>
+    <li>Produce 30 records, half with <code>key=A</code>, half with <code>key=B</code>.</li>
+    <li>Inspect which partitions A and B landed in.</li>
+    <li>Confirm: all A's are in one partition (in order); all B's in one partition (in order); but A and B may interleave globally.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 4: Replay</h4>
+  <ol>
+    <li>Produce 100 messages.</li>
+    <li>Run a consumer with a unique group ID; consume 50, kill it.</li>
+    <li>Restart with same group — confirm it continues at 51.</li>
+    <li>Now reset offsets to earliest with <code>kafka-consumer-groups.sh</code> and restart — confirm it replays from 0.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 5: Build a small producer/consumer in your favorite language</h4>
+  <ol>
+    <li>Use the code samples from Modules 18–21.</li>
+    <li>Producer: send 1000 messages with synthetic data (random user IDs, timestamps).</li>
+    <li>Consumer: count messages per partition over 10 seconds and print stats.</li>
+    <li>Try with and without <code>linger.ms=10</code> — measure how many messages/sec you sustain.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 6: Idempotency &amp; DLQ</h4>
+  <ol>
+    <li>Build a consumer that fails 30% of messages (random).</li>
+    <li>On failure, retry up to 3 times in-process; after that, produce to <code>topic.dlq</code> and commit the original.</li>
+    <li>Add a message ID; track processed IDs in a Set; skip duplicates.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 7: Compacted topic</h4>
+  <ol>
+    <li>Create a topic with <code>cleanup.policy=compact</code>, <code>min.cleanable.dirty.ratio=0.01</code>, <code>segment.ms=10000</code>.</li>
+    <li>Produce 10 records with the same 3 keys (multiple values per key).</li>
+    <li>Wait a minute, then read from beginning. You should see only the latest per key.</li>
+    <li>Produce a tombstone (<code>value=null</code>) for one key. Confirm it disappears after the next compaction.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 8: Throughput benchmark</h4>
+  <p>Use the built-in tools:</p>
+  <pre><code>kafka-producer-perf-test.sh --topic perf --num-records 1000000 \
+  --record-size 1024 --throughput -1 \
+  --producer-props bootstrap.servers=localhost:9092 acks=1 linger.ms=10
+
+kafka-consumer-perf-test.sh --bootstrap-server localhost:9092 \
+  --topic perf --messages 1000000</code></pre>
+  <p>Try with different <code>linger.ms</code> and <code>compression.type</code>; record results.</p>
+</div>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 36 -->
+<!-- =================================================== -->
+<h2 id="m36"><span class="module-tag">Module 36</span><br>Interview Questions</h2>
+
+<div class="qa">
+  <div class="q">Q: What's the difference between a topic and a partition?</div>
+  <div>A topic is the logical name for a stream. A partition is a physical, ordered subdivision of that topic. A topic has 1+ partitions; ordering is per partition, not per topic.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How does Kafka achieve high throughput on commodity disks?</div>
+  <div>Sequential I/O (append-only logs), batching at producer and broker, page cache for hot reads, zero-copy <code>sendfile</code> for fetch responses, and compression at the producer.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What happens when a consumer joins or leaves a consumer group?</div>
+  <div>The group coordinator triggers a rebalance: the group leader recomputes assignments, and each member is told its new partitions. With cooperative rebalancing, only consumers losing partitions briefly pause; everyone else keeps consuming.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: Explain the difference between <code>acks=1</code> and <code>acks=all</code>.</div>
+  <div><code>acks=1</code> waits for the leader replica to write; can lose data if the leader fails before replicating. <code>acks=all</code> waits for all in-sync replicas; safer but slower. With <code>min.insync.replicas=2</code> and RF=3, <code>acks=all</code> tolerates one replica failure.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What is the ISR and why does it matter?</div>
+  <div>The In-Sync Replica set is the subset of replicas caught up to the leader. Only ISR members can be elected leader. A producer with <code>acks=all</code> waits for all ISR members. The ISR shrinks if a follower lags &gt; <code>replica.lag.time.max.ms</code>, and grows when it catches up.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How does Kafka guarantee ordering?</div>
+  <div>Per partition. Records with the same key always land in the same partition (assuming partition count doesn't change), so they're consumed in order. Across partitions, no global ordering.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What is exactly-once semantics in Kafka?</div>
+  <div>The combination of idempotent producer + transactional producer + <code>read_committed</code> consumer. It guarantees Kafka-to-Kafka pipelines see each record exactly once, even with retries and failures. End-to-end EOS to non-Kafka systems requires additional patterns (transactional outbox).</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: Why can you increase but not decrease partitions?</div>
+  <div>Partitioning is hash-based: <code>hash(key) % N</code>. If you decreased N, the mapping would change for nearly every key, breaking ordering and consumer offset tracking. Increasing also breaks per-key ordering across the change but is supported.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How is consumer offset stored?</div>
+  <div>In an internal compacted topic <code>__consumer_offsets</code>, keyed by (group, topic, partition). The group coordinator broker manages it.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What is log compaction and when is it useful?</div>
+  <div>A retention policy that keeps at least the latest record per key, removing older versions. Useful for materialized state (user profiles, account balances), Kafka Streams state stores, and configuration broadcasts.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: Difference between Kafka and a traditional queue (RabbitMQ)?</div>
+  <div>Kafka: durable log, multiple independent consumers (groups), replay supported, partitioned for parallelism, high throughput. RabbitMQ: queue model (delete on consume), rich routing (exchanges, headers), per-message TTL, lower throughput. Different tools for different needs.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How would you handle a poison message that always fails?</div>
+  <div>Implement a retry counter (in headers or external store). After N retries, push to a Dead Letter Queue topic and commit the original offset to unblock the partition. Have a separate process (or human) inspect the DLQ.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What happens if all replicas of a partition go offline?</div>
+  <div>The partition becomes unavailable. With <code>unclean.leader.election.enable=false</code>, Kafka waits for an in-sync replica to come back. With it enabled, it elects an out-of-sync replica — restoring availability but losing data.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: Why is Kafka pull-based instead of push-based?</div>
+  <div>Pull lets each consumer control its own pace. A slow consumer doesn't get overwhelmed; a fast one isn't throttled by the broker; and consumers can replay easily. Push systems require complex backpressure protocols.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What does <code>min.insync.replicas</code> do?</div>
+  <div>Sets the minimum number of in-sync replicas required for a write to succeed when <code>acks=all</code>. If fewer than this many ISRs exist, the producer gets a <code>NotEnoughReplicasException</code>. Trades availability for durability.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: Can you have more consumers than partitions in a group?</div>
+  <div>Yes, but the extras sit idle — each partition is owned by exactly one consumer in the group. So partition count is your maximum useful parallelism per group.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: What's the controller's job?</div>
+  <div>One broker (or KRaft node) is the controller. It detects broker failures, drives leader elections, and is the authority for cluster metadata changes (topic create/delete, partition reassignment).</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How does Schema Registry prevent breakage?</div>
+  <div>Producers register schemas before publishing. The registry checks compatibility (BACKWARD/FORWARD/FULL/NONE) against existing versions and rejects changes that violate the policy. The schema ID is embedded in each message so consumers can fetch the right schema.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How would you back up a Kafka cluster?</div>
+  <div>Best: replicate to a secondary cluster with MirrorMaker 2 (continuously). Worst case: snapshot log directories with brokers offline. For state that's downstream of a topic, you can usually rebuild by replaying.</div>
+</div>
+
+<div class="qa">
+  <div class="q">Q: How do you handle a hot partition?</div>
+  <div>(1) Use a higher-cardinality key. (2) Add a synthetic suffix to the key to spread it. (3) Increase partition count and reassign. (4) If ordering matters within "user", and the user is the hot one, you may need to rearchitect.</div>
+</div>
+
+<hr>
+
+<!-- =================================================== -->
+<!-- MODULE 37 -->
+<!-- =================================================== -->
+<h2 id="m37"><span class="module-tag">Module 37</span><br>Resources &amp; Roadmap</h2>
+
+<h3>Free official resources</h3>
+<ul>
+  <li><strong>Apache Kafka Docs</strong> — kafka.apache.org/documentation/</li>
+  <li><strong>Confluent Developer</strong> — developer.confluent.io (free courses, including "Apache Kafka 101")</li>
+  <li><strong>Confluent Blog</strong> — confluent.io/blog (deep technical articles)</li>
+  <li><strong>Kafka Improvement Proposals (KIPs)</strong> — design discussions for every feature</li>
+</ul>
+
+<h3>Books</h3>
+<ul>
+  <li><em>Kafka: The Definitive Guide</em> (3rd ed.) — Shapira, Palino, Sivaram, Petty. Free PDF on Confluent's site.</li>
+  <li><em>Designing Event-Driven Systems</em> — Ben Stopford (free PDF on Confluent).</li>
+  <li><em>Mastering Kafka Streams and ksqlDB</em> — Mitch Seymour.</li>
+  <li><em>Kafka Streams in Action</em> — Bill Bejeck.</li>
+  <li><em>Kafka in Action</em> — Scott, Gamov, Klein.</li>
+</ul>
+
+<h3>Tools to know</h3>
+<ul>
+  <li><strong>Kafka UI</strong> (Provectus) — free web UI</li>
+  <li><strong>Kowl / Redpanda Console</strong> — alternative web UIs</li>
+  <li><strong>kcat</strong> (formerly kafkacat) — Swiss-army CLI for Kafka</li>
+  <li><strong>Burrow</strong> — consumer lag monitoring</li>
+  <li><strong>Cruise Control</strong> — automated cluster rebalancing</li>
+  <li><strong>Confluent Control Center</strong> — commercial UI</li>
+</ul>
+
+<h3>30/60/90 day learning roadmap</h3>
+
+<h4>Days 1–30 — Producer/Consumer fluency</h4>
+<ul>
+  <li>Run single-broker Docker locally.</li>
+  <li>Master CLI tools (topics, console-producer, console-consumer, consumer-groups, configs).</li>
+  <li>Write producer + consumer in your language; understand keys, partitions, offsets.</li>
+  <li>Complete Exercises 1–5.</li>
+  <li>Read <em>Kafka: The Definitive Guide</em> chapters 1–4.</li>
+</ul>
+
+<h4>Days 31–60 — Production readiness</h4>
+<ul>
+  <li>Run a 3-broker cluster; test broker failure and recovery.</li>
+  <li>Implement at-least-once with idempotent processing + DLQ (Exercise 6).</li>
+  <li>Add Schema Registry + Avro to your producer/consumer.</li>
+  <li>Set up Prometheus + Grafana + JMX exporter.</li>
+  <li>Run kafka-producer-perf-test; tune <code>linger.ms</code>, batch size, compression.</li>
+  <li>Read <em>The Definitive Guide</em> chapters 5–8.</li>
+</ul>
+
+<h4>Days 61–90 — Advanced topics &amp; ecosystem</h4>
+<ul>
+  <li>Build a Kafka Streams or ksqlDB app for a real aggregation problem.</li>
+  <li>Wire up Kafka Connect with at least one source and sink connector.</li>
+  <li>Implement an outbox pattern with CDC (Debezium).</li>
+  <li>Configure SASL_SSL + ACLs.</li>
+  <li>Set up MirrorMaker 2 between two clusters.</li>
+  <li>Read remaining chapters; explore KIPs that interest you.</li>
+</ul>
+
+<h3>Communities</h3>
+<ul>
+  <li>Kafka users mailing list (users@kafka.apache.org)</li>
+  <li>Confluent Community Slack (cnfl.io/slack)</li>
+  <li>r/apachekafka subreddit</li>
+  <li>Stack Overflow tag <code>apache-kafka</code></li>
+</ul>
+
+<hr>
+
+<footer style="text-align:center; color: var(--muted); font-size: 0.9em; margin-top: 64px;">
+  The Complete Apache Kafka Course — for self-paced learning from beginner to production.
+</footer>
+
+</main>
+
+</div>
+</body>
+</html>

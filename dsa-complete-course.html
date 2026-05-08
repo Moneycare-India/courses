@@ -1,0 +1,4410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete DSA Course — Data Structures, Algorithms, Big-O, Interview Prep</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #0891b2;
+    --accent-2: #0e7490;
+    --accent-soft: #cffafe;
+    --border: #d0d7de;
+    --code-bg: #1e1e1e;
+    --code-fg: #e6e6e6;
+    --inline-code-bg: #eef2f5;
+    --inline-code-fg: #d6336c;
+    --table-head: #f6f8fa;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9c74f;
+    --tip-bg: #e3fcec;
+    --tip-border: #2da44e;
+    --warn-bg: #ffeef0;
+    --warn-border: #cf222e;
+    --info-bg: #ddf4ff;
+    --info-border: #0969da;
+    --sidebar-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65; color: var(--fg); background: var(--bg);
+    margin: 0; padding: 0;
+  }
+  .layout { display: grid; grid-template-columns: 290px 1fr; gap: 0; min-height: 100vh; }
+  aside.sidebar {
+    background: var(--sidebar-bg); border-right: 1px solid var(--border);
+    padding: 24px 20px; position: sticky; top: 0; height: 100vh;
+    overflow-y: auto; font-size: 0.9em;
+  }
+  aside.sidebar h2 {
+    font-size: 0.82em; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); margin: 22px 0 6px; padding: 0; border: none;
+  }
+  aside.sidebar h2:first-of-type { margin-top: 0; }
+  aside.sidebar a {
+    display: block; padding: 4px 8px; color: var(--fg); text-decoration: none;
+    border-radius: 4px; margin-bottom: 2px; line-height: 1.35;
+  }
+  aside.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+  aside.sidebar .brand {
+    font-weight: 700; font-size: 1.05em; color: var(--accent); margin-bottom: 4px;
+  }
+  aside.sidebar .brand-sub { font-size: 0.8em; color: var(--muted); margin-bottom: 16px; }
+  main { max-width: 920px; padding: 48px 48px 96px; }
+  header.title {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px; margin-bottom: 32px;
+  }
+  header.title h1 { margin: 0 0 8px 0; font-size: 2.2em; line-height: 1.2; }
+  header.title p { margin: 0; color: var(--muted); font-size: 1.05em; }
+  .module-tag {
+    display: inline-block; background: var(--accent); color: white;
+    padding: 2px 10px; border-radius: 12px; font-size: 0.75em;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .module-tag.project { background: #6f42c1; }
+  .module-tag.pattern { background: #2da44e; }
+  h2 {
+    margin-top: 64px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border); font-size: 1.6em;
+  }
+  h3 { margin-top: 36px; font-size: 1.25em; }
+  h4 { margin-top: 24px; font-size: 1.05em; color: var(--accent); }
+  p, li { font-size: 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--inline-code-bg); color: var(--inline-code-fg);
+    padding: 2px 6px; border-radius: 4px; font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 18px 20px; border-radius: 8px;
+    overflow-x: auto; line-height: 1.5; font-size: 0.88em;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.93em; }
+  th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--table-head); font-weight: 600; }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .callout {
+    border-left: 4px solid var(--callout-border); background: var(--callout-bg);
+    padding: 12px 16px; margin: 16px 0; border-radius: 4px;
+  }
+  .callout.tip { border-color: var(--tip-border); background: var(--tip-bg); }
+  .callout.warn { border-color: var(--warn-border); background: var(--warn-bg); }
+  .callout.info { border-color: var(--info-border); background: var(--info-bg); }
+  hr { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  pre.diagram {
+    background: #f6f8fa; color: #24292f;
+    border: 1px solid var(--border); font-size: 0.82em;
+  }
+  .compare {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0;
+  }
+  .compare .bad, .compare .good {
+    border-radius: 8px; padding: 16px; font-size: 0.9em;
+  }
+  .compare .bad { background: #fff7ed; border: 1px solid #fdba74; }
+  .compare .good { background: #ecfdf5; border: 1px solid #6ee7b7; }
+  .compare h4 { margin-top: 0; }
+  .compare .bad h4 { color: #c2410c; }
+  .compare .good h4 { color: #047857; }
+  .compare pre { font-size: 0.8em; padding: 12px 14px; }
+  .complexity-table th, .complexity-table td { text-align: center; }
+  .complexity-table .good { color: #047857; font-weight: 600; }
+  .complexity-table .ok { color: #ca8a04; font-weight: 600; }
+  .complexity-table .bad { color: #dc2626; font-weight: 600; }
+  details {
+    background: #f6f8fa; border: 1px solid var(--border);
+    border-radius: 6px; padding: 12px 16px; margin: 12px 0;
+  }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+  .exercise {
+    background: #cffafe; border: 1px solid #67e8f9;
+    border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+  }
+  .exercise h4 { margin-top: 0; color: var(--accent); }
+  .qa {
+    margin: 12px 0; padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #f6f8fa; border-radius: 4px;
+  }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .glossary dt { font-weight: 700; color: var(--accent); margin-top: 14px; }
+  .glossary dd { margin: 4px 0 0 0; padding-left: 16px; }
+  .project-section {
+    background: linear-gradient(180deg, #f9f5ff 0%, #ffffff 100%);
+    border-left: 4px solid #6f42c1;
+    padding: 20px 28px; margin: 24px 0; border-radius: 6px;
+  }
+  .part-divider {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: white; padding: 28px 32px; border-radius: 12px;
+    margin: 64px 0 32px; text-align: center;
+  }
+  .part-divider h2 { color: white; border: none; margin: 0; font-size: 1.7em; }
+  .part-divider p { margin: 8px 0 0 0; opacity: 0.9; font-size: 1em; }
+  .problem-box {
+    background: #fffbeb; border: 1px solid #fde68a;
+    border-radius: 8px; padding: 16px 20px; margin: 16px 0;
+  }
+  .problem-box h4 { margin-top: 0; color: #b45309; }
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 24px 80px; max-width: none; }
+    .compare { grid-template-columns: 1fr; }
+  }
+  @media print {
+    aside.sidebar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { max-width: none; padding: 0; }
+    pre, .callout, details, .exercise, .qa, .project-section, .part-divider, .compare, .problem-box { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+<!-- VS Code-style syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/vs2015.min.css">
+<style>
+  /* Keep our pre layout; hljs only colorizes tokens */
+  pre code.hljs { padding: 0; background: transparent; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+      hljs.configure({ cssSelector: 'pre code', ignoreUnescapedHTML: true });
+      hljs.highlightAll();
+    }
+  });
+</script>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">DSA</div>
+  <div class="brand-sub">The Complete Course</div>
+
+  <h2>Part A: Foundations</h2>
+  <a href="#m1">1. What &amp; Why of DSA</a>
+  <a href="#m2">2. Time Complexity &amp; Big-O</a>
+  <a href="#m3">3. Space Complexity</a>
+  <a href="#m4">4. Recursion</a>
+  <a href="#m5">5. Math Foundations</a>
+  <a href="#m6">6. Bit Manipulation</a>
+  <a href="#m7">7. Operation Costs Cheat Sheet</a>
+
+  <h2>Part B: Linear Structures</h2>
+  <a href="#m8">8. Arrays</a>
+  <a href="#m9">9. Strings</a>
+  <a href="#m10">10. Linked Lists</a>
+  <a href="#m11">11. Stacks</a>
+  <a href="#m12">12. Queues &amp; Deques</a>
+  <a href="#m13">13. Hash Tables</a>
+
+  <h2>Part C: Trees &amp; Heaps</h2>
+  <a href="#m14">14. Binary Trees</a>
+  <a href="#m15">15. Tree Traversals</a>
+  <a href="#m16">16. Binary Search Trees</a>
+  <a href="#m17">17. Heaps &amp; Priority Queue</a>
+  <a href="#m18">18. Self-Balancing Trees</a>
+  <a href="#m19">19. Tries</a>
+
+  <h2>Part D: Graphs</h2>
+  <a href="#m20">20. Graph Representations</a>
+  <a href="#m21">21. BFS &amp; DFS</a>
+  <a href="#m22">22. Shortest Paths</a>
+  <a href="#m23">23. Minimum Spanning Tree</a>
+  <a href="#m24">24. Topological Sort &amp; SCC</a>
+
+  <h2>Part E: Search &amp; Sort</h2>
+  <a href="#m25">25. Binary Search &amp; Variants</a>
+  <a href="#m26">26. Basic Sorting</a>
+  <a href="#m27">27. Efficient Sorting</a>
+  <a href="#m28">28. Non-Comparison Sorts</a>
+  <a href="#m29">29. Two Pointers, Sliding Window, Prefix</a>
+
+  <h2>Part F: Paradigms</h2>
+  <a href="#m30">30. Brute Force</a>
+  <a href="#m31">31. Greedy</a>
+  <a href="#m32">32. Divide &amp; Conquer</a>
+  <a href="#m33">33. DP Foundations</a>
+  <a href="#m34">34. Classic 1D DPs</a>
+  <a href="#m35">35. Classic 2D DPs</a>
+  <a href="#m36">36. Backtracking</a>
+  <a href="#m37">37. DSU, Segment, Fenwick</a>
+
+  <h2>Part G: Patterns</h2>
+  <a href="#m38">38. The 16 Patterns</a>
+  <a href="#m39">39. Two Pointers</a>
+  <a href="#m40">40. Sliding Window</a>
+  <a href="#m41">41. Fast &amp; Slow Pointers</a>
+  <a href="#m42">42. Top-K with Heap</a>
+  <a href="#m43">43. Modified Binary Search</a>
+  <a href="#m44">44. BFS/DFS on Matrices</a>
+
+  <h2>Part H: Interview Prep</h2>
+  <a href="#m45">45. Solving Strategy (UMPIRE)</a>
+  <a href="#m46">46. 50 Top Problems</a>
+  <a href="#m47">47. System Design + DSA</a>
+  <a href="#m48">48. Common Mistakes</a>
+  <a href="#m49">49. How to Practice</a>
+  <a href="#m50">50. Mock Interview Tips</a>
+
+  <h2>Reference</h2>
+  <a href="#m51">51. Big-O Cheat Sheet</a>
+  <a href="#m52">52. Glossary</a>
+  <a href="#m53">53. 30/60/90 Plan</a>
+
+  <h2>EasyAudit</h2>
+  <a href="#m54">54. Real-World Applications</a>
+  <a href="#m55">55. Resources &amp; Roadmap</a>
+</aside>
+
+<main>
+
+<header class="title">
+  <h1>The Complete DSA Course</h1>
+  <p>From "what is Big-O?" to mastering data structures, algorithms, and the 16 interview patterns. Code in C# (your stack), with brute-force vs optimized side-by-side. Ends with concrete real-world DSA applications inside EasyAudit.</p>
+</header>
+
+<div class="part-divider">
+  <h2>Part A — Foundations</h2>
+  <p>Modules 1–7: the analytical mindset behind every algorithm</p>
+</div>
+
+<!-- ============== MODULE 1 ============== -->
+<h2 id="m1"><span class="module-tag">Module 1</span><br>What &amp; Why of DSA</h2>
+
+<h3>What is DSA?</h3>
+<p><strong>Data Structures</strong> are ways of organizing data in memory (arrays, lists, trees, graphs). <strong>Algorithms</strong> are step-by-step procedures to solve problems on that data. Together: <strong>DSA</strong>.</p>
+
+<p>The point isn't memorizing trivia. It's developing the ability to:</p>
+<ol>
+  <li>Look at a problem and recognize its <em>shape</em>.</li>
+  <li>Pick the right structure to model the data.</li>
+  <li>Pick the right algorithm to operate on it.</li>
+  <li>Reason about how it scales — will it be fast enough on real input?</li>
+</ol>
+
+<h3>Why does it matter for production code?</h3>
+<p>You're already using DSA every day, even if you don't think about it:</p>
+<ul>
+  <li><strong>Dictionary&lt;K,V&gt;</strong> — hash table. O(1) average lookup.</li>
+  <li><strong>List&lt;T&gt;.Sort()</strong> — variant of introsort. O(n log n).</li>
+  <li><strong>EF Core's IQueryable</strong> — internally builds an expression tree.</li>
+  <li><strong>JSON parsers</strong> — recursive descent over a string.</li>
+  <li><strong>Routing</strong> — a trie maps URL paths to handlers.</li>
+  <li><strong>Caching</strong> — LRU = doubly-linked list + hash map.</li>
+  <li><strong>EF Core change tracker</strong> — graph traversal.</li>
+  <li><strong>Pagination</strong> — depends on whether you sort or use seek.</li>
+</ul>
+
+<h3>The brute force vs optimized story</h3>
+<p>For almost every problem, there's a <strong>brute force</strong> solution that's "obvious" but slow, and a <strong>smart</strong> solution that's faster. The interview gauntlet trains you to recognize when O(n²) won't survive 100k inputs and how to drop it to O(n log n) or O(n).</p>
+
+<p>Example: "Given an array, do any two numbers sum to <code>target</code>?"</p>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Brute force — O(n²)</h4>
+<pre><code>bool TwoSum(int[] nums, int target)
+{
+    for (int i = 0; i &lt; nums.Length; i++)
+        for (int j = i + 1; j &lt; nums.Length; j++)
+            if (nums[i] + nums[j] == target)
+                return true;
+    return false;
+}</code></pre>
+    <p>n=10⁵ → 10¹⁰ ops → seconds. n=10⁶ → minutes.</p>
+  </div>
+  <div class="good">
+    <h4>Hash set — O(n)</h4>
+<pre><code>bool TwoSum(int[] nums, int target)
+{
+    var seen = new HashSet&lt;int&gt;();
+    foreach (var x in nums)
+    {
+        if (seen.Contains(target - x)) return true;
+        seen.Add(x);
+    }
+    return false;
+}</code></pre>
+    <p>n=10⁶ → done in milliseconds.</p>
+  </div>
+</div>
+
+<p>That gap — from "minutes" to "milliseconds" — is the whole point of DSA. You stop fearing scale because you can predict whether your code will survive it.</p>
+
+<hr>
+
+<!-- ============== MODULE 2 ============== -->
+<h2 id="m2"><span class="module-tag">Module 2</span><br>Time Complexity &amp; Big-O</h2>
+
+<h3>What is time complexity?</h3>
+<p>A measure of <em>how the running time grows as input size grows</em>. We don't care about microseconds on your laptop — we care about the <em>shape</em> of the curve.</p>
+
+<h3>Big-O notation</h3>
+<p><strong>O(f(n))</strong> = "the running time grows no faster than a constant times f(n) as n → ∞."</p>
+
+<p>Three rules:</p>
+<ol>
+  <li><strong>Drop constants:</strong> O(2n) = O(n).</li>
+  <li><strong>Drop lower-order terms:</strong> O(n² + n) = O(n²).</li>
+  <li><strong>Worst case</strong> is what we usually quote (unless explicitly amortized or average).</li>
+</ol>
+
+<h3>The complexity ladder</h3>
+<table class="complexity-table">
+  <thead>
+    <tr><th>Big-O</th><th>Name</th><th>Example</th><th>n=10</th><th>n=10³</th><th>n=10⁶</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="good">O(1)</td><td>Constant</td><td>Hash lookup, array index</td><td>1</td><td>1</td><td>1</td></tr>
+    <tr><td class="good">O(log n)</td><td>Logarithmic</td><td>Binary search</td><td>3</td><td>10</td><td>20</td></tr>
+    <tr><td class="good">O(n)</td><td>Linear</td><td>Single loop</td><td>10</td><td>10³</td><td>10⁶</td></tr>
+    <tr><td class="ok">O(n log n)</td><td>Linearithmic</td><td>Merge sort, heap sort</td><td>33</td><td>10⁴</td><td>2×10⁷</td></tr>
+    <tr><td class="bad">O(n²)</td><td>Quadratic</td><td>Nested loops, bubble sort</td><td>100</td><td>10⁶</td><td>10¹²</td></tr>
+    <tr><td class="bad">O(n³)</td><td>Cubic</td><td>Three nested loops</td><td>10³</td><td>10⁹</td><td>10¹⁸</td></tr>
+    <tr><td class="bad">O(2ⁿ)</td><td>Exponential</td><td>Recursive subsets</td><td>1024</td><td>10³⁰¹</td><td>practically ∞</td></tr>
+    <tr><td class="bad">O(n!)</td><td>Factorial</td><td>Permutations</td><td>3.6M</td><td>10²⁵⁶⁷</td><td>practically ∞</td></tr>
+  </tbody>
+</table>
+
+<p>A modern CPU does roughly <strong>10⁸ to 10⁹ simple operations per second</strong>. As a rule of thumb during interviews:</p>
+
+<table>
+  <thead><tr><th>Input size</th><th>Acceptable complexity</th></tr></thead>
+  <tbody>
+    <tr><td>n ≤ 10</td><td>O(n!), O(2ⁿ) — backtracking is fine</td></tr>
+    <tr><td>n ≤ 20</td><td>O(2ⁿ)</td></tr>
+    <tr><td>n ≤ 500</td><td>O(n³)</td></tr>
+    <tr><td>n ≤ 5,000</td><td>O(n²)</td></tr>
+    <tr><td>n ≤ 10⁶</td><td>O(n log n) or O(n)</td></tr>
+    <tr><td>n ≤ 10⁸</td><td>O(n) or O(log n) — must be very tight</td></tr>
+    <tr><td>n ≥ 10⁹</td><td>O(log n) or O(1)</td></tr>
+  </tbody>
+</table>
+
+<h3>Big-O, Big-Ω, Big-Θ</h3>
+<table>
+  <thead><tr><th>Notation</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><strong>O(f)</strong></td><td>Upper bound — at most this slow</td></tr>
+    <tr><td><strong>Ω(f)</strong> (Omega)</td><td>Lower bound — at least this slow</td></tr>
+    <tr><td><strong>Θ(f)</strong> (Theta)</td><td>Tight — both upper and lower bound</td></tr>
+  </tbody>
+</table>
+
+<p>In practice everyone says "O" colloquially — what they usually mean is Θ.</p>
+
+<h3>Best / average / worst case</h3>
+<p>Different inputs of the same size can take different time. Quicksort:</p>
+<ul>
+  <li>Best: O(n log n) — perfect pivots.</li>
+  <li>Average: O(n log n).</li>
+  <li>Worst: O(n²) — already-sorted input with bad pivot.</li>
+</ul>
+
+<p>When someone asks "what's the time complexity?" — they usually mean worst case. Always state which one you're discussing.</p>
+
+<h3>Amortized analysis</h3>
+<p>Some operations are usually fast but occasionally slow. <code>List&lt;T&gt;.Add</code> is O(1) most of the time, but O(n) when the internal array doubles. <strong>Amortized</strong> O(1) means the average cost over many operations is O(1) even though individual ones might be slower.</p>
+
+<hr>
+
+<!-- ============== MODULE 3 ============== -->
+<h2 id="m3"><span class="module-tag">Module 3</span><br>Space Complexity</h2>
+
+<p>Same idea as time, but for memory. Counts <strong>extra memory beyond the input</strong>.</p>
+
+<h3>How to count it</h3>
+<ul>
+  <li>Each variable: O(1).</li>
+  <li>Array of length n: O(n).</li>
+  <li>2D array n×m: O(nm).</li>
+  <li>Hash map of n entries: O(n).</li>
+  <li>Recursion: O(depth) for the call stack.</li>
+</ul>
+
+<h3>Examples</h3>
+<pre><code>// O(1) extra space — only a few scalars
+int Sum(int[] a)
+{
+    int s = 0;
+    for (int i = 0; i &lt; a.Length; i++) s += a[i];
+    return s;
+}
+
+// O(n) extra — the new array
+int[] Doubled(int[] a)
+{
+    var r = new int[a.Length];
+    for (int i = 0; i &lt; a.Length; i++) r[i] = a[i] * 2;
+    return r;
+}
+
+// O(n) — recursion depth
+int FactRec(int n) =&gt; n == 0 ? 1 : n * FactRec(n - 1);
+
+// O(log n) — recursion depth in binary search tree of height log n
+int BstHeight(Node? root) =&gt; root == null ? 0
+    : 1 + Math.Max(BstHeight(root.Left), BstHeight(root.Right));</code></pre>
+
+<h3>In-place vs out-of-place</h3>
+<p>An <strong>in-place</strong> algorithm uses O(1) or O(log n) extra space (modifies input). An <strong>out-of-place</strong> algorithm creates a new structure.</p>
+
+<table>
+  <thead><tr><th>Algorithm</th><th>In-place?</th><th>Extra space</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble / Insertion sort</td><td>Yes</td><td>O(1)</td></tr>
+    <tr><td>Quick sort</td><td>Yes (with stack)</td><td>O(log n)</td></tr>
+    <tr><td>Merge sort</td><td>No</td><td>O(n)</td></tr>
+    <tr><td>Heap sort</td><td>Yes</td><td>O(1)</td></tr>
+    <tr><td>Counting sort</td><td>No</td><td>O(n + k)</td></tr>
+  </tbody>
+</table>
+
+<h3>Time-space trade-offs</h3>
+<p>Most optimizations spend space to save time. The hash-set <code>TwoSum</code> from Module 1 is O(n) time + O(n) space, vs O(n²) time + O(1) space for the brute force. Memoization in DP is the canonical example — you cache results to avoid recomputing.</p>
+
+<hr>
+
+<!-- ============== MODULE 4 ============== -->
+<h2 id="m4"><span class="module-tag">Module 4</span><br>Recursion</h2>
+
+<h3>The mental model</h3>
+<p>A recursive function calls itself with a smaller version of the problem. Two parts:</p>
+<ol>
+  <li><strong>Base case</strong> — when to stop.</li>
+  <li><strong>Recursive case</strong> — how to reduce the problem.</li>
+</ol>
+
+<pre><code>int Factorial(int n)
+{
+    if (n &lt;= 1) return 1;          // base case
+    return n * Factorial(n - 1);   // recursive case
+}</code></pre>
+
+<h3>Trace it on paper once</h3>
+<pre class="diagram">Factorial(4)
+= 4 * Factorial(3)
+= 4 * 3 * Factorial(2)
+= 4 * 3 * 2 * Factorial(1)
+= 4 * 3 * 2 * 1
+= 24</code></pre>
+
+<h3>The call stack</h3>
+<p>Each call pushes a frame. Each return pops one. If you go too deep → <code>StackOverflowException</code>. .NET's default thread stack is 1 MB — typically 10k–50k frames before it blows up. For deep recursion, convert to iteration.</p>
+
+<h3>Tail recursion</h3>
+<p>If the recursive call is the LAST thing the function does, some compilers can transform it into a loop (no stack growth). C# does NOT reliably tail-call optimize. F# does. JIT may or may not.</p>
+
+<h3>Classic recursive problems</h3>
+
+<h4>Fibonacci — be careful, brute is O(2ⁿ)</h4>
+<div class="compare">
+  <div class="bad">
+    <h4>Brute — O(2ⁿ)</h4>
+<pre><code>int Fib(int n) =&gt; n &lt; 2
+    ? n
+    : Fib(n - 1) + Fib(n - 2);
+// Fib(40) takes seconds.
+// Fib(60) takes hours.</code></pre>
+  </div>
+  <div class="good">
+    <h4>Memoized — O(n)</h4>
+<pre><code>Dictionary&lt;int,long&gt; memo = new();
+long Fib(int n)
+{
+    if (n &lt; 2) return n;
+    if (memo.TryGetValue(n, out var v)) return v;
+    return memo[n] = Fib(n - 1) + Fib(n - 2);
+}
+// Fib(60) instant.</code></pre>
+  </div>
+</div>
+
+<h4>Iterative is even better — O(n) time, O(1) space</h4>
+<pre><code>long Fib(int n)
+{
+    if (n &lt; 2) return n;
+    long a = 0, b = 1;
+    for (int i = 2; i &lt;= n; i++) (a, b) = (b, a + b);
+    return b;
+}</code></pre>
+
+<h3>Recurrence relations</h3>
+<p>Recursive functions can be analyzed by writing a recurrence:</p>
+<ul>
+  <li><strong>Factorial:</strong> T(n) = T(n-1) + 1 → O(n)</li>
+  <li><strong>Fibonacci (brute):</strong> T(n) = T(n-1) + T(n-2) + 1 → O(φⁿ) ≈ O(2ⁿ)</li>
+  <li><strong>Binary search:</strong> T(n) = T(n/2) + 1 → O(log n)</li>
+  <li><strong>Merge sort:</strong> T(n) = 2T(n/2) + n → O(n log n)</li>
+  <li><strong>Subsets/permutations:</strong> T(n) = nT(n-1) → O(n!)</li>
+</ul>
+
+<h3>Master theorem (quick version)</h3>
+<p>For T(n) = aT(n/b) + O(n^d):</p>
+<ul>
+  <li>If a &lt; b^d → T(n) = O(n^d) — the work outside dominates</li>
+  <li>If a = b^d → T(n) = O(n^d log n) — balanced</li>
+  <li>If a &gt; b^d → T(n) = O(n^(log_b a)) — the recursion dominates</li>
+</ul>
+
+<p>Examples: Merge sort: 2T(n/2) + n → a=2, b=2, d=1 → balanced → O(n log n). Binary search: T(n/2) + 1 → a=1, b=2, d=0 → balanced → O(log n).</p>
+
+<hr>
+
+<!-- ============== MODULE 5 ============== -->
+<h2 id="m5"><span class="module-tag">Module 5</span><br>Math Foundations</h2>
+
+<h3>Modular arithmetic</h3>
+<p>When numbers get huge, problems often ask "answer modulo 10⁹ + 7". Why? Keeps results in <code>int</code>/<code>long</code> range. Crypto and competitive programming use this constantly.</p>
+
+<pre><code>const long MOD = 1_000_000_007L;
+long Add(long a, long b) =&gt; (a + b) % MOD;
+long Mul(long a, long b) =&gt; (a * b) % MOD;
+
+// Modular exponentiation — a^b mod m in O(log b)
+long PowMod(long a, long b, long m)
+{
+    long result = 1;
+    a %= m;
+    while (b &gt; 0)
+    {
+        if ((b &amp; 1) == 1) result = result * a % m;
+        a = a * a % m;
+        b &gt;&gt;= 1;
+    }
+    return result;
+}</code></pre>
+
+<h3>GCD &amp; LCM</h3>
+<pre><code>// Euclidean algorithm — O(log min(a,b))
+long Gcd(long a, long b) =&gt; b == 0 ? a : Gcd(b, a % b);
+long Lcm(long a, long b) =&gt; a / Gcd(a, b) * b;</code></pre>
+
+<h3>Primes — Sieve of Eratosthenes</h3>
+<pre><code>// All primes up to n in O(n log log n)
+bool[] Sieve(int n)
+{
+    var isPrime = new bool[n + 1];
+    Array.Fill(isPrime, true);
+    isPrime[0] = isPrime[1] = false;
+    for (int i = 2; (long)i * i &lt;= n; i++)
+        if (isPrime[i])
+            for (int j = i * i; j &lt;= n; j += i)
+                isPrime[j] = false;
+    return isPrime;
+}</code></pre>
+
+<h3>Combinatorics quick reference</h3>
+<table>
+  <thead><tr><th>Concept</th><th>Formula</th><th>Counts</th></tr></thead>
+  <tbody>
+    <tr><td>Permutations of n</td><td>n!</td><td>Orderings of n distinct items</td></tr>
+    <tr><td>P(n, k)</td><td>n! / (n-k)!</td><td>Ordered k-selections from n</td></tr>
+    <tr><td>C(n, k)</td><td>n! / (k!(n-k)!)</td><td>Unordered k-selections from n</td></tr>
+    <tr><td>Subsets of n</td><td>2ⁿ</td><td>Yes/no for each item</td></tr>
+  </tbody>
+</table>
+
+<h3>Logarithms — quick reminders</h3>
+<ul>
+  <li>log₂(n) appears whenever you halve. Binary search, BSTs, heaps.</li>
+  <li>log₂(10⁶) ≈ 20. log₂(10⁹) ≈ 30. log₂(10¹⁸) ≈ 60.</li>
+  <li>O(log n) is so much faster than O(n) it's worth restructuring almost any hot path.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 6 ============== -->
+<h2 id="m6"><span class="module-tag">Module 6</span><br>Bit Manipulation</h2>
+
+<h3>The basic operators</h3>
+<table>
+  <thead><tr><th>Op</th><th>Meaning</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><code>&amp;</code></td><td>AND</td><td>5 &amp; 3 = 0b101 &amp; 0b011 = 0b001 = 1</td></tr>
+    <tr><td><code>|</code></td><td>OR</td><td>5 | 3 = 7</td></tr>
+    <tr><td><code>^</code></td><td>XOR</td><td>5 ^ 3 = 6 (a^a=0, a^0=a)</td></tr>
+    <tr><td><code>~</code></td><td>NOT</td><td>~5 = -6 in two's complement</td></tr>
+    <tr><td><code>&lt;&lt;</code></td><td>Left shift</td><td>5 &lt;&lt; 1 = 10 (multiply by 2)</td></tr>
+    <tr><td><code>&gt;&gt;</code></td><td>Right shift</td><td>5 &gt;&gt; 1 = 2 (divide by 2)</td></tr>
+  </tbody>
+</table>
+
+<h3>Common tricks</h3>
+<pre><code>// Test if bit i is set
+bool IsSet(int n, int i) =&gt; (n &amp; (1 &lt;&lt; i)) != 0;
+
+// Set / clear / toggle bit i
+int Set(int n, int i)    =&gt; n |  (1 &lt;&lt; i);
+int Clear(int n, int i)  =&gt; n &amp; ~(1 &lt;&lt; i);
+int Toggle(int n, int i) =&gt; n ^  (1 &lt;&lt; i);
+
+// Count set bits — O(popcount)
+int PopCount(uint n)
+{
+    int c = 0;
+    while (n &gt; 0) { n &amp;= (n - 1); c++; }   // clears lowest set bit
+    return c;
+}
+// Or: BitOperations.PopCount(n);   // .NET built-in, fastest
+
+// Is power of two?
+bool IsPow2(int n) =&gt; n &gt; 0 &amp;&amp; (n &amp; (n - 1)) == 0;
+
+// Lowest set bit
+int LowestBit(int n) =&gt; n &amp; -n;
+
+// Swap two ints without temp
+void Swap(ref int a, ref int b) { a ^= b; b ^= a; a ^= b; }</code></pre>
+
+<h3>XOR magic — the find-the-unique problem</h3>
+<p><strong>Problem:</strong> every element appears twice except one. Find it.</p>
+<pre><code>int FindUnique(int[] a)
+{
+    int x = 0;
+    foreach (var v in a) x ^= v;     // pairs cancel out
+    return x;
+}
+// O(n) time, O(1) space — beats hash set's O(n) space</code></pre>
+
+<h3>Bitmask DP</h3>
+<p>For small n (≤ 20), you can represent a subset as an int. Iterate over all 2ⁿ subsets:</p>
+<pre><code>for (int mask = 0; mask &lt; (1 &lt;&lt; n); mask++)
+    for (int i = 0; i &lt; n; i++)
+        if ((mask &amp; (1 &lt;&lt; i)) != 0) { /* element i is in subset */ }</code></pre>
+
+<p>Used in Travelling Salesman, set-cover DPs, etc. (Module 35.)</p>
+
+<hr>
+
+<!-- ============== MODULE 7 ============== -->
+<h2 id="m7"><span class="module-tag">Module 7</span><br>Operation Costs Cheat Sheet</h2>
+
+<p>Memorize these. When you reach for a structure mid-problem, you should know its costs by reflex.</p>
+
+<h3>Built-in C# / .NET structures</h3>
+
+<table class="complexity-table">
+  <thead>
+    <tr><th>Structure</th><th>Access</th><th>Search</th><th>Insert</th><th>Delete</th><th>Notes</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Array <code>T[]</code></td>
+      <td class="good">O(1)</td>
+      <td class="bad">O(n)</td>
+      <td class="bad">O(n)</td>
+      <td class="bad">O(n)</td>
+      <td>Fixed size; cache-friendly</td>
+    </tr>
+    <tr>
+      <td><code>List&lt;T&gt;</code></td>
+      <td class="good">O(1)</td>
+      <td class="bad">O(n)</td>
+      <td class="good">O(1)*</td>
+      <td class="bad">O(n)</td>
+      <td>* amortized at end; O(n) at front/middle</td>
+    </tr>
+    <tr>
+      <td><code>LinkedList&lt;T&gt;</code></td>
+      <td class="bad">O(n)</td>
+      <td class="bad">O(n)</td>
+      <td class="good">O(1)</td>
+      <td class="good">O(1)</td>
+      <td>Insert/delete at known node</td>
+    </tr>
+    <tr>
+      <td><code>Stack&lt;T&gt;</code></td>
+      <td class="good">O(1) top</td>
+      <td>—</td>
+      <td class="good">O(1)</td>
+      <td class="good">O(1)</td>
+      <td>Push/Pop</td>
+    </tr>
+    <tr>
+      <td><code>Queue&lt;T&gt;</code></td>
+      <td class="good">O(1) front</td>
+      <td>—</td>
+      <td class="good">O(1)</td>
+      <td class="good">O(1)</td>
+      <td>Enqueue/Dequeue</td>
+    </tr>
+    <tr>
+      <td><code>Dictionary&lt;K,V&gt;</code></td>
+      <td>—</td>
+      <td class="good">O(1) avg</td>
+      <td class="good">O(1) avg</td>
+      <td class="good">O(1) avg</td>
+      <td>O(n) worst (collisions)</td>
+    </tr>
+    <tr>
+      <td><code>HashSet&lt;T&gt;</code></td>
+      <td>—</td>
+      <td class="good">O(1) avg</td>
+      <td class="good">O(1) avg</td>
+      <td class="good">O(1) avg</td>
+      <td>Same as Dictionary</td>
+    </tr>
+    <tr>
+      <td><code>SortedDictionary&lt;K,V&gt;</code></td>
+      <td>—</td>
+      <td class="ok">O(log n)</td>
+      <td class="ok">O(log n)</td>
+      <td class="ok">O(log n)</td>
+      <td>Red-black tree; ordered iteration</td>
+    </tr>
+    <tr>
+      <td><code>SortedSet&lt;T&gt;</code></td>
+      <td>—</td>
+      <td class="ok">O(log n)</td>
+      <td class="ok">O(log n)</td>
+      <td class="ok">O(log n)</td>
+      <td>Min/Max in O(log n)</td>
+    </tr>
+    <tr>
+      <td><code>PriorityQueue&lt;T,P&gt;</code></td>
+      <td class="good">O(1) peek</td>
+      <td>—</td>
+      <td class="ok">O(log n)</td>
+      <td class="ok">O(log n)</td>
+      <td>Binary heap; .NET 6+</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Common algorithm costs</h3>
+
+<table class="complexity-table">
+  <thead><tr><th>Algorithm</th><th>Time</th><th>Space</th></tr></thead>
+  <tbody>
+    <tr><td>Linear search</td><td class="bad">O(n)</td><td class="good">O(1)</td></tr>
+    <tr><td>Binary search (sorted)</td><td class="good">O(log n)</td><td class="good">O(1)</td></tr>
+    <tr><td>Bubble / Insertion / Selection sort</td><td class="bad">O(n²)</td><td class="good">O(1)</td></tr>
+    <tr><td>Merge sort</td><td class="ok">O(n log n)</td><td class="bad">O(n)</td></tr>
+    <tr><td>Quick sort (avg)</td><td class="ok">O(n log n)</td><td class="ok">O(log n)</td></tr>
+    <tr><td>Heap sort</td><td class="ok">O(n log n)</td><td class="good">O(1)</td></tr>
+    <tr><td>Counting sort</td><td class="good">O(n + k)</td><td class="bad">O(n + k)</td></tr>
+    <tr><td>BFS / DFS</td><td class="good">O(V + E)</td><td class="good">O(V)</td></tr>
+    <tr><td>Dijkstra (heap)</td><td class="ok">O((V + E) log V)</td><td class="good">O(V)</td></tr>
+    <tr><td>Bellman-Ford</td><td class="bad">O(V·E)</td><td class="good">O(V)</td></tr>
+    <tr><td>Floyd-Warshall</td><td class="bad">O(V³)</td><td class="bad">O(V²)</td></tr>
+  </tbody>
+</table>
+
+<p>"Good" / "OK" / "Bad" coloring is for typical interview-input sizes. None of these are bad in absolute terms — V³ is fine on V=200.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part B — Linear Data Structures</h2>
+  <p>Modules 8–13: arrays, strings, lists, stacks, queues, hash tables — the bread and butter</p>
+</div>
+
+<!-- ============== MODULE 8 ============== -->
+<h2 id="m8"><span class="module-tag">Module 8</span><br>Arrays</h2>
+
+<h3>What is an array?</h3>
+<p>A contiguous block of memory holding a fixed number of equally-sized elements. Indexing is O(1) because the address is just <code>base + index × elementSize</code>.</p>
+
+<pre class="diagram">int[] a = { 5, 8, 2, 9, 1 };
+
+  index:   0    1    2    3    4
+  memory: [5]  [8]  [2]  [9]  [1]    ← contiguous, all the same size</pre>
+
+<h3>Operations &amp; costs</h3>
+<table class="complexity-table">
+  <thead><tr><th>Operation</th><th>Time</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Read by index</td><td class="good">O(1)</td><td>Pointer arithmetic</td></tr>
+    <tr><td>Write by index</td><td class="good">O(1)</td><td>—</td></tr>
+    <tr><td>Search (unsorted)</td><td class="bad">O(n)</td><td>Linear scan</td></tr>
+    <tr><td>Search (sorted)</td><td class="good">O(log n)</td><td>Binary search</td></tr>
+    <tr><td>Insert at end (List)</td><td class="good">O(1) amortized</td><td>Resize doubles capacity</td></tr>
+    <tr><td>Insert at front / middle</td><td class="bad">O(n)</td><td>Shift elements</td></tr>
+    <tr><td>Delete</td><td class="bad">O(n)</td><td>Shift elements</td></tr>
+  </tbody>
+</table>
+
+<h3>List&lt;T&gt; — the dynamic array</h3>
+<p>Internally a <code>T[]</code> with a length and capacity. When full, allocates a new array twice as big and copies. That's why <code>Add</code> is amortized O(1).</p>
+
+<h3>Classic problem: max subarray sum (Kadane's algorithm)</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Given an array of integers (positive and negative), find the contiguous subarray with the largest sum.<br>
+  Example: <code>[-2, 1, -3, 4, -1, 2, 1, -5, 4]</code> → max sum is 6 (subarray <code>[4, -1, 2, 1]</code>).</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Brute force — O(n²)</h4>
+<pre><code>int MaxSubarray(int[] a)
+{
+    int best = int.MinValue;
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        int sum = 0;
+        for (int j = i; j &lt; a.Length; j++)
+        {
+            sum += a[j];
+            best = Math.Max(best, sum);
+        }
+    }
+    return best;
+}</code></pre>
+    <p>Try every starting index, then every ending index. n=10⁵ → 10¹⁰ ops, too slow.</p>
+  </div>
+  <div class="good">
+    <h4>Kadane — O(n)</h4>
+<pre><code>int MaxSubarray(int[] a)
+{
+    int best = a[0], cur = a[0];
+    for (int i = 1; i &lt; a.Length; i++)
+    {
+        cur = Math.Max(a[i], cur + a[i]);
+        // either start fresh at a[i],
+        // or extend the previous subarray
+        best = Math.Max(best, cur);
+    }
+    return best;
+}</code></pre>
+    <p><strong>Insight:</strong> if the running sum becomes negative, drop it — starting fresh is better.</p>
+  </div>
+</div>
+
+<h3>Other classic array problems</h3>
+<ul>
+  <li>Move zeros to end (two pointers).</li>
+  <li>Rotate array by k.</li>
+  <li>Find missing number from 1..n (XOR or sum trick).</li>
+  <li>Stock buy/sell — single pass tracking min so far.</li>
+  <li>Trapping rain water (two pointers / monotonic stack).</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 9 ============== -->
+<h2 id="m9"><span class="module-tag">Module 9</span><br>Strings</h2>
+
+<p>A string is an array of characters. In .NET, <code>string</code> is immutable — every "modification" creates a new string. Use <code>StringBuilder</code> or <code>char[]</code> for in-place work.</p>
+
+<h3>Common string operations</h3>
+<pre><code>string s = "hello";
+
+// O(n) on length
+int len = s.Length;
+char c = s[2];                           // O(1)
+bool eq = s == "hello";                   // O(n) value compare
+
+string upper = s.ToUpper();               // O(n) NEW string
+string concat = s + " world";             // O(n+m) NEW string
+string sub = s.Substring(1, 3);           // O(n)
+
+// For many concatenations:
+var sb = new StringBuilder();
+foreach (var w in words) sb.Append(w);    // amortized O(1) per Append
+string result = sb.ToString();            // O(total length)</code></pre>
+
+<h3>Classic problem: anagram check</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Are two strings anagrams of each other? (Same characters, different order.)<br>
+  Example: <code>"listen"</code> and <code>"silent"</code> → true.</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Sort both — O(n log n)</h4>
+<pre><code>bool IsAnagram(string a, string b)
+{
+    if (a.Length != b.Length) return false;
+    var arrA = a.ToCharArray();
+    var arrB = b.ToCharArray();
+    Array.Sort(arrA);
+    Array.Sort(arrB);
+    return arrA.SequenceEqual(arrB);
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Frequency count — O(n)</h4>
+<pre><code>bool IsAnagram(string a, string b)
+{
+    if (a.Length != b.Length) return false;
+    var count = new int[26];        // assuming a-z
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        count[a[i] - 'a']++;
+        count[b[i] - 'a']--;
+    }
+    return count.All(c =&gt; c == 0);
+}</code></pre>
+  </div>
+</div>
+
+<h3>Classic problem: longest substring without repeating chars</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p><code>"abcabcbb"</code> → 3 (<code>"abc"</code>). <code>"bbbbb"</code> → 1.</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Brute — O(n³)</h4>
+<pre><code>int LongestUnique(string s)
+{
+    int best = 0;
+    for (int i = 0; i &lt; s.Length; i++)
+        for (int j = i; j &lt; s.Length; j++)
+            if (s.Substring(i, j - i + 1)
+                 .Distinct().Count() == j - i + 1)
+                best = Math.Max(best, j - i + 1);
+    return best;
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Sliding window — O(n)</h4>
+<pre><code>int LongestUnique(string s)
+{
+    var seen = new Dictionary&lt;char,int&gt;();
+    int left = 0, best = 0;
+    for (int right = 0; right &lt; s.Length; right++)
+    {
+        if (seen.TryGetValue(s[right], out int idx) &amp;&amp; idx &gt;= left)
+            left = idx + 1;
+        seen[s[right]] = right;
+        best = Math.Max(best, right - left + 1);
+    }
+    return best;
+}</code></pre>
+    <p>Window grows; whenever we see a repeat, jump <code>left</code> past it. (See Module 40 — Sliding Window pattern.)</p>
+  </div>
+</div>
+
+<h3>String comparison gotchas</h3>
+<ul>
+  <li><code>==</code> on strings does value comparison in C# (because of operator overload). In Java/JS, prefer <code>.equals()</code> / <code>===</code>.</li>
+  <li>Locale-aware comparison: <code>StringComparison.OrdinalIgnoreCase</code> is fastest for case-insensitive ASCII.</li>
+  <li>Use <code>string.Intern</code> sparingly — locks strings in memory forever.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 10 ============== -->
+<h2 id="m10"><span class="module-tag">Module 10</span><br>Linked Lists</h2>
+
+<h3>What &amp; why</h3>
+<p>A sequence of nodes, each pointing to the next. Insertion/deletion at a known position is O(1) — no shifting. The cost: random access is O(n), and each node has a pointer overhead.</p>
+
+<pre class="diagram">Singly linked list:
+  [data|next]→[data|next]→[data|next]→null
+
+Doubly linked list:
+  null←[prev|data|next]⇄[prev|data|next]⇄[prev|data|next]→null</pre>
+
+<h3>Singly linked list in C#</h3>
+<pre><code>public class ListNode
+{
+    public int Val;
+    public ListNode? Next;
+    public ListNode(int val, ListNode? next = null) { Val = val; Next = next; }
+}</code></pre>
+
+<h3>Reverse a linked list — the canonical interview question</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Recursive — O(n) time, O(n) stack</h4>
+<pre><code>ListNode? Reverse(ListNode? head)
+{
+    if (head?.Next == null) return head;
+    ListNode? newHead = Reverse(head.Next);
+    head.Next.Next = head;
+    head.Next = null;
+    return newHead;
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Iterative — O(n) time, O(1) space</h4>
+<pre><code>ListNode? Reverse(ListNode? head)
+{
+    ListNode? prev = null;
+    ListNode? cur = head;
+    while (cur != null)
+    {
+        var next = cur.Next;
+        cur.Next = prev;
+        prev = cur;
+        cur = next;
+    }
+    return prev;
+}</code></pre>
+  </div>
+</div>
+
+<h3>Detect a cycle — Floyd's tortoise &amp; hare</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Does the list contain a cycle? (Some node's <code>next</code> points back to an earlier node.)</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Hash set — O(n) time, O(n) space</h4>
+<pre><code>bool HasCycle(ListNode? head)
+{
+    var seen = new HashSet&lt;ListNode&gt;();
+    while (head != null)
+    {
+        if (!seen.Add(head)) return true;
+        head = head.Next;
+    }
+    return false;
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Floyd's algorithm — O(n) time, O(1) space</h4>
+<pre><code>bool HasCycle(ListNode? head)
+{
+    var slow = head;
+    var fast = head;
+    while (fast != null &amp;&amp; fast.Next != null)
+    {
+        slow = slow!.Next;
+        fast = fast.Next.Next;
+        if (slow == fast) return true;
+    }
+    return false;
+}</code></pre>
+    <p>Two pointers move at different speeds. If there's a cycle, they meet. (See Module 41.)</p>
+  </div>
+</div>
+
+<h3>Other classic linked list problems</h3>
+<ul>
+  <li>Find middle node (slow + fast pointer).</li>
+  <li>Merge two sorted lists.</li>
+  <li>Remove Nth node from end (two-pointer with N gap).</li>
+  <li>Detect cycle and find its start.</li>
+  <li>Check palindrome (reverse second half).</li>
+</ul>
+
+<h3>When to use a linked list</h3>
+<p>Honestly, rarely in production C# code. <code>List&lt;T&gt;</code> wins for cache-friendliness in almost every case. Use linked lists when:</p>
+<ul>
+  <li>You frequently insert/delete from the middle <em>at a known node</em>.</li>
+  <li>You need O(1) splicing of two lists.</li>
+  <li>You're implementing LRU cache (doubly-linked list + hash map).</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 11 ============== -->
+<h2 id="m11"><span class="module-tag">Module 11</span><br>Stacks</h2>
+
+<p>LIFO — Last In, First Out. Push/Pop at one end, both O(1).</p>
+
+<pre class="diagram">Push 1, 2, 3:
+  [3]   ← top
+  [2]
+  [1]
+
+Pop → 3, then 2, then 1.</pre>
+
+<h3>C# usage</h3>
+<pre><code>var stack = new Stack&lt;int&gt;();
+stack.Push(1);
+stack.Push(2);
+int top = stack.Peek();      // 2 (look without removing)
+int p = stack.Pop();         // 2 (remove)
+int count = stack.Count;</code></pre>
+
+<h3>Where stacks appear</h3>
+<ul>
+  <li>Function call stack (recursion).</li>
+  <li>Undo/redo (two stacks).</li>
+  <li>Parsing / matching brackets / expression evaluation.</li>
+  <li>DFS (iterative version uses an explicit stack).</li>
+  <li>Browser back button.</li>
+  <li>Monotonic stack — find next greater/smaller element.</li>
+</ul>
+
+<h3>Classic problem: valid parentheses</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p><code>"()[]{}"</code> → true. <code>"([)]"</code> → false.</p>
+</div>
+
+<pre><code>bool IsValid(string s)
+{
+    var stack = new Stack&lt;char&gt;();
+    var pairs = new Dictionary&lt;char,char&gt;
+    {
+        [')'] = '(', [']'] = '[', ['}'] = '{'
+    };
+
+    foreach (var c in s)
+    {
+        if (c == '(' || c == '[' || c == '{')
+            stack.Push(c);
+        else
+        {
+            if (stack.Count == 0 || stack.Pop() != pairs[c])
+                return false;
+        }
+    }
+    return stack.Count == 0;
+}
+// O(n) time, O(n) space</code></pre>
+
+<h3>Monotonic stack — next greater element</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>For each element, find the next greater element to its right. <code>[2, 1, 2, 4, 3]</code> → <code>[4, 2, 4, -1, -1]</code>.</p>
+</div>
+
+<pre><code>int[] NextGreater(int[] a)
+{
+    var result = new int[a.Length];
+    Array.Fill(result, -1);
+    var stack = new Stack&lt;int&gt;();   // stores indices
+
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        while (stack.Count &gt; 0 &amp;&amp; a[stack.Peek()] &lt; a[i])
+            result[stack.Pop()] = a[i];
+        stack.Push(i);
+    }
+    return result;
+}
+// O(n) — each index pushed and popped at most once</code></pre>
+
+<p>This trick — push, then pop while the new element invalidates old ones — solves a class of problems: largest rectangle in histogram, daily temperatures, stock span.</p>
+
+<hr>
+
+<!-- ============== MODULE 12 ============== -->
+<h2 id="m12"><span class="module-tag">Module 12</span><br>Queues, Deques, Priority Queues</h2>
+
+<h3>Queue — FIFO</h3>
+<p>Enqueue at the back, Dequeue from the front. Both O(1).</p>
+
+<pre><code>var q = new Queue&lt;int&gt;();
+q.Enqueue(1);
+q.Enqueue(2);
+q.Enqueue(3);
+int front = q.Peek();        // 1
+int d = q.Dequeue();         // 1
+// q is now [2, 3]</code></pre>
+
+<p>Queues power BFS (Module 21), task scheduling, message buffers.</p>
+
+<h3>Deque — double-ended queue</h3>
+<p>Insert/remove from either end in O(1). .NET doesn't have a built-in deque, but <code>LinkedList&lt;T&gt;</code> works (you use <code>AddFirst</code>/<code>AddLast</code>/<code>RemoveFirst</code>/<code>RemoveLast</code>). For competitive scenarios, a circular array implementation is faster.</p>
+
+<h3>Sliding window maximum — classic deque problem</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Given an array and window size k, return the max in each window. <code>[1,3,-1,-3,5,3,6,7]</code> k=3 → <code>[3,3,5,5,6,7]</code>.</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Brute — O(n·k)</h4>
+<pre><code>int[] MaxWindow(int[] a, int k)
+{
+    var r = new int[a.Length - k + 1];
+    for (int i = 0; i + k &lt;= a.Length; i++)
+    {
+        int max = a[i];
+        for (int j = 1; j &lt; k; j++)
+            max = Math.Max(max, a[i + j]);
+        r[i] = max;
+    }
+    return r;
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Monotonic deque — O(n)</h4>
+<pre><code>int[] MaxWindow(int[] a, int k)
+{
+    var dq = new LinkedList&lt;int&gt;();   // indices, decreasing values
+    var r = new int[a.Length - k + 1];
+
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        // remove out-of-window from front
+        if (dq.Count &gt; 0 &amp;&amp; dq.First!.Value == i - k)
+            dq.RemoveFirst();
+        // remove smaller-or-equal from back
+        while (dq.Count &gt; 0 &amp;&amp; a[dq.Last!.Value] &lt;= a[i])
+            dq.RemoveLast();
+        dq.AddLast(i);
+        if (i &gt;= k - 1) r[i - k + 1] = a[dq.First!.Value];
+    }
+    return r;
+}</code></pre>
+  </div>
+</div>
+
+<h3>Priority Queue — heap-backed</h3>
+<p>Returns the smallest (or largest) element in O(log n). Backed by a binary heap.</p>
+
+<pre><code>// .NET 6+
+var pq = new PriorityQueue&lt;string, int&gt;();   // element, priority (lower = sooner)
+pq.Enqueue("b", 2);
+pq.Enqueue("a", 1);
+pq.Enqueue("c", 3);
+string next = pq.Dequeue();    // "a"
+
+// Max heap — invert priority
+var maxPq = new PriorityQueue&lt;string, int&gt;();
+maxPq.Enqueue("low", -1);
+maxPq.Enqueue("high", -10);
+maxPq.Dequeue();   // "high" — most negative = highest priority</code></pre>
+
+<p>Used everywhere: Dijkstra (shortest path), top-K problems, K-way merge, scheduling, A* search. We cover the heap data structure deeply in Module 17.</p>
+
+<hr>
+
+<!-- ============== MODULE 13 ============== -->
+<h2 id="m13"><span class="module-tag">Module 13</span><br>Hash Tables</h2>
+
+<h3>The single most useful data structure</h3>
+<p>A hash table maps keys to values with O(1) average insert / lookup / delete. The trick: a <em>hash function</em> turns the key into an array index.</p>
+
+<pre class="diagram">Hash("alice") = 47 → bucket 47 holds (alice, 30)
+Hash("bob")   = 12 → bucket 12 holds (bob, 25)
+Hash("carol") = 47 → COLLISION → chained in bucket 47</pre>
+
+<h3>How collisions are handled</h3>
+<ul>
+  <li><strong>Chaining</strong> (most common, .NET): each bucket is a linked list of entries.</li>
+  <li><strong>Open addressing</strong>: probe to the next empty slot (linear/quadratic/double hashing).</li>
+</ul>
+
+<h3>Why O(1) "average"?</h3>
+<p>If the hash function distributes keys uniformly and the load factor (entries / buckets) stays bounded, each bucket has O(1) entries on average. Worst case (everything collides) is O(n) — but that requires an adversarial hash function. .NET handles this with randomized hash codes.</p>
+
+<h3>C# Dictionary essentials</h3>
+<pre><code>var users = new Dictionary&lt;int, string&gt;();
+users[1] = "Alice";
+users[2] = "Bob";
+
+if (users.TryGetValue(1, out var name)) { ... }
+if (users.ContainsKey(3)) { ... }
+users.Remove(2);
+foreach (var (k, v) in users) { ... }</code></pre>
+
+<h3>HashSet — like Dictionary but values-only</h3>
+<pre><code>var seen = new HashSet&lt;int&gt;();
+if (seen.Add(x))   // returns false if already present
+{
+    // first time we've seen x
+}
+bool has = seen.Contains(x);</code></pre>
+
+<h3>Custom hash codes — when keys are your types</h3>
+<pre><code>public record Point(int X, int Y);
+// Records get value equality + hash for free.
+
+// For classes:
+public class Point : IEquatable&lt;Point&gt;
+{
+    public int X { get; }
+    public int Y { get; }
+    public Point(int x, int y) { X = x; Y = y; }
+
+    public bool Equals(Point? other) =&gt;
+        other != null &amp;&amp; X == other.X &amp;&amp; Y == other.Y;
+    public override bool Equals(object? obj) =&gt; Equals(obj as Point);
+    public override int GetHashCode() =&gt; HashCode.Combine(X, Y);
+}</code></pre>
+
+<p><strong>Rule:</strong> if two objects are equal, they MUST have equal hash codes. Otherwise hash table breaks.</p>
+
+<h3>Two Sum — the classic hash table problem (revisited)</h3>
+<pre><code>int[] TwoSum(int[] nums, int target)
+{
+    var seen = new Dictionary&lt;int,int&gt;();   // value → index
+    for (int i = 0; i &lt; nums.Length; i++)
+    {
+        int need = target - nums[i];
+        if (seen.TryGetValue(need, out int j))
+            return new[] { j, i };
+        seen[nums[i]] = i;
+    }
+    return Array.Empty&lt;int&gt;();
+}
+// O(n) time, O(n) space</code></pre>
+
+<h3>Other hash-table-shaped problems</h3>
+<ul>
+  <li>Group anagrams (key = sorted string or char-count signature).</li>
+  <li>Subarray sum equals K (running sum + count map).</li>
+  <li>First non-repeating character.</li>
+  <li>Longest consecutive sequence.</li>
+  <li>Detect duplicates within distance k.</li>
+</ul>
+
+<h3>Pitfalls</h3>
+<ul>
+  <li>Mutable keys whose hash code can change → entries become "lost".</li>
+  <li>Iterating in undefined order. <code>SortedDictionary</code> if you need order.</li>
+  <li>Memory overhead — typically 2–3× the data size.</li>
+  <li>Cache-unfriendly compared to arrays for small N.</li>
+</ul>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part C — Trees &amp; Heaps</h2>
+  <p>Modules 14–19: hierarchical data structures and the algorithms that walk them</p>
+</div>
+
+<!-- ============== MODULE 14 ============== -->
+<h2 id="m14"><span class="module-tag">Module 14</span><br>Binary Trees</h2>
+
+<h3>What is a tree?</h3>
+<p>A connected acyclic graph. One special node is the <strong>root</strong>. Each node has zero or more <strong>children</strong> and exactly one <strong>parent</strong> (except the root).</p>
+
+<p>A <strong>binary tree</strong> = each node has at most 2 children (Left, Right).</p>
+
+<pre class="diagram">             1            ← root, depth 0
+           /   \
+          2     3         ← depth 1
+         / \     \
+        4   5     6       ← depth 2
+                 / \
+                7   8     ← depth 3 (leaves are 4, 5, 7, 8)
+                          height = 3 (longest root-to-leaf)</pre>
+
+<h3>Common terminology</h3>
+<ul>
+  <li><strong>Root</strong> — top node, no parent.</li>
+  <li><strong>Leaf</strong> — no children.</li>
+  <li><strong>Depth</strong> of node — distance from root (root is 0).</li>
+  <li><strong>Height</strong> of tree — max depth.</li>
+  <li><strong>Subtree</strong> — a node + all its descendants.</li>
+  <li><strong>Balanced</strong> — heights of left and right subtrees differ by at most 1, recursively.</li>
+  <li><strong>Complete</strong> — every level full except possibly the last, which fills left-to-right.</li>
+  <li><strong>Perfect</strong> — every internal node has 2 children, all leaves at same depth.</li>
+</ul>
+
+<h3>Node definition in C#</h3>
+<pre><code>public class TreeNode
+{
+    public int Val;
+    public TreeNode? Left;
+    public TreeNode? Right;
+    public TreeNode(int val, TreeNode? left = null, TreeNode? right = null)
+    {
+        Val = val; Left = left; Right = right;
+    }
+}</code></pre>
+
+<h3>Where binary trees show up</h3>
+<ul>
+  <li>BSTs (Module 16): databases (B-trees are the multi-way variant), <code>SortedDictionary</code>.</li>
+  <li>Heaps (Module 17): priority queues, top-K problems.</li>
+  <li>Tries (Module 19): autocomplete, IP routing.</li>
+  <li>Expression trees: parsers, EF Core's IQueryable.</li>
+  <li>Decision trees: ML, rule engines.</li>
+  <li>Game trees: chess engines (minimax).</li>
+</ul>
+
+<h3>Common operations</h3>
+<table class="complexity-table">
+  <thead><tr><th>Operation</th><th>Balanced</th><th>Worst case</th></tr></thead>
+  <tbody>
+    <tr><td>Search</td><td class="ok">O(log n)</td><td class="bad">O(n)</td></tr>
+    <tr><td>Insert</td><td class="ok">O(log n)</td><td class="bad">O(n)</td></tr>
+    <tr><td>Delete</td><td class="ok">O(log n)</td><td class="bad">O(n)</td></tr>
+    <tr><td>Traverse all</td><td class="good">O(n)</td><td class="good">O(n)</td></tr>
+  </tbody>
+</table>
+
+<p>"Worst case" happens when the tree degenerates into a linked list — that's why self-balancing trees (Module 18) exist.</p>
+
+<hr>
+
+<!-- ============== MODULE 15 ============== -->
+<h2 id="m15"><span class="module-tag">Module 15</span><br>Tree Traversals</h2>
+
+<p>Four standard ways to visit every node, each O(n):</p>
+
+<table>
+  <thead><tr><th>Order</th><th>Visit pattern</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Preorder</strong></td><td>Root → Left → Right</td><td>Copy/clone a tree, prefix expression</td></tr>
+    <tr><td><strong>Inorder</strong></td><td>Left → Root → Right</td><td>BST → sorted output</td></tr>
+    <tr><td><strong>Postorder</strong></td><td>Left → Right → Root</td><td>Delete tree, evaluate expression bottom-up</td></tr>
+    <tr><td><strong>Level-order (BFS)</strong></td><td>Layer by layer, top to bottom</td><td>Print by depth, shortest path in tree</td></tr>
+  </tbody>
+</table>
+
+<h3>Recursive traversals</h3>
+<pre><code>void Preorder(TreeNode? n)
+{
+    if (n == null) return;
+    Visit(n);                  // root first
+    Preorder(n.Left);
+    Preorder(n.Right);
+}
+
+void Inorder(TreeNode? n)
+{
+    if (n == null) return;
+    Inorder(n.Left);
+    Visit(n);                  // root in middle
+    Inorder(n.Right);
+}
+
+void Postorder(TreeNode? n)
+{
+    if (n == null) return;
+    Postorder(n.Left);
+    Postorder(n.Right);
+    Visit(n);                  // root last
+}</code></pre>
+
+<h3>Iterative inorder with a stack</h3>
+<pre><code>List&lt;int&gt; Inorder(TreeNode? root)
+{
+    var result = new List&lt;int&gt;();
+    var stack = new Stack&lt;TreeNode&gt;();
+    var cur = root;
+    while (cur != null || stack.Count &gt; 0)
+    {
+        while (cur != null)
+        {
+            stack.Push(cur);
+            cur = cur.Left;
+        }
+        cur = stack.Pop();
+        result.Add(cur.Val);
+        cur = cur.Right;
+    }
+    return result;
+}</code></pre>
+
+<h3>Level-order — BFS with a queue</h3>
+<pre><code>List&lt;List&lt;int&gt;&gt; LevelOrder(TreeNode? root)
+{
+    var result = new List&lt;List&lt;int&gt;&gt;();
+    if (root == null) return result;
+
+    var queue = new Queue&lt;TreeNode&gt;();
+    queue.Enqueue(root);
+
+    while (queue.Count &gt; 0)
+    {
+        int size = queue.Count;
+        var level = new List&lt;int&gt;();
+        for (int i = 0; i &lt; size; i++)
+        {
+            var n = queue.Dequeue();
+            level.Add(n.Val);
+            if (n.Left != null) queue.Enqueue(n.Left);
+            if (n.Right != null) queue.Enqueue(n.Right);
+        }
+        result.Add(level);
+    }
+    return result;
+}</code></pre>
+
+<h3>Classic problem: max depth of binary tree</h3>
+<pre><code>int MaxDepth(TreeNode? n) =&gt; n == null
+    ? 0
+    : 1 + Math.Max(MaxDepth(n.Left), MaxDepth(n.Right));
+// O(n) time, O(h) recursion depth — h = log n if balanced, n if not</code></pre>
+
+<h3>Lowest common ancestor (LCA)</h3>
+<pre><code>TreeNode? Lca(TreeNode? root, TreeNode p, TreeNode q)
+{
+    if (root == null || root == p || root == q) return root;
+    var L = Lca(root.Left, p, q);
+    var R = Lca(root.Right, p, q);
+    if (L != null &amp;&amp; R != null) return root;   // p and q split here
+    return L ?? R;
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 16 ============== -->
+<h2 id="m16"><span class="module-tag">Module 16</span><br>Binary Search Trees (BST)</h2>
+
+<h3>The BST property</h3>
+<p>For every node: all values in the left subtree are <em>less</em>, all values in the right subtree are <em>greater</em>. (And recursively the same applies to subtrees.)</p>
+
+<pre class="diagram">           8
+         /   \
+        3     10
+       / \      \
+      1   6      14
+         / \    /
+        4   7  13</pre>
+
+<p>Inorder traversal of a BST gives sorted output. <strong>That's the magic.</strong></p>
+
+<h3>Operations on a balanced BST — all O(log n)</h3>
+
+<pre><code>// Search
+TreeNode? Search(TreeNode? n, int target)
+{
+    if (n == null || n.Val == target) return n;
+    return target &lt; n.Val ? Search(n.Left, target) : Search(n.Right, target);
+}
+
+// Insert
+TreeNode Insert(TreeNode? n, int val)
+{
+    if (n == null) return new TreeNode(val);
+    if (val &lt; n.Val) n.Left = Insert(n.Left, val);
+    else if (val &gt; n.Val) n.Right = Insert(n.Right, val);
+    return n;
+}
+
+// Delete — three cases (no child / one child / two children)
+TreeNode? Delete(TreeNode? n, int val)
+{
+    if (n == null) return null;
+    if (val &lt; n.Val) n.Left = Delete(n.Left, val);
+    else if (val &gt; n.Val) n.Right = Delete(n.Right, val);
+    else
+    {
+        if (n.Left == null) return n.Right;
+        if (n.Right == null) return n.Left;
+        // Two children: replace with inorder successor
+        var succ = MinNode(n.Right);
+        n.Val = succ.Val;
+        n.Right = Delete(n.Right, succ.Val);
+    }
+    return n;
+}
+
+TreeNode MinNode(TreeNode n)
+{
+    while (n.Left != null) n = n.Left;
+    return n;
+}</code></pre>
+
+<h3>The catch — unbalanced BSTs degrade to O(n)</h3>
+<p>Insert 1, 2, 3, 4, 5 in order → you get a right-leaning chain that's just a linked list. Hence self-balancing trees (Module 18). .NET's <code>SortedDictionary</code> is a red-black tree.</p>
+
+<h3>Validate a BST — common bug</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Wrong — only checks immediate children</h4>
+<pre><code>bool IsBst(TreeNode? n)
+{
+    if (n == null) return true;
+    if (n.Left != null &amp;&amp; n.Left.Val &gt;= n.Val) return false;
+    if (n.Right != null &amp;&amp; n.Right.Val &lt;= n.Val) return false;
+    return IsBst(n.Left) &amp;&amp; IsBst(n.Right);
+}
+// Misses: 10 → left=5 → right=15 (15 is in left subtree of 10!)</code></pre>
+  </div>
+  <div class="good">
+    <h4>Correct — pass min/max bounds</h4>
+<pre><code>bool IsBst(TreeNode? n, long min = long.MinValue, long max = long.MaxValue)
+{
+    if (n == null) return true;
+    if (n.Val &lt;= min || n.Val &gt;= max) return false;
+    return IsBst(n.Left, min, n.Val) &amp;&amp; IsBst(n.Right, n.Val, max);
+}</code></pre>
+  </div>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 17 ============== -->
+<h2 id="m17"><span class="module-tag">Module 17</span><br>Heaps &amp; Priority Queue</h2>
+
+<h3>What is a heap?</h3>
+<p>A complete binary tree with the <strong>heap property</strong>: every parent is ≤ (min-heap) or ≥ (max-heap) its children. The min/max is always at the root → O(1) peek.</p>
+
+<pre class="diagram">Min-heap:
+              1
+            /   \
+           3     5
+          / \   /
+         8   9 7
+
+Min is always at root.</pre>
+
+<h3>The trick: store as an array</h3>
+<pre><code>// Index 0 = root
+// For node at index i:
+//   parent      = (i - 1) / 2
+//   left child  = 2*i + 1
+//   right child = 2*i + 2
+
+int[] heap = { 1, 3, 5, 8, 9, 7 };
+//             ^root</code></pre>
+
+<h3>Operations</h3>
+<table class="complexity-table">
+  <thead><tr><th>Operation</th><th>Time</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td>Peek (min/max)</td><td class="good">O(1)</td><td>Return root</td></tr>
+    <tr><td>Insert (push)</td><td class="ok">O(log n)</td><td>Add at end, "sift up"</td></tr>
+    <tr><td>Extract (pop)</td><td class="ok">O(log n)</td><td>Swap root with last, "sift down"</td></tr>
+    <tr><td>Build from array</td><td class="good">O(n)</td><td>"Heapify" all internal nodes</td></tr>
+  </tbody>
+</table>
+
+<h3>Where heaps are essential</h3>
+<ul>
+  <li><strong>Dijkstra's shortest path</strong> — fetch closest unvisited.</li>
+  <li><strong>A* search</strong>.</li>
+  <li><strong>Top-K problems</strong> — keep a heap of size K.</li>
+  <li><strong>Median in a stream</strong> — two heaps.</li>
+  <li><strong>K-way merge</strong> — merge K sorted lists.</li>
+  <li><strong>Heap sort</strong>.</li>
+  <li><strong>OS scheduling</strong>.</li>
+</ul>
+
+<h3>Top-K largest elements</h3>
+<div class="compare">
+  <div class="bad">
+    <h4>Sort then take K — O(n log n)</h4>
+<pre><code>int[] TopK(int[] a, int k)
+{
+    var sorted = a.OrderByDescending(x =&gt; x).ToArray();
+    return sorted.Take(k).ToArray();
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Min-heap of size K — O(n log k)</h4>
+<pre><code>int[] TopK(int[] a, int k)
+{
+    var heap = new PriorityQueue&lt;int,int&gt;();   // min-heap
+    foreach (var x in a)
+    {
+        heap.Enqueue(x, x);
+        if (heap.Count &gt; k) heap.Dequeue();    // drop smallest
+    }
+    var result = new int[k];
+    for (int i = k - 1; i &gt;= 0; i--) result[i] = heap.Dequeue();
+    return result;
+}
+// For n=10⁹, k=10: massive speedup</code></pre>
+  </div>
+</div>
+
+<h3>Median in a data stream</h3>
+<p>Maintain two heaps: a max-heap for the lower half, a min-heap for the upper half. Median is at the top of one (or average of both tops if balanced). Insert is O(log n), median lookup is O(1).</p>
+
+<hr>
+
+<!-- ============== MODULE 18 ============== -->
+<h2 id="m18"><span class="module-tag">Module 18</span><br>Self-Balancing Trees</h2>
+
+<p>Plain BSTs degrade to O(n). Self-balancing trees re-shape after inserts/deletes to keep height ≈ log n.</p>
+
+<h3>AVL trees</h3>
+<ul>
+  <li>For every node, |height(left) − height(right)| ≤ 1.</li>
+  <li>Restored via rotations after insert/delete.</li>
+  <li>Strictly balanced → fastest reads.</li>
+  <li>More expensive writes than red-black trees.</li>
+</ul>
+
+<h3>Red-black trees</h3>
+<ul>
+  <li>Each node colored red or black; rules ensure no path is &gt; 2× longer than any other.</li>
+  <li>Looser balance → faster writes than AVL.</li>
+  <li>The standard library workhorse — used by Java's TreeMap, C++'s std::map, .NET's <code>SortedDictionary</code>.</li>
+</ul>
+
+<h3>B-trees and B+ trees</h3>
+<p>Multi-way trees with each node holding many keys (typically dozens to hundreds). Used by databases (SQL Server clustered indexes, PostgreSQL, MySQL InnoDB) and filesystems. Why? Disks read in pages — fitting many keys per node minimizes disk reads.</p>
+
+<table>
+  <thead><tr><th>Tree</th><th>Insert</th><th>Search</th><th>Where used</th></tr></thead>
+  <tbody>
+    <tr><td>AVL</td><td>O(log n)</td><td>O(log n)</td><td>Read-heavy in-memory</td></tr>
+    <tr><td>Red-black</td><td>O(log n)</td><td>O(log n)</td><td>SortedDictionary, std::map</td></tr>
+    <tr><td>B-tree</td><td>O(log n)</td><td>O(log n)</td><td>Databases, filesystems</td></tr>
+    <tr><td>Splay tree</td><td>O(log n) amortized</td><td>O(log n) amortized</td><td>Caching: recently accessed → near root</td></tr>
+  </tbody>
+</table>
+
+<p>For interviews, knowing they exist and the trade-off (loose vs tight balance, in-memory vs disk) is usually enough. Implementing a red-black tree from scratch is rarely asked.</p>
+
+<hr>
+
+<!-- ============== MODULE 19 ============== -->
+<h2 id="m19"><span class="module-tag">Module 19</span><br>Tries</h2>
+
+<h3>What is a trie?</h3>
+<p>A tree where each node represents one character; paths from root spell out strings. Excellent for prefix queries.</p>
+
+<pre class="diagram">Insert "cat", "car", "card", "dog":
+
+           root
+           /  \
+          c    d
+          |    |
+          a    o
+         / \   |
+        t*  r  g*
+            |
+           *or d*
+
+* = end of a word</pre>
+
+<h3>Operations</h3>
+<table class="complexity-table">
+  <thead><tr><th>Op</th><th>Time</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Insert string of length L</td><td class="good">O(L)</td><td>Independent of how many words stored</td></tr>
+    <tr><td>Search exact match</td><td class="good">O(L)</td><td>—</td></tr>
+    <tr><td>Search by prefix</td><td class="good">O(L)</td><td>Walk down to prefix node</td></tr>
+    <tr><td>List all with prefix</td><td>O(L + K)</td><td>K = total chars in matches</td></tr>
+  </tbody>
+</table>
+
+<h3>Implementation in C#</h3>
+<pre><code>public class Trie
+{
+    private class Node
+    {
+        public Dictionary&lt;char, Node&gt; Children = new();
+        public bool IsEnd;
+    }
+
+    private readonly Node _root = new();
+
+    public void Insert(string word)
+    {
+        var n = _root;
+        foreach (var c in word)
+        {
+            if (!n.Children.TryGetValue(c, out var next))
+                n.Children[c] = next = new Node();
+            n = next;
+        }
+        n.IsEnd = true;
+    }
+
+    public bool Search(string word) =&gt; FindNode(word) is { IsEnd: true };
+
+    public bool StartsWith(string prefix) =&gt; FindNode(prefix) != null;
+
+    private Node? FindNode(string s)
+    {
+        var n = _root;
+        foreach (var c in s)
+        {
+            if (!n.Children.TryGetValue(c, out var next)) return null;
+            n = next;
+        }
+        return n;
+    }
+}</code></pre>
+
+<h3>Where tries shine</h3>
+<ul>
+  <li><strong>Autocomplete</strong> — every keystroke triggers a prefix lookup.</li>
+  <li><strong>Spell check</strong> — combined with edit distance.</li>
+  <li><strong>IP routing tables</strong> — longest prefix match.</li>
+  <li><strong>URL routing</strong> — many web frameworks store routes in tries.</li>
+  <li><strong>T9 keyboards</strong>.</li>
+  <li><strong>Word games</strong> (Boggle, Scrabble solvers).</li>
+</ul>
+
+<h3>Memory cost</h3>
+<p>A trie with ASCII can use 26+ pointers per node. For large dictionaries, switch from <code>Dictionary&lt;char, Node&gt;</code> to a 26-element array, or use a compressed trie / radix tree where chains of single-child nodes are collapsed.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part D — Graphs</h2>
+  <p>Modules 20–24: nodes, edges, and the algorithms that traverse them</p>
+</div>
+
+<!-- ============== MODULE 20 ============== -->
+<h2 id="m20"><span class="module-tag">Module 20</span><br>Graph Representations</h2>
+
+<h3>Definitions</h3>
+<ul>
+  <li><strong>Vertex (node)</strong> — the entities.</li>
+  <li><strong>Edge</strong> — a connection between two vertices.</li>
+  <li><strong>Directed</strong> — edges have direction (A→B doesn't imply B→A).</li>
+  <li><strong>Weighted</strong> — edges have a cost / distance.</li>
+  <li><strong>Cyclic / Acyclic</strong> — has a cycle or not. DAG = directed acyclic graph.</li>
+  <li><strong>Connected</strong> — every vertex reachable from every other.</li>
+</ul>
+
+<pre class="diagram">Undirected:           Directed weighted (DAG):
+
+   A───B                A ──5── B
+   │  /                 │       │
+   │ /                  3       2
+   C───D                ▼       ▼
+                        C ──1── D</pre>
+
+<h3>Real-world graphs</h3>
+<ul>
+  <li>Social network — vertices=people, edges=friendships.</li>
+  <li>Maps — intersections, roads.</li>
+  <li>Web — pages, links.</li>
+  <li>Dependencies — packages, services.</li>
+  <li>Workflows — tasks with prerequisites.</li>
+  <li>Networks — computers, links.</li>
+</ul>
+
+<h3>Two main representations</h3>
+
+<h4>Adjacency list — typical choice</h4>
+<pre><code>// V vertices labeled 0..V-1
+var graph = new List&lt;List&lt;int&gt;&gt;(V);
+for (int i = 0; i &lt; V; i++) graph.Add(new List&lt;int&gt;());
+
+// Add edge u → v
+graph[u].Add(v);
+// For undirected:
+graph[v].Add(u);
+
+// For weighted, store tuples
+var weighted = new List&lt;List&lt;(int to, int weight)&gt;&gt;();
+weighted[u].Add((v, 5));</code></pre>
+
+<p>Space O(V + E), iterate neighbors of v in O(deg(v)).</p>
+
+<h4>Adjacency matrix — for dense graphs or fast edge lookup</h4>
+<pre><code>var matrix = new int[V, V];
+matrix[u, v] = 1;            // unweighted
+matrix[u, v] = weight;       // weighted (use int.MaxValue or 0 for "no edge")</code></pre>
+
+<p>Space O(V²). Edge lookup O(1). For sparse graphs (most real ones), it's wasteful.</p>
+
+<h3>When to pick which</h3>
+<table>
+  <thead><tr><th>Graph property</th><th>Pick</th></tr></thead>
+  <tbody>
+    <tr><td>Sparse (E ≪ V²)</td><td>Adjacency list</td></tr>
+    <tr><td>Dense (E ≈ V²)</td><td>Adjacency matrix</td></tr>
+    <tr><td>Frequent edge existence checks</td><td>Adjacency matrix (or hash set per node)</td></tr>
+    <tr><td>Large V (millions)</td><td>Adjacency list (matrix would need TB)</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 21 ============== -->
+<h2 id="m21"><span class="module-tag">Module 21</span><br>BFS &amp; DFS</h2>
+
+<p>Two ways to visit every reachable node. Both O(V + E).</p>
+
+<h3>BFS — Breadth-First Search</h3>
+<p>Visit all vertices at distance 1 first, then 2, then 3. Uses a queue.</p>
+
+<pre><code>void Bfs(List&lt;List&lt;int&gt;&gt; graph, int start)
+{
+    var visited = new bool[graph.Count];
+    var queue = new Queue&lt;int&gt;();
+
+    queue.Enqueue(start);
+    visited[start] = true;
+
+    while (queue.Count &gt; 0)
+    {
+        int v = queue.Dequeue();
+        Visit(v);
+        foreach (var u in graph[v])
+        {
+            if (!visited[u])
+            {
+                visited[u] = true;
+                queue.Enqueue(u);
+            }
+        }
+    }
+}</code></pre>
+
+<p><strong>Use BFS when you need shortest path</strong> (in unweighted graphs) — the first time you reach a node is via the shortest path.</p>
+
+<h3>Shortest path with BFS</h3>
+<pre><code>int[] ShortestPaths(List&lt;List&lt;int&gt;&gt; graph, int start)
+{
+    var dist = new int[graph.Count];
+    Array.Fill(dist, -1);
+    var queue = new Queue&lt;int&gt;();
+    queue.Enqueue(start);
+    dist[start] = 0;
+    while (queue.Count &gt; 0)
+    {
+        int v = queue.Dequeue();
+        foreach (var u in graph[v])
+            if (dist[u] == -1)
+            {
+                dist[u] = dist[v] + 1;
+                queue.Enqueue(u);
+            }
+    }
+    return dist;
+}</code></pre>
+
+<h3>DFS — Depth-First Search</h3>
+<p>Go as deep as possible, then backtrack. Uses recursion (or explicit stack).</p>
+
+<pre><code>void Dfs(List&lt;List&lt;int&gt;&gt; graph, int start)
+{
+    var visited = new bool[graph.Count];
+    DfsHelper(graph, start, visited);
+}
+
+void DfsHelper(List&lt;List&lt;int&gt;&gt; graph, int v, bool[] visited)
+{
+    visited[v] = true;
+    Visit(v);
+    foreach (var u in graph[v])
+        if (!visited[u]) DfsHelper(graph, u, visited);
+}</code></pre>
+
+<p><strong>Use DFS for:</strong> connectivity, cycle detection, topological sort, finding all paths, tree problems.</p>
+
+<h3>BFS vs DFS quick reference</h3>
+<table>
+  <thead><tr><th>Goal</th><th>Pick</th></tr></thead>
+  <tbody>
+    <tr><td>Shortest path (unweighted)</td><td>BFS</td></tr>
+    <tr><td>Detect cycle in undirected</td><td>BFS or DFS</td></tr>
+    <tr><td>Detect cycle in directed</td><td>DFS with colors (white/gray/black)</td></tr>
+    <tr><td>Topological sort</td><td>DFS (postorder reverse) or BFS (Kahn's)</td></tr>
+    <tr><td>All connected components</td><td>Either, on each unvisited node</td></tr>
+    <tr><td>Bipartite check</td><td>BFS with 2-coloring</td></tr>
+    <tr><td>Maze solving</td><td>BFS for shortest path; DFS for any path</td></tr>
+  </tbody>
+</table>
+
+<h3>Number of islands — classic BFS/DFS on grid</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Given a 2D grid of '1' (land) and '0' (water), count the islands. Islands connect horizontally and vertically.</p>
+</div>
+
+<pre><code>int NumIslands(char[][] grid)
+{
+    if (grid.Length == 0) return 0;
+    int rows = grid.Length, cols = grid[0].Length;
+    int count = 0;
+
+    void Dfs(int r, int c)
+    {
+        if (r &lt; 0 || c &lt; 0 || r &gt;= rows || c &gt;= cols || grid[r][c] != '1')
+            return;
+        grid[r][c] = '0';      // mark visited
+        Dfs(r + 1, c); Dfs(r - 1, c);
+        Dfs(r, c + 1); Dfs(r, c - 1);
+    }
+
+    for (int r = 0; r &lt; rows; r++)
+        for (int c = 0; c &lt; cols; c++)
+            if (grid[r][c] == '1') { count++; Dfs(r, c); }
+    return count;
+}
+// O(R·C) time and space</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 22 ============== -->
+<h2 id="m22"><span class="module-tag">Module 22</span><br>Shortest Paths</h2>
+
+<table>
+  <thead><tr><th>Algorithm</th><th>Graph type</th><th>Time</th></tr></thead>
+  <tbody>
+    <tr><td>BFS</td><td>Unweighted</td><td>O(V + E)</td></tr>
+    <tr><td>Dijkstra</td><td>Non-negative weights</td><td>O((V + E) log V) with heap</td></tr>
+    <tr><td>Bellman-Ford</td><td>Allows negative weights; detects negative cycles</td><td>O(V·E)</td></tr>
+    <tr><td>Floyd-Warshall</td><td>All-pairs shortest paths</td><td>O(V³)</td></tr>
+    <tr><td>A*</td><td>With heuristic</td><td>Faster than Dijkstra in practice</td></tr>
+  </tbody>
+</table>
+
+<h3>Dijkstra's algorithm</h3>
+<pre><code>// graph[u] = list of (neighbor, weight) tuples; weights ≥ 0
+int[] Dijkstra(List&lt;List&lt;(int to, int w)&gt;&gt; graph, int start)
+{
+    var dist = new int[graph.Count];
+    Array.Fill(dist, int.MaxValue);
+    dist[start] = 0;
+
+    var heap = new PriorityQueue&lt;int, int&gt;();
+    heap.Enqueue(start, 0);
+
+    while (heap.Count &gt; 0)
+    {
+        heap.TryDequeue(out int v, out int d);
+        if (d &gt; dist[v]) continue;        // stale entry — skip
+
+        foreach (var (u, w) in graph[v])
+        {
+            int nd = d + w;
+            if (nd &lt; dist[u])
+            {
+                dist[u] = nd;
+                heap.Enqueue(u, nd);
+            }
+        }
+    }
+    return dist;
+}</code></pre>
+
+<h3>Bellman-Ford</h3>
+<p>Handles negative edges. Slower but more general. Detects negative cycles (if a distance can still be improved after V-1 iterations, there's a negative cycle).</p>
+
+<pre><code>int[] BellmanFord(int V, List&lt;(int from, int to, int w)&gt; edges, int start)
+{
+    var dist = new int[V];
+    Array.Fill(dist, int.MaxValue);
+    dist[start] = 0;
+
+    for (int i = 0; i &lt; V - 1; i++)
+        foreach (var (u, v, w) in edges)
+            if (dist[u] != int.MaxValue &amp;&amp; dist[u] + w &lt; dist[v])
+                dist[v] = dist[u] + w;
+
+    // Detect negative cycle
+    foreach (var (u, v, w) in edges)
+        if (dist[u] != int.MaxValue &amp;&amp; dist[u] + w &lt; dist[v])
+            throw new Exception("Negative cycle");
+
+    return dist;
+}</code></pre>
+
+<h3>Floyd-Warshall — all-pairs shortest paths</h3>
+<pre><code>int[,] FloydWarshall(int[,] g)   // g[i,j] = direct distance, or INF
+{
+    int n = g.GetLength(0);
+    var d = (int[,])g.Clone();
+    for (int k = 0; k &lt; n; k++)
+        for (int i = 0; i &lt; n; i++)
+            for (int j = 0; j &lt; n; j++)
+                if (d[i, k] + d[k, j] &lt; d[i, j])
+                    d[i, j] = d[i, k] + d[k, j];
+    return d;
+}
+// Three nested loops; works for V up to ~500</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 23 ============== -->
+<h2 id="m23"><span class="module-tag">Module 23</span><br>Minimum Spanning Tree</h2>
+
+<p>Given a connected weighted undirected graph, find the subset of edges that connects all vertices with minimum total weight. The result is a tree (V-1 edges).</p>
+
+<h3>Two classic algorithms</h3>
+
+<h4>Kruskal — sort edges + Union-Find</h4>
+<pre><code>// Sort all edges by weight; greedily add edges that don't form a cycle.
+int Kruskal(int V, List&lt;(int u, int v, int w)&gt; edges)
+{
+    edges.Sort((a, b) =&gt; a.w.CompareTo(b.w));
+    var dsu = new DSU(V);
+    int total = 0, used = 0;
+    foreach (var (u, v, w) in edges)
+    {
+        if (dsu.Union(u, v))           // returns true if they weren't connected
+        {
+            total += w;
+            if (++used == V - 1) break;
+        }
+    }
+    return total;
+}
+// O(E log E) — dominated by sort
+// (DSU shown in Module 37)</code></pre>
+
+<h4>Prim — grow from a starting vertex with a heap</h4>
+<pre><code>int Prim(List&lt;List&lt;(int to, int w)&gt;&gt; graph)
+{
+    var inMst = new bool[graph.Count];
+    var heap = new PriorityQueue&lt;(int v, int w), int&gt;();
+    heap.Enqueue((0, 0), 0);
+    int total = 0;
+    while (heap.Count &gt; 0)
+    {
+        heap.TryDequeue(out var cur, out var w);
+        if (inMst[cur.v]) continue;
+        inMst[cur.v] = true;
+        total += w;
+        foreach (var (to, ew) in graph[cur.v])
+            if (!inMst[to]) heap.Enqueue((to, ew), ew);
+    }
+    return total;
+}
+// O((V + E) log V)</code></pre>
+
+<h3>When MST appears in real life</h3>
+<ul>
+  <li>Network design — laying cable to connect cities cheaply.</li>
+  <li>Clustering — single-linkage hierarchical clustering.</li>
+  <li>Approximate solutions to TSP.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 24 ============== -->
+<h2 id="m24"><span class="module-tag">Module 24</span><br>Topological Sort &amp; SCC</h2>
+
+<h3>Topological sort</h3>
+<p>For a DAG (directed acyclic graph), produce an ordering where every edge u→v has u before v. Used for: course prerequisites, build dependencies (make/MSBuild), task scheduling.</p>
+
+<h4>Kahn's algorithm — BFS based</h4>
+<pre><code>List&lt;int&gt; TopoSort(List&lt;List&lt;int&gt;&gt; graph)
+{
+    int V = graph.Count;
+    var indeg = new int[V];
+    for (int u = 0; u &lt; V; u++)
+        foreach (var v in graph[u]) indeg[v]++;
+
+    var q = new Queue&lt;int&gt;();
+    for (int i = 0; i &lt; V; i++) if (indeg[i] == 0) q.Enqueue(i);
+
+    var result = new List&lt;int&gt;();
+    while (q.Count &gt; 0)
+    {
+        int v = q.Dequeue();
+        result.Add(v);
+        foreach (var u in graph[v])
+            if (--indeg[u] == 0) q.Enqueue(u);
+    }
+    if (result.Count != V) throw new Exception("Has cycle");
+    return result;
+}
+// O(V + E)</code></pre>
+
+<h3>Strongly connected components</h3>
+<p>In a directed graph, an SCC is a maximal set of vertices that can all reach each other. Used for: deadlock detection, optimizer dependency analysis, web link analysis.</p>
+
+<p>Two algorithms:</p>
+<ul>
+  <li><strong>Kosaraju</strong> — two DFS passes (forward then transposed graph). O(V + E).</li>
+  <li><strong>Tarjan</strong> — single DFS using a stack and low-link values. O(V + E). Slightly faster constants.</li>
+</ul>
+
+<p>Implementations are 30–50 lines each — recognize the use case, look up the canonical implementation when needed.</p>
+
+<h3>Cycle detection</h3>
+<ul>
+  <li><strong>Undirected:</strong> DFS — if you visit a node already in the current path (and it's not the parent), there's a cycle.</li>
+  <li><strong>Directed:</strong> DFS with three colors — white (unseen), gray (in current path), black (done). Hitting a gray node = cycle.</li>
+</ul>
+
+<pre><code>bool HasCycleDirected(List&lt;List&lt;int&gt;&gt; graph)
+{
+    int V = graph.Count;
+    var color = new int[V];   // 0=white, 1=gray, 2=black
+
+    bool Dfs(int v)
+    {
+        color[v] = 1;
+        foreach (var u in graph[v])
+        {
+            if (color[u] == 1) return true;
+            if (color[u] == 0 &amp;&amp; Dfs(u)) return true;
+        }
+        color[v] = 2;
+        return false;
+    }
+
+    for (int i = 0; i &lt; V; i++)
+        if (color[i] == 0 &amp;&amp; Dfs(i)) return true;
+    return false;
+}</code></pre>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part E — Searching &amp; Sorting</h2>
+  <p>Modules 25–29: the classics, plus the array-pattern toolkit</p>
+</div>
+
+<!-- ============== MODULE 25 ============== -->
+<h2 id="m25"><span class="module-tag">Module 25</span><br>Binary Search &amp; Variants</h2>
+
+<h3>The basic algorithm</h3>
+<p>On a sorted array, we can find a target in O(log n) by repeatedly halving the search space.</p>
+
+<pre><code>int BinarySearch(int[] a, int target)
+{
+    int lo = 0, hi = a.Length - 1;
+    while (lo &lt;= hi)
+    {
+        int mid = lo + (hi - lo) / 2;     // avoids overflow
+        if (a[mid] == target) return mid;
+        if (a[mid] &lt; target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}</code></pre>
+
+<p>20 iterations enough for an array of a million. 30 for a billion. <em>Always</em> consider whether your data can be sorted to enable binary search.</p>
+
+<h3>Off-by-one is the killer</h3>
+<p>Three loop invariants:</p>
+<ul>
+  <li><code>while (lo &lt;= hi)</code> — search closed interval [lo, hi]; updates: <code>mid+1</code> / <code>mid-1</code>.</li>
+  <li><code>while (lo &lt; hi)</code> — search half-open [lo, hi); updates: <code>mid+1</code> / <code>mid</code>.</li>
+  <li><code>while (lo + 1 &lt; hi)</code> — leaves [lo, hi] with two candidates at end; pick after the loop.</li>
+</ul>
+
+<p>Pick one and stick with it. Mixing causes infinite loops or off-by-ones. Recommended: <strong>closed interval</strong> as above.</p>
+
+<h3>Lower bound / upper bound</h3>
+<p>Find the first index where <code>a[i] &gt;= target</code> (lower bound) or <code>a[i] &gt; target</code> (upper bound). The number of equal elements is <code>upper - lower</code>.</p>
+
+<pre><code>// First index where a[i] &gt;= target
+int LowerBound(int[] a, int target)
+{
+    int lo = 0, hi = a.Length;
+    while (lo &lt; hi)
+    {
+        int mid = lo + (hi - lo) / 2;
+        if (a[mid] &lt; target) lo = mid + 1;
+        else hi = mid;
+    }
+    return lo;
+}</code></pre>
+
+<h3>Binary search the answer</h3>
+<p>This is the killer pattern: when the input is NOT sorted but the <em>answer</em> has a monotonic feasibility predicate (something feasible at value k is also feasible at k+1, but not at k-1), binary search the answer space.</p>
+
+<div class="problem-box">
+  <h4>Problem: Koko eating bananas</h4>
+  <p>Piles of bananas. Koko can eat at speed k bananas/hour (one pile per hour, even if &lt; k). Min k to finish in H hours?</p>
+</div>
+
+<pre><code>int MinEatingSpeed(int[] piles, int H)
+{
+    int lo = 1, hi = piles.Max();
+    while (lo &lt; hi)
+    {
+        int mid = lo + (hi - lo) / 2;
+        long hoursNeeded = piles.Sum(p =&gt; (long)((p + mid - 1) / mid));
+        if (hoursNeeded &lt;= H) hi = mid;       // feasible — try slower
+        else lo = mid + 1;                     // infeasible — eat faster
+    }
+    return lo;
+}
+// O(N log M) where M = max pile</code></pre>
+
+<p>Other "binary search the answer" problems: split array largest sum, capacity to ship within D days, min days to make bouquets, find min in rotated sorted array.</p>
+
+<hr>
+
+<!-- ============== MODULE 26 ============== -->
+<h2 id="m26"><span class="module-tag">Module 26</span><br>Basic Sorting</h2>
+
+<p>You'll never write these in production (use <code>Array.Sort</code>) but you must understand them — the patterns appear everywhere.</p>
+
+<h3>Bubble sort — O(n²)</h3>
+<pre><code>void BubbleSort(int[] a)
+{
+    int n = a.Length;
+    for (int i = 0; i &lt; n - 1; i++)
+    {
+        bool swapped = false;
+        for (int j = 0; j &lt; n - i - 1; j++)
+            if (a[j] &gt; a[j + 1])
+            {
+                (a[j], a[j + 1]) = (a[j + 1], a[j]);
+                swapped = true;
+            }
+        if (!swapped) break;        // already sorted
+    }
+}</code></pre>
+
+<h3>Selection sort — O(n²)</h3>
+<pre><code>void SelectionSort(int[] a)
+{
+    for (int i = 0; i &lt; a.Length - 1; i++)
+    {
+        int minIdx = i;
+        for (int j = i + 1; j &lt; a.Length; j++)
+            if (a[j] &lt; a[minIdx]) minIdx = j;
+        if (minIdx != i) (a[i], a[minIdx]) = (a[minIdx], a[i]);
+    }
+}</code></pre>
+
+<h3>Insertion sort — O(n²) worst, O(n) best</h3>
+<p>Best when the array is nearly sorted. Used as the base case in introsort/timsort for small subarrays.</p>
+<pre><code>void InsertionSort(int[] a)
+{
+    for (int i = 1; i &lt; a.Length; i++)
+    {
+        int cur = a[i], j = i - 1;
+        while (j &gt;= 0 &amp;&amp; a[j] &gt; cur)
+        {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = cur;
+    }
+}</code></pre>
+
+<h3>Stability</h3>
+<p>A stable sort preserves the relative order of equal-keyed elements. Matters when sorting by multiple criteria sequentially.</p>
+
+<table>
+  <thead><tr><th>Sort</th><th>Stable?</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble, Insertion, Merge</td><td>Yes</td></tr>
+    <tr><td>Selection, Quick, Heap</td><td>No (typically)</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 27 ============== -->
+<h2 id="m27"><span class="module-tag">Module 27</span><br>Efficient Sorting</h2>
+
+<h3>Merge sort — O(n log n), stable, O(n) space</h3>
+<p>Divide the array in half, sort each half recursively, merge. The merge step is the heart.</p>
+
+<pre><code>void MergeSort(int[] a, int lo, int hi)
+{
+    if (lo &gt;= hi) return;
+    int mid = lo + (hi - lo) / 2;
+    MergeSort(a, lo, mid);
+    MergeSort(a, mid + 1, hi);
+    Merge(a, lo, mid, hi);
+}
+
+void Merge(int[] a, int lo, int mid, int hi)
+{
+    var tmp = new int[hi - lo + 1];
+    int i = lo, j = mid + 1, k = 0;
+    while (i &lt;= mid &amp;&amp; j &lt;= hi)
+        tmp[k++] = a[i] &lt;= a[j] ? a[i++] : a[j++];
+    while (i &lt;= mid) tmp[k++] = a[i++];
+    while (j &lt;= hi)  tmp[k++] = a[j++];
+    Array.Copy(tmp, 0, a, lo, tmp.Length);
+}</code></pre>
+
+<p>Always O(n log n) — predictable. Used to sort linked lists (no random access needed) and external sorts (data on disk).</p>
+
+<h3>Quick sort — O(n log n) avg, O(n²) worst, O(log n) extra space</h3>
+<p>Pick a pivot, partition (smaller left, larger right), recurse on each side.</p>
+
+<pre><code>void QuickSort(int[] a, int lo, int hi)
+{
+    if (lo &gt;= hi) return;
+    int p = Partition(a, lo, hi);
+    QuickSort(a, lo, p - 1);
+    QuickSort(a, p + 1, hi);
+}
+
+int Partition(int[] a, int lo, int hi)
+{
+    int pivot = a[hi];          // last element as pivot
+    int i = lo - 1;
+    for (int j = lo; j &lt; hi; j++)
+        if (a[j] &lt; pivot)
+            (a[++i], a[j]) = (a[j], a[i]);
+    (a[i + 1], a[hi]) = (a[hi], a[i + 1]);
+    return i + 1;
+}</code></pre>
+
+<p>Faster constants than merge sort in practice. Worst case is O(n²) when pivots are bad — mitigate with random or median-of-three pivot. Real-world implementations (introsort) detect bad recursion and switch to heap sort.</p>
+
+<h3>Heap sort — O(n log n), O(1) extra space</h3>
+<p>Build a max-heap, then repeatedly extract the max to the end. In-place.</p>
+
+<pre><code>void HeapSort(int[] a)
+{
+    int n = a.Length;
+    // Build heap (heapify all internal nodes)
+    for (int i = n / 2 - 1; i &gt;= 0; i--) SiftDown(a, i, n);
+    // Extract max repeatedly
+    for (int i = n - 1; i &gt; 0; i--)
+    {
+        (a[0], a[i]) = (a[i], a[0]);
+        SiftDown(a, 0, i);
+    }
+}
+
+void SiftDown(int[] a, int i, int n)
+{
+    while (true)
+    {
+        int l = 2 * i + 1, r = 2 * i + 2, largest = i;
+        if (l &lt; n &amp;&amp; a[l] &gt; a[largest]) largest = l;
+        if (r &lt; n &amp;&amp; a[r] &gt; a[largest]) largest = r;
+        if (largest == i) break;
+        (a[i], a[largest]) = (a[largest], a[i]);
+        i = largest;
+    }
+}</code></pre>
+
+<h3>Built-in choice in .NET</h3>
+<p><code>Array.Sort</code> / <code>List&lt;T&gt;.Sort</code> use <strong>introsort</strong>: quicksort that switches to heap sort if recursion goes too deep, plus insertion sort for small subarrays. Best of both worlds.</p>
+
+<hr>
+
+<!-- ============== MODULE 28 ============== -->
+<h2 id="m28"><span class="module-tag">Module 28</span><br>Non-Comparison Sorting</h2>
+
+<p>Comparison sorts have a lower bound of Ω(n log n). To go faster, you need to know more about the data.</p>
+
+<h3>Counting sort — O(n + k)</h3>
+<p>For integers in a small range [0, k]. Count occurrences, then write out.</p>
+<pre><code>void CountingSort(int[] a, int k)
+{
+    var count = new int[k + 1];
+    foreach (var x in a) count[x]++;
+    int idx = 0;
+    for (int v = 0; v &lt;= k; v++)
+        while (count[v]-- &gt; 0) a[idx++] = v;
+}
+// O(n + k); great when k is bounded (e.g., counting ages 0..120)</code></pre>
+
+<h3>Radix sort — O(d·(n + b))</h3>
+<p>Sort by digits, least significant first. d = number of digits, b = base. For 32-bit ints with base 256, that's 4 passes.</p>
+
+<h3>Bucket sort — O(n) average</h3>
+<p>Spread elements into k buckets, sort each, concatenate. Works well when input is uniformly distributed.</p>
+
+<h3>When you'd actually use these</h3>
+<ul>
+  <li>Counting sort: counting votes by age, sorting score bins, anagram comparison.</li>
+  <li>Radix sort: sorting fixed-length strings or integers in massive datasets.</li>
+  <li>Bucket sort: histogram-style data with known distribution.</li>
+</ul>
+
+<p>For 99% of real C# code, just use <code>Array.Sort</code>.</p>
+
+<hr>
+
+<!-- ============== MODULE 29 ============== -->
+<h2 id="m29"><span class="module-tag">Module 29</span><br>Two Pointers, Sliding Window, Prefix Sum</h2>
+
+<p>Three indispensable techniques for array problems. Master these and a quarter of LeetCode falls.</p>
+
+<h3>Two pointers</h3>
+<p>Use two indices that move based on conditions. Often turns O(n²) into O(n).</p>
+
+<div class="problem-box">
+  <h4>Problem: pair sum in sorted array</h4>
+  <p>Sorted array. Two indices that sum to target?</p>
+</div>
+
+<pre><code>bool HasPairSum(int[] a, int target)
+{
+    int lo = 0, hi = a.Length - 1;
+    while (lo &lt; hi)
+    {
+        int s = a[lo] + a[hi];
+        if (s == target) return true;
+        if (s &lt; target) lo++;        // need bigger
+        else hi--;                    // need smaller
+    }
+    return false;
+}
+// O(n)</code></pre>
+
+<p>More two-pointer problems: container with most water, 3Sum, valid palindrome, remove duplicates from sorted array, move zeros.</p>
+
+<h3>Sliding window</h3>
+<p>Maintain a contiguous window <code>[left, right]</code> and slide it across, updating an aggregate (sum, count, set of elements) in O(1) per step.</p>
+
+<div class="problem-box">
+  <h4>Problem: longest substring with at most K distinct chars</h4>
+  <p><code>"eceba"</code>, k=2 → 3 (<code>"ece"</code>).</p>
+</div>
+
+<pre><code>int LongestKDistinct(string s, int k)
+{
+    var count = new Dictionary&lt;char,int&gt;();
+    int left = 0, best = 0;
+    for (int right = 0; right &lt; s.Length; right++)
+    {
+        count[s[right]] = count.GetValueOrDefault(s[right]) + 1;
+        while (count.Count &gt; k)
+        {
+            count[s[left]]--;
+            if (count[s[left]] == 0) count.Remove(s[left]);
+            left++;
+        }
+        best = Math.Max(best, right - left + 1);
+    }
+    return best;
+}
+// O(n) — left and right each advance at most n times</code></pre>
+
+<h3>Prefix sum</h3>
+<p>Precompute cumulative sums so any range sum is O(1).</p>
+
+<pre><code>// prefix[i] = sum of a[0..i-1]
+int[] BuildPrefix(int[] a)
+{
+    var p = new int[a.Length + 1];
+    for (int i = 0; i &lt; a.Length; i++) p[i + 1] = p[i] + a[i];
+    return p;
+}
+
+// Sum of a[l..r] inclusive
+int RangeSum(int[] prefix, int l, int r) =&gt; prefix[r + 1] - prefix[l];</code></pre>
+
+<h3>Subarray sum equals K — prefix sum + hash map</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Count subarrays whose sum equals k. <code>[1,1,1]</code>, k=2 → 2.</p>
+</div>
+
+<div class="compare">
+  <div class="bad">
+    <h4>Brute — O(n²)</h4>
+<pre><code>int Count(int[] a, int k)
+{
+    int total = 0;
+    for (int i = 0; i &lt; a.Length; i++)
+    {
+        int s = 0;
+        for (int j = i; j &lt; a.Length; j++)
+        {
+            s += a[j];
+            if (s == k) total++;
+        }
+    }
+    return total;
+}</code></pre>
+  </div>
+  <div class="good">
+    <h4>Prefix + map — O(n)</h4>
+<pre><code>int Count(int[] a, int k)
+{
+    var seen = new Dictionary&lt;int,int&gt; { [0] = 1 };
+    int sum = 0, total = 0;
+    foreach (var x in a)
+    {
+        sum += x;
+        // Subarrays ending here with sum k
+        // are previous prefixes with sum (sum - k)
+        total += seen.GetValueOrDefault(sum - k);
+        seen[sum] = seen.GetValueOrDefault(sum) + 1;
+    }
+    return total;
+}</code></pre>
+  </div>
+</div>
+
+<p>2D prefix sums work the same way (image/grid range queries in O(1) after O(R·C) preprocessing).</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part F — Algorithm Paradigms</h2>
+  <p>Modules 30–37: brute force, greedy, divide &amp; conquer, dynamic programming, backtracking</p>
+</div>
+
+<!-- ============== MODULE 30 ============== -->
+<h2 id="m30"><span class="module-tag">Module 30</span><br>Brute Force</h2>
+
+<p>The simplest possible solution: try every possibility. Often O(2ⁿ) or O(n!) — but it's the right starting point because:</p>
+<ul>
+  <li>It establishes correctness.</li>
+  <li>You can compare optimized solutions against it on small inputs.</li>
+  <li>Sometimes it's actually fast enough for the input size.</li>
+</ul>
+
+<h3>The right way to brute-force</h3>
+<ol>
+  <li>Enumerate all candidates.</li>
+  <li>Check each.</li>
+  <li>Return the answer (or all answers).</li>
+</ol>
+
+<h3>Common brute force shapes</h3>
+<table>
+  <thead><tr><th>Shape</th><th>Complexity</th><th>Example</th></tr></thead>
+  <tbody>
+    <tr><td>All pairs</td><td>O(n²)</td><td>Closest pair, two-sum</td></tr>
+    <tr><td>All triples</td><td>O(n³)</td><td>3-sum, max product of 3</td></tr>
+    <tr><td>All subsets</td><td>O(2ⁿ)</td><td>Subset sum, power set</td></tr>
+    <tr><td>All permutations</td><td>O(n!)</td><td>TSP, anagram generation</td></tr>
+    <tr><td>All grid paths</td><td>O(2^(R+C))</td><td>Naïve unique paths</td></tr>
+  </tbody>
+</table>
+
+<h3>How to optimize away from brute</h3>
+<ul>
+  <li><strong>Sort first</strong> — opens up two-pointer or binary search.</li>
+  <li><strong>Hash table</strong> — turn O(n²) lookups into O(n).</li>
+  <li><strong>Memoize</strong> — for recursive brute force with overlapping subproblems → DP.</li>
+  <li><strong>Prune</strong> — backtracking with cuts.</li>
+  <li><strong>Greedy</strong> — if local optimal leads to global optimal.</li>
+  <li><strong>Math</strong> — closed-form formula instead of enumerating.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 31 ============== -->
+<h2 id="m31"><span class="module-tag">Module 31</span><br>Greedy</h2>
+
+<p>At each step, take the locally optimal choice. If you can prove greedy gives the global optimum, you're done — usually O(n) or O(n log n).</p>
+
+<h3>The hard part: proving greedy works</h3>
+<p>Greedy doesn't always work. The key question: "does the locally best choice never sabotage the future?" Two common proof techniques:</p>
+<ul>
+  <li><strong>Exchange argument</strong> — show any non-greedy step can be swapped for a greedy one without making the answer worse.</li>
+  <li><strong>Stays-ahead argument</strong> — show after k steps the greedy solution is at least as good as any other.</li>
+</ul>
+
+<h3>Classic greedy: activity selection</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Given activities with (start, end) times, schedule the maximum number that don't overlap.</p>
+</div>
+
+<pre><code>int MaxActivities((int s, int e)[] acts)
+{
+    Array.Sort(acts, (a, b) =&gt; a.e.CompareTo(b.e));   // by end time
+    int count = 0, lastEnd = int.MinValue;
+    foreach (var (s, e) in acts)
+        if (s &gt;= lastEnd) { count++; lastEnd = e; }
+    return count;
+}
+// O(n log n) — sort dominates
+// Greedy choice: always pick the activity that ends earliest among compatible ones.</code></pre>
+
+<h3>Other greedy classics</h3>
+<ul>
+  <li><strong>Coin change</strong> — works greedily for canonical coin systems (US coins) but NOT for arbitrary (e.g., {1, 3, 4} for amount 6 — greedy gives 3 coins, optimal is 2).</li>
+  <li><strong>Huffman coding</strong> — compress text by giving frequent chars short codes. Greedy via priority queue.</li>
+  <li><strong>Kruskal &amp; Prim</strong> — MST (Module 23).</li>
+  <li><strong>Dijkstra</strong> — shortest path (Module 22).</li>
+  <li><strong>Job scheduling with deadlines</strong> — sort by profit, schedule latest possible slot.</li>
+  <li><strong>Gas station problem</strong>.</li>
+  <li><strong>Jump game</strong> — track furthest reachable.</li>
+</ul>
+
+<h3>When greedy fails — fall back to DP</h3>
+<p>If a problem's optimal solution requires combining choices in non-obvious ways (e.g., 0/1 knapsack), greedy fails — need dynamic programming.</p>
+
+<hr>
+
+<!-- ============== MODULE 32 ============== -->
+<h2 id="m32"><span class="module-tag">Module 32</span><br>Divide &amp; Conquer</h2>
+
+<p>Three steps:</p>
+<ol>
+  <li><strong>Divide</strong> the problem into smaller subproblems of the same shape.</li>
+  <li><strong>Conquer</strong> them recursively.</li>
+  <li><strong>Combine</strong> their answers.</li>
+</ol>
+
+<p>Examples: merge sort, quick sort, binary search, Strassen's matrix multiplication, FFT.</p>
+
+<h3>Recurrence and Master Theorem</h3>
+<p>Already covered in Module 4. Quick reminder:</p>
+<ul>
+  <li>Merge sort: 2 subproblems of size n/2 + O(n) combine → O(n log n).</li>
+  <li>Binary search: 1 subproblem of size n/2 + O(1) → O(log n).</li>
+  <li>Karatsuba multiplication: 3 subproblems of size n/2 + O(n) → O(n^log₂3) ≈ O(n^1.58).</li>
+</ul>
+
+<h3>Maximum subarray with D&amp;C — O(n log n)</h3>
+<p>(Less efficient than Kadane but a great D&amp;C example.)</p>
+<pre><code>int Solve(int[] a, int lo, int hi)
+{
+    if (lo == hi) return a[lo];
+    int mid = (lo + hi) / 2;
+    int leftMax = Solve(a, lo, mid);
+    int rightMax = Solve(a, mid + 1, hi);
+    int crossMax = MaxCrossing(a, lo, mid, hi);
+    return Math.Max(Math.Max(leftMax, rightMax), crossMax);
+}
+
+int MaxCrossing(int[] a, int lo, int mid, int hi)
+{
+    int leftSum = int.MinValue, sum = 0;
+    for (int i = mid; i &gt;= lo; i--)
+    {
+        sum += a[i];
+        if (sum &gt; leftSum) leftSum = sum;
+    }
+    int rightSum = int.MinValue; sum = 0;
+    for (int i = mid + 1; i &lt;= hi; i++)
+    {
+        sum += a[i];
+        if (sum &gt; rightSum) rightSum = sum;
+    }
+    return leftSum + rightSum;
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 33 ============== -->
+<h2 id="m33"><span class="module-tag">Module 33</span><br>Dynamic Programming Foundations</h2>
+
+<p><strong>DP</strong> is the technique for problems where:</p>
+<ol>
+  <li><strong>Overlapping subproblems</strong> — the same smaller problem comes up many times.</li>
+  <li><strong>Optimal substructure</strong> — the optimal answer is built from optimal answers to smaller subproblems.</li>
+</ol>
+
+<p>The trick: compute each subproblem once, save the answer, reuse it.</p>
+
+<h3>Two implementation styles</h3>
+
+<h4>1. Top-down (memoization)</h4>
+<p>Recursion + cache. Easier to write; same code as brute force plus a memo table.</p>
+<pre><code>Dictionary&lt;int, long&gt; memo = new();
+
+long Fib(int n)
+{
+    if (n &lt; 2) return n;
+    if (memo.TryGetValue(n, out var v)) return v;
+    return memo[n] = Fib(n - 1) + Fib(n - 2);
+}</code></pre>
+
+<h4>2. Bottom-up (tabulation)</h4>
+<p>Iterative, fill in subproblems in order. Usually faster (no recursion overhead) and avoids stack overflow.</p>
+<pre><code>long Fib(int n)
+{
+    if (n &lt; 2) return n;
+    var dp = new long[n + 1];
+    dp[0] = 0; dp[1] = 1;
+    for (int i = 2; i &lt;= n; i++) dp[i] = dp[i - 1] + dp[i - 2];
+    return dp[n];
+}</code></pre>
+
+<h3>Often: optimize space</h3>
+<p>If <code>dp[i]</code> only depends on the last few entries, store just those.</p>
+<pre><code>long Fib(int n)
+{
+    if (n &lt; 2) return n;
+    long a = 0, b = 1;
+    for (int i = 2; i &lt;= n; i++) (a, b) = (b, a + b);
+    return b;
+}
+// O(n) time, O(1) space</code></pre>
+
+<h3>The DP recipe</h3>
+<ol>
+  <li><strong>Define the state</strong> — what does <code>dp[i]</code> (or <code>dp[i][j]</code>) represent?</li>
+  <li><strong>Find the recurrence</strong> — how do you compute <code>dp[i]</code> from smaller states?</li>
+  <li><strong>Identify base cases</strong> — what are the trivial answers?</li>
+  <li><strong>Decide order</strong> — which states to fill first.</li>
+  <li><strong>Optionally optimize space</strong>.</li>
+</ol>
+
+<h3>How to recognize a DP problem</h3>
+<ul>
+  <li>"How many ways…", "minimum cost…", "longest…", "is it possible to…"</li>
+  <li>Brute force is recursive and re-explores the same states.</li>
+  <li>Each step has a small set of choices.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 34 ============== -->
+<h2 id="m34"><span class="module-tag">Module 34</span><br>Classic 1D DPs</h2>
+
+<h3>Climbing stairs</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>You climb stairs taking 1 or 2 steps. How many distinct ways to reach step n?</p>
+</div>
+<pre><code>// dp[i] = ways to reach step i
+// dp[i] = dp[i-1] + dp[i-2] — Fibonacci!
+int ClimbStairs(int n)
+{
+    if (n &lt;= 2) return n;
+    int a = 1, b = 2;
+    for (int i = 3; i &lt;= n; i++) (a, b) = (b, a + b);
+    return b;
+}</code></pre>
+
+<h3>House robber</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Rob houses on a street; can't rob two adjacent. Max money?</p>
+</div>
+<pre><code>int Rob(int[] money)
+{
+    int prev2 = 0, prev1 = 0;
+    foreach (var m in money)
+    {
+        int cur = Math.Max(prev1, prev2 + m);
+        // either skip this house (prev1) or rob it (prev2 + m)
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    return prev1;
+}
+// O(n) time, O(1) space</code></pre>
+
+<h3>Coin change — minimum coins</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Given coin denominations and an amount, return min number of coins. -1 if impossible.</p>
+</div>
+<pre><code>int CoinChange(int[] coins, int amount)
+{
+    var dp = new int[amount + 1];
+    Array.Fill(dp, amount + 1);   // sentinel for "impossible"
+    dp[0] = 0;
+    for (int a = 1; a &lt;= amount; a++)
+        foreach (var c in coins)
+            if (c &lt;= a) dp[a] = Math.Min(dp[a], dp[a - c] + 1);
+    return dp[amount] &gt; amount ? -1 : dp[amount];
+}
+// O(amount × coins.Length)</code></pre>
+
+<h3>Longest increasing subsequence (LIS)</h3>
+<pre><code>// O(n²) DP
+int LisN2(int[] a)
+{
+    int n = a.Length;
+    var dp = new int[n];
+    Array.Fill(dp, 1);
+    for (int i = 1; i &lt; n; i++)
+        for (int j = 0; j &lt; i; j++)
+            if (a[j] &lt; a[i]) dp[i] = Math.Max(dp[i], dp[j] + 1);
+    return dp.Max();
+}
+
+// O(n log n) — patience sorting / binary search
+int LisNLogN(int[] a)
+{
+    var tails = new List&lt;int&gt;();
+    foreach (var x in a)
+    {
+        int idx = tails.BinarySearch(x);
+        if (idx &lt; 0) idx = ~idx;
+        if (idx == tails.Count) tails.Add(x);
+        else tails[idx] = x;
+    }
+    return tails.Count;
+}</code></pre>
+
+<h3>Decode ways, word break, jump game II</h3>
+<p>All follow the same template: <code>dp[i]</code> describes some property up to index i, recurrence considers the last "step" backwards.</p>
+
+<hr>
+
+<!-- ============== MODULE 35 ============== -->
+<h2 id="m35"><span class="module-tag">Module 35</span><br>Classic 2D DPs</h2>
+
+<h3>0/1 Knapsack</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>N items, each with weight w[i] and value v[i]. Capacity W. Pick a subset (each at most once) to maximize value.</p>
+</div>
+<pre><code>// dp[i][c] = max value with first i items, capacity c
+int Knapsack(int[] w, int[] v, int W)
+{
+    int n = w.Length;
+    var dp = new int[n + 1, W + 1];
+    for (int i = 1; i &lt;= n; i++)
+        for (int c = 0; c &lt;= W; c++)
+        {
+            dp[i, c] = dp[i - 1, c];                        // skip item
+            if (w[i - 1] &lt;= c)
+                dp[i, c] = Math.Max(dp[i, c],
+                                     dp[i - 1, c - w[i - 1]] + v[i - 1]);
+        }
+    return dp[n, W];
+}
+// O(nW) time and space; can reduce to O(W) space with rolling array</code></pre>
+
+<h3>Longest Common Subsequence (LCS)</h3>
+<pre><code>int Lcs(string a, string b)
+{
+    int n = a.Length, m = b.Length;
+    var dp = new int[n + 1, m + 1];
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            dp[i, j] = a[i - 1] == b[j - 1]
+                ? dp[i - 1, j - 1] + 1
+                : Math.Max(dp[i - 1, j], dp[i, j - 1]);
+    return dp[n, m];
+}
+// O(nm)</code></pre>
+
+<h3>Edit distance (Levenshtein)</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Min number of insert/delete/replace operations to transform string a into b.</p>
+</div>
+<pre><code>int EditDistance(string a, string b)
+{
+    int n = a.Length, m = b.Length;
+    var dp = new int[n + 1, m + 1];
+    for (int i = 0; i &lt;= n; i++) dp[i, 0] = i;
+    for (int j = 0; j &lt;= m; j++) dp[0, j] = j;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= m; j++)
+            dp[i, j] = a[i - 1] == b[j - 1]
+                ? dp[i - 1, j - 1]
+                : 1 + Math.Min(dp[i - 1, j - 1],          // replace
+                       Math.Min(dp[i - 1, j],              // delete
+                                dp[i, j - 1]));            // insert
+    return dp[n, m];
+}
+// O(nm) — used in spell checkers, diff tools, DNA alignment</code></pre>
+
+<h3>Unique paths in a grid</h3>
+<pre><code>int UniquePaths(int rows, int cols)
+{
+    var dp = new int[rows, cols];
+    for (int r = 0; r &lt; rows; r++) dp[r, 0] = 1;
+    for (int c = 0; c &lt; cols; c++) dp[0, c] = 1;
+    for (int r = 1; r &lt; rows; r++)
+        for (int c = 1; c &lt; cols; c++)
+            dp[r, c] = dp[r - 1, c] + dp[r, c - 1];
+    return dp[rows - 1, cols - 1];
+}</code></pre>
+
+<h3>Other 2D DPs to know</h3>
+<ul>
+  <li>Matrix chain multiplication.</li>
+  <li>Palindrome partitioning.</li>
+  <li>Distinct subsequences.</li>
+  <li>Regular expression matching.</li>
+  <li>Wildcard matching.</li>
+  <li>Interleaving strings.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 36 ============== -->
+<h2 id="m36"><span class="module-tag">Module 36</span><br>Backtracking</h2>
+
+<p>Backtracking is brute-force-with-pruning. Build a candidate solution incrementally; whenever a partial solution can't possibly succeed, "back up" and try a different choice.</p>
+
+<h3>The shape</h3>
+<pre><code>void Backtrack(state)
+{
+    if (IsSolution(state)) { Record(state); return; }
+    foreach (choice in Candidates(state))
+    {
+        if (!IsValid(state, choice)) continue;     // pruning
+        Apply(state, choice);
+        Backtrack(state);
+        Undo(state, choice);                        // backtrack
+    }
+}</code></pre>
+
+<h3>Permutations</h3>
+<pre><code>List&lt;List&lt;int&gt;&gt; Permute(int[] nums)
+{
+    var result = new List&lt;List&lt;int&gt;&gt;();
+    var path = new List&lt;int&gt;();
+    var used = new bool[nums.Length];
+
+    void Backtrack()
+    {
+        if (path.Count == nums.Length)
+        {
+            result.Add(new List&lt;int&gt;(path));
+            return;
+        }
+        for (int i = 0; i &lt; nums.Length; i++)
+        {
+            if (used[i]) continue;
+            used[i] = true;
+            path.Add(nums[i]);
+            Backtrack();
+            path.RemoveAt(path.Count - 1);
+            used[i] = false;
+        }
+    }
+
+    Backtrack();
+    return result;
+}
+// O(n · n!)</code></pre>
+
+<h3>Subsets</h3>
+<pre><code>List&lt;List&lt;int&gt;&gt; Subsets(int[] nums)
+{
+    var result = new List&lt;List&lt;int&gt;&gt;();
+    var path = new List&lt;int&gt;();
+
+    void Backtrack(int start)
+    {
+        result.Add(new List&lt;int&gt;(path));
+        for (int i = start; i &lt; nums.Length; i++)
+        {
+            path.Add(nums[i]);
+            Backtrack(i + 1);
+            path.RemoveAt(path.Count - 1);
+        }
+    }
+
+    Backtrack(0);
+    return result;
+}
+// O(n · 2ⁿ)</code></pre>
+
+<h3>N-Queens</h3>
+<pre><code>List&lt;List&lt;string&gt;&gt; SolveNQueens(int n)
+{
+    var result = new List&lt;List&lt;string&gt;&gt;();
+    var cols = new bool[n];
+    var diag1 = new bool[2 * n];   // r + c
+    var diag2 = new bool[2 * n];   // r - c + n
+    var queens = new int[n];
+
+    void Backtrack(int row)
+    {
+        if (row == n)
+        {
+            var board = new List&lt;string&gt;();
+            for (int r = 0; r &lt; n; r++)
+                board.Add(new string('.', queens[r]) + "Q" +
+                          new string('.', n - queens[r] - 1));
+            result.Add(board);
+            return;
+        }
+        for (int c = 0; c &lt; n; c++)
+        {
+            if (cols[c] || diag1[row + c] || diag2[row - c + n]) continue;
+            cols[c] = diag1[row + c] = diag2[row - c + n] = true;
+            queens[row] = c;
+            Backtrack(row + 1);
+            cols[c] = diag1[row + c] = diag2[row - c + n] = false;
+        }
+    }
+
+    Backtrack(0);
+    return result;
+}</code></pre>
+
+<h3>Other backtracking classics</h3>
+<ul>
+  <li>Sudoku solver.</li>
+  <li>Word search in grid.</li>
+  <li>Combination sum.</li>
+  <li>Letter combinations of a phone number.</li>
+  <li>Generate parentheses.</li>
+  <li>Restore IP addresses.</li>
+  <li>Hamiltonian path.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 37 ============== -->
+<h2 id="m37"><span class="module-tag">Module 37</span><br>DSU, Segment Tree, Fenwick Tree</h2>
+
+<h3>Disjoint Set Union (Union-Find)</h3>
+<p>Tracks a partition of n elements into disjoint sets. Two operations:</p>
+<ul>
+  <li><strong>Find(x)</strong> — which set is x in?</li>
+  <li><strong>Union(x, y)</strong> — merge their sets.</li>
+</ul>
+
+<p>With both <em>path compression</em> and <em>union by rank</em>, both ops are nearly O(1) amortized (technically O(α(n)), the inverse Ackermann function — practically constant).</p>
+
+<pre><code>public class DSU
+{
+    private readonly int[] _parent;
+    private readonly int[] _rank;
+
+    public DSU(int n)
+    {
+        _parent = new int[n];
+        _rank = new int[n];
+        for (int i = 0; i &lt; n; i++) _parent[i] = i;
+    }
+
+    public int Find(int x)
+    {
+        if (_parent[x] != x) _parent[x] = Find(_parent[x]);   // path compression
+        return _parent[x];
+    }
+
+    public bool Union(int x, int y)
+    {
+        int rx = Find(x), ry = Find(y);
+        if (rx == ry) return false;
+        if (_rank[rx] &lt; _rank[ry]) (rx, ry) = (ry, rx);
+        _parent[ry] = rx;
+        if (_rank[rx] == _rank[ry]) _rank[rx]++;
+        return true;
+    }
+}</code></pre>
+
+<p><strong>Where DSU shines:</strong> Kruskal MST, dynamic connectivity ("are u and v in the same component?"), counting components, account merging, image segmentation.</p>
+
+<h3>Segment Tree</h3>
+<p>Supports range queries (sum, min, max, ...) and point updates in O(log n). Built on an array of size up to 4n.</p>
+
+<pre><code>// Sum segment tree
+public class SegTree
+{
+    private readonly int[] _t;
+    private readonly int _n;
+
+    public SegTree(int[] a)
+    {
+        _n = a.Length;
+        _t = new int[4 * _n];
+        Build(a, 1, 0, _n - 1);
+    }
+
+    void Build(int[] a, int node, int lo, int hi)
+    {
+        if (lo == hi) { _t[node] = a[lo]; return; }
+        int mid = (lo + hi) / 2;
+        Build(a, 2 * node, lo, mid);
+        Build(a, 2 * node + 1, mid + 1, hi);
+        _t[node] = _t[2 * node] + _t[2 * node + 1];
+    }
+
+    public int RangeSum(int l, int r) =&gt; Query(1, 0, _n - 1, l, r);
+
+    int Query(int node, int lo, int hi, int l, int r)
+    {
+        if (r &lt; lo || l &gt; hi) return 0;
+        if (l &lt;= lo &amp;&amp; hi &lt;= r) return _t[node];
+        int mid = (lo + hi) / 2;
+        return Query(2 * node, lo, mid, l, r) +
+               Query(2 * node + 1, mid + 1, hi, l, r);
+    }
+
+    public void Update(int idx, int val) =&gt; Up(1, 0, _n - 1, idx, val);
+
+    void Up(int node, int lo, int hi, int idx, int val)
+    {
+        if (lo == hi) { _t[node] = val; return; }
+        int mid = (lo + hi) / 2;
+        if (idx &lt;= mid) Up(2 * node, lo, mid, idx, val);
+        else Up(2 * node + 1, mid + 1, hi, idx, val);
+        _t[node] = _t[2 * node] + _t[2 * node + 1];
+    }
+}</code></pre>
+
+<h3>Fenwick Tree (Binary Indexed Tree, BIT)</h3>
+<p>Simpler than segment trees — supports prefix sums and point updates in O(log n). Less general (no arbitrary range query out of the box) but very compact.</p>
+
+<pre><code>public class Fenwick
+{
+    private readonly int[] _t;
+    public Fenwick(int n) { _t = new int[n + 1]; }
+    public void Update(int i, int delta)
+    {
+        for (i++; i &lt; _t.Length; i += i &amp; -i) _t[i] += delta;
+    }
+    public int Prefix(int i)
+    {
+        int s = 0;
+        for (i++; i &gt; 0; i -= i &amp; -i) s += _t[i];
+        return s;
+    }
+    public int Range(int l, int r) =&gt; Prefix(r) - Prefix(l - 1);
+}</code></pre>
+
+<p>Use for: count of inversions, cumulative frequency, range-sum-with-updates, online order statistics.</p>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part G — Interview Patterns</h2>
+  <p>Modules 38–44: the recurring problem shapes — recognize the pattern and the solution falls out</p>
+</div>
+
+<!-- ============== MODULE 38 ============== -->
+<h2 id="m38"><span class="module-tag pattern">Module 38</span><br>The 16 Coding Interview Patterns</h2>
+
+<p>Almost every problem you'll see fits one of these. Learn to recognize them; the algorithm follows.</p>
+
+<table>
+  <thead><tr><th>#</th><th>Pattern</th><th>When you see…</th><th>Example problem</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><strong>Two Pointers</strong></td><td>Sorted array, pair/triplet, palindrome</td><td>Two Sum II, 3Sum</td></tr>
+    <tr><td>2</td><td><strong>Sliding Window</strong></td><td>Contiguous subarray/substring with property</td><td>Longest substring no repeats</td></tr>
+    <tr><td>3</td><td><strong>Fast &amp; Slow Pointers</strong></td><td>Linked list cycle, middle, detect repeats</td><td>Linked list cycle</td></tr>
+    <tr><td>4</td><td><strong>Merge Intervals</strong></td><td>Overlapping ranges, scheduling</td><td>Merge intervals, meeting rooms</td></tr>
+    <tr><td>5</td><td><strong>Cyclic Sort</strong></td><td>Array of n nums in 1..n</td><td>Find missing, find duplicate</td></tr>
+    <tr><td>6</td><td><strong>In-place Reversal of LinkedList</strong></td><td>Reverse parts of a list</td><td>Reverse k-group</td></tr>
+    <tr><td>7</td><td><strong>BFS on Trees/Graphs</strong></td><td>Level-by-level, shortest unweighted path</td><td>Level order, word ladder</td></tr>
+    <tr><td>8</td><td><strong>DFS / Backtracking</strong></td><td>All paths, all combinations, exhaustive search</td><td>Subsets, permutations, N-Queens</td></tr>
+    <tr><td>9</td><td><strong>Two Heaps</strong></td><td>Median, top-K halves</td><td>Median of stream, sliding window median</td></tr>
+    <tr><td>10</td><td><strong>Subsets / Power Set</strong></td><td>"All combinations of…"</td><td>Subsets, combinations, letter combos</td></tr>
+    <tr><td>11</td><td><strong>Modified Binary Search</strong></td><td>Sorted/rotated, find floor/ceiling, peak</td><td>Search in rotated sorted array</td></tr>
+    <tr><td>12</td><td><strong>Top K Elements</strong></td><td>"K largest/smallest/most frequent"</td><td>Top K frequent, K closest points</td></tr>
+    <tr><td>13</td><td><strong>K-way Merge</strong></td><td>Multiple sorted sequences</td><td>Merge K sorted lists</td></tr>
+    <tr><td>14</td><td><strong>Topological Sort</strong></td><td>Order with dependencies</td><td>Course schedule, build order</td></tr>
+    <tr><td>15</td><td><strong>Dynamic Programming</strong></td><td>"How many ways", "min/max cost"</td><td>Fib, knapsack, edit distance</td></tr>
+    <tr><td>16</td><td><strong>Bitwise XOR / Bit Manipulation</strong></td><td>Find unique, count bits, subsets via mask</td><td>Single number, count bits</td></tr>
+  </tbody>
+</table>
+
+<h3>How to use this table</h3>
+<ol>
+  <li>Read the problem twice.</li>
+  <li>Match it to a pattern from this list.</li>
+  <li>Recall the template; adapt it to the problem's specifics.</li>
+  <li>Code, test on small inputs, analyze complexity.</li>
+</ol>
+
+<hr>
+
+<!-- ============== MODULE 39 ============== -->
+<h2 id="m39"><span class="module-tag pattern">Module 39</span><br>Pattern: Two Pointers</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>Sorted array / linked list and you're searching for pairs/triplets.</li>
+  <li>Reverse / palindrome check.</li>
+  <li>Partition problems (move zeros, sort colors).</li>
+  <li>Merge two sorted arrays.</li>
+</ul>
+
+<h3>Template</h3>
+<pre><code>int left = 0, right = n - 1;
+while (left &lt; right)
+{
+    if (Condition(left, right)) return ...;
+    if (NeedBigger(left, right)) left++;
+    else right--;
+}</code></pre>
+
+<h3>3Sum — find all triplets summing to 0</h3>
+<pre><code>List&lt;List&lt;int&gt;&gt; ThreeSum(int[] nums)
+{
+    Array.Sort(nums);
+    var result = new List&lt;List&lt;int&gt;&gt;();
+    for (int i = 0; i &lt; nums.Length - 2; i++)
+    {
+        if (i &gt; 0 &amp;&amp; nums[i] == nums[i - 1]) continue;     // skip dups
+        int l = i + 1, r = nums.Length - 1;
+        while (l &lt; r)
+        {
+            int sum = nums[i] + nums[l] + nums[r];
+            if (sum == 0)
+            {
+                result.Add(new List&lt;int&gt; { nums[i], nums[l], nums[r] });
+                while (l &lt; r &amp;&amp; nums[l] == nums[l + 1]) l++;
+                while (l &lt; r &amp;&amp; nums[r] == nums[r - 1]) r--;
+                l++; r--;
+            }
+            else if (sum &lt; 0) l++;
+            else r--;
+        }
+    }
+    return result;
+}
+// O(n²) — sorting is O(n log n), outer × two-pointer is O(n²)</code></pre>
+
+<h3>Container with most water</h3>
+<pre><code>int MaxArea(int[] h)
+{
+    int l = 0, r = h.Length - 1, best = 0;
+    while (l &lt; r)
+    {
+        int area = (r - l) * Math.Min(h[l], h[r]);
+        best = Math.Max(best, area);
+        if (h[l] &lt; h[r]) l++;        // shorter side limits us
+        else r--;
+    }
+    return best;
+}
+// O(n)</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 40 ============== -->
+<h2 id="m40"><span class="module-tag pattern">Module 40</span><br>Pattern: Sliding Window</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>Contiguous subarray / substring with some property.</li>
+  <li>"Longest", "shortest", "minimum", "with at most K".</li>
+  <li>Fixed-size or variable-size windows.</li>
+</ul>
+
+<h3>Two flavors</h3>
+
+<h4>Fixed window — size k</h4>
+<pre><code>// Max sum of any window of size k
+int MaxSumK(int[] a, int k)
+{
+    int sum = 0;
+    for (int i = 0; i &lt; k; i++) sum += a[i];
+    int best = sum;
+    for (int i = k; i &lt; a.Length; i++)
+    {
+        sum += a[i] - a[i - k];
+        best = Math.Max(best, sum);
+    }
+    return best;
+}</code></pre>
+
+<h4>Variable window — grow until condition broken, then shrink</h4>
+<pre><code>// Smallest subarray with sum ≥ target
+int MinSubarrayLen(int target, int[] a)
+{
+    int left = 0, sum = 0, best = int.MaxValue;
+    for (int right = 0; right &lt; a.Length; right++)
+    {
+        sum += a[right];
+        while (sum &gt;= target)
+        {
+            best = Math.Min(best, right - left + 1);
+            sum -= a[left++];
+        }
+    }
+    return best == int.MaxValue ? 0 : best;
+}
+// O(n) — both pointers advance n times</code></pre>
+
+<h3>Permutation in string — anagram window</h3>
+<pre><code>bool CheckInclusion(string s1, string s2)
+{
+    if (s1.Length &gt; s2.Length) return false;
+    var need = new int[26];
+    var have = new int[26];
+    foreach (var c in s1) need[c - 'a']++;
+    int k = s1.Length;
+
+    for (int i = 0; i &lt; s2.Length; i++)
+    {
+        have[s2[i] - 'a']++;
+        if (i &gt;= k) have[s2[i - k] - 'a']--;
+        if (have.SequenceEqual(need)) return true;
+    }
+    return false;
+}</code></pre>
+
+<p>Sliding window solves: longest unique substring, longest with at most K distinct, min window substring, max consecutive 1s with K flips, fruits in baskets.</p>
+
+<hr>
+
+<!-- ============== MODULE 41 ============== -->
+<h2 id="m41"><span class="module-tag pattern">Module 41</span><br>Pattern: Fast &amp; Slow Pointers</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>Detect cycle in linked list / sequence.</li>
+  <li>Find middle of a list.</li>
+  <li>Find cycle's entry point.</li>
+  <li>Happy number (number-cycle detection).</li>
+  <li>Palindrome linked list.</li>
+</ul>
+
+<h3>Floyd's algorithm — find cycle entry</h3>
+<pre><code>ListNode? CycleEntry(ListNode? head)
+{
+    var slow = head; var fast = head;
+    // Phase 1: detect
+    while (fast?.Next != null)
+    {
+        slow = slow!.Next;
+        fast = fast.Next.Next;
+        if (slow == fast)
+        {
+            // Phase 2: find entry
+            slow = head;
+            while (slow != fast)
+            {
+                slow = slow!.Next;
+                fast = fast.Next;
+            }
+            return slow;
+        }
+    }
+    return null;     // no cycle
+}</code></pre>
+
+<p>Why does Phase 2 work? Math: distance from head to entry = distance from meeting point to entry (going around). Walk both at same speed and they meet at the entry.</p>
+
+<h3>Find middle (for splitting list, palindrome check, etc.)</h3>
+<pre><code>ListNode? Middle(ListNode? head)
+{
+    var slow = head; var fast = head;
+    while (fast?.Next != null) { slow = slow!.Next; fast = fast.Next.Next; }
+    return slow;
+}</code></pre>
+
+<h3>Happy number — sequence cycle detection on numbers</h3>
+<pre><code>bool IsHappy(int n)
+{
+    int slow = n, fast = SquareSum(n);
+    while (fast != 1 &amp;&amp; slow != fast)
+    {
+        slow = SquareSum(slow);
+        fast = SquareSum(SquareSum(fast));
+    }
+    return fast == 1;
+
+    int SquareSum(int x)
+    {
+        int s = 0;
+        while (x &gt; 0) { int d = x % 10; s += d * d; x /= 10; }
+        return s;
+    }
+}</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 42 ============== -->
+<h2 id="m42"><span class="module-tag pattern">Module 42</span><br>Pattern: Top-K with Heap</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>"K largest", "K smallest", "K most frequent".</li>
+  <li>"K closest points to origin".</li>
+  <li>Online: top-K of a stream.</li>
+</ul>
+
+<h3>The trick: heap of size K, not n</h3>
+<p>For top-K largest: keep a <em>min-heap</em> of size K. When a new element arrives, if it's bigger than the heap's min, push and pop. After processing all n, the heap holds the top K.</p>
+
+<pre><code>// Top K most frequent
+int[] TopKFrequent(int[] nums, int k)
+{
+    var freq = new Dictionary&lt;int, int&gt;();
+    foreach (var x in nums)
+        freq[x] = freq.GetValueOrDefault(x) + 1;
+
+    var heap = new PriorityQueue&lt;int, int&gt;();   // (num, freq) — min-heap by freq
+    foreach (var (num, f) in freq)
+    {
+        heap.Enqueue(num, f);
+        if (heap.Count &gt; k) heap.Dequeue();
+    }
+    var result = new int[k];
+    for (int i = k - 1; i &gt;= 0; i--) result[i] = heap.Dequeue();
+    return result;
+}
+// O(n log k)</code></pre>
+
+<h3>K closest points to origin</h3>
+<pre><code>int[][] KClosest(int[][] points, int k)
+{
+    var heap = new PriorityQueue&lt;int[], int&gt;();   // max-heap (negate dist)
+    foreach (var p in points)
+    {
+        int d = p[0] * p[0] + p[1] * p[1];
+        heap.Enqueue(p, -d);
+        if (heap.Count &gt; k) heap.Dequeue();
+    }
+    var result = new int[k][];
+    for (int i = 0; i &lt; k; i++) result[i] = heap.Dequeue();
+    return result;
+}</code></pre>
+
+<h3>Two heaps — median of a stream</h3>
+<pre><code>public class MedianFinder
+{
+    private readonly PriorityQueue&lt;int, int&gt; _lo = new();   // max-heap (lower half)
+    private readonly PriorityQueue&lt;int, int&gt; _hi = new();   // min-heap (upper half)
+
+    public void Add(int n)
+    {
+        _lo.Enqueue(n, -n);                      // negate for max-heap
+        _hi.Enqueue(_lo.Dequeue(), -_lo.Peek());
+        if (_hi.Count &gt; _lo.Count)
+        {
+            int top = _hi.Dequeue();
+            _lo.Enqueue(top, -top);
+        }
+    }
+
+    public double Median() =&gt; _lo.Count &gt; _hi.Count
+        ? _lo.Peek()
+        : (_lo.Peek() + _hi.Peek()) / 2.0;
+}
+// Add: O(log n). Median: O(1).</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 43 ============== -->
+<h2 id="m43"><span class="module-tag pattern">Module 43</span><br>Pattern: Modified Binary Search</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>Sorted array but with a twist: rotated, contains duplicates, infinite stream, 2D matrix.</li>
+  <li>Find peak / valley / target with property.</li>
+  <li>Find first/last occurrence.</li>
+  <li>"Binary search the answer" (Module 25).</li>
+</ul>
+
+<h3>Search in rotated sorted array</h3>
+<pre><code>int Search(int[] a, int target)
+{
+    int lo = 0, hi = a.Length - 1;
+    while (lo &lt;= hi)
+    {
+        int mid = (lo + hi) / 2;
+        if (a[mid] == target) return mid;
+
+        if (a[lo] &lt;= a[mid])      // left half is sorted
+        {
+            if (a[lo] &lt;= target &amp;&amp; target &lt; a[mid]) hi = mid - 1;
+            else lo = mid + 1;
+        }
+        else                       // right half is sorted
+        {
+            if (a[mid] &lt; target &amp;&amp; target &lt;= a[hi]) lo = mid + 1;
+            else hi = mid - 1;
+        }
+    }
+    return -1;
+}
+// O(log n)</code></pre>
+
+<h3>Find peak element</h3>
+<pre><code>int FindPeak(int[] a)
+{
+    int lo = 0, hi = a.Length - 1;
+    while (lo &lt; hi)
+    {
+        int mid = (lo + hi) / 2;
+        if (a[mid] &gt; a[mid + 1]) hi = mid;       // peak is to the left or here
+        else lo = mid + 1;                        // peak is to the right
+    }
+    return lo;
+}</code></pre>
+
+<h3>Find first/last occurrence</h3>
+<pre><code>int FirstOccurrence(int[] a, int target)
+{
+    int lo = 0, hi = a.Length - 1, ans = -1;
+    while (lo &lt;= hi)
+    {
+        int mid = (lo + hi) / 2;
+        if (a[mid] == target) { ans = mid; hi = mid - 1; }
+        else if (a[mid] &lt; target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return ans;
+}
+// Switch hi=mid-1 with lo=mid+1 in the equal case for last occurrence.</code></pre>
+
+<hr>
+
+<!-- ============== MODULE 44 ============== -->
+<h2 id="m44"><span class="module-tag pattern">Module 44</span><br>Pattern: BFS/DFS on Matrices</h2>
+
+<h3>When to use</h3>
+<ul>
+  <li>Grid problems: islands, regions, paths, walls.</li>
+  <li>Multi-source BFS: nearest hospital/police, rotting oranges.</li>
+  <li>Flood fill, paint bucket.</li>
+  <li>Shortest path in maze.</li>
+</ul>
+
+<h3>The pattern</h3>
+<pre><code>int[][] dirs = { new[] { 0, 1 }, new[] { 0, -1 },
+                 new[] { 1, 0 }, new[] { -1, 0 } };
+
+void BfsGrid(int[][] grid, int sr, int sc)
+{
+    int rows = grid.Length, cols = grid[0].Length;
+    var visited = new bool[rows, cols];
+    var q = new Queue&lt;(int r, int c)&gt;();
+    q.Enqueue((sr, sc));
+    visited[sr, sc] = true;
+
+    while (q.Count &gt; 0)
+    {
+        var (r, c) = q.Dequeue();
+        Visit(r, c);
+        foreach (var d in dirs)
+        {
+            int nr = r + d[0], nc = c + d[1];
+            if (nr &lt; 0 || nc &lt; 0 || nr &gt;= rows || nc &gt;= cols) continue;
+            if (visited[nr, nc] || /* obstacle */ grid[nr][nc] == 0) continue;
+            visited[nr, nc] = true;
+            q.Enqueue((nr, nc));
+        }
+    }
+}</code></pre>
+
+<h3>Rotting oranges — multi-source BFS</h3>
+<div class="problem-box">
+  <h4>Problem</h4>
+  <p>Grid: 0=empty, 1=fresh, 2=rotten. Each minute, rotten infects orthogonal neighbors. Min minutes until all rotten? Or -1 if impossible.</p>
+</div>
+
+<pre><code>int OrangesRotting(int[][] grid)
+{
+    int rows = grid.Length, cols = grid[0].Length;
+    var q = new Queue&lt;(int r, int c)&gt;();
+    int fresh = 0;
+
+    for (int r = 0; r &lt; rows; r++)
+        for (int c = 0; c &lt; cols; c++)
+        {
+            if (grid[r][c] == 2) q.Enqueue((r, c));
+            else if (grid[r][c] == 1) fresh++;
+        }
+
+    int[][] dirs = { new[]{0,1}, new[]{0,-1}, new[]{1,0}, new[]{-1,0} };
+    int minutes = 0;
+
+    while (q.Count &gt; 0 &amp;&amp; fresh &gt; 0)
+    {
+        int size = q.Count;
+        for (int i = 0; i &lt; size; i++)
+        {
+            var (r, c) = q.Dequeue();
+            foreach (var d in dirs)
+            {
+                int nr = r + d[0], nc = c + d[1];
+                if (nr &lt; 0 || nc &lt; 0 || nr &gt;= rows || nc &gt;= cols) continue;
+                if (grid[nr][nc] != 1) continue;
+                grid[nr][nc] = 2;
+                fresh--;
+                q.Enqueue((nr, nc));
+            }
+        }
+        minutes++;
+    }
+    return fresh == 0 ? minutes : -1;
+}
+// O(R·C)</code></pre>
+
+<h3>Other matrix problems to recognize</h3>
+<ul>
+  <li>Number of islands, max area of island.</li>
+  <li>Surrounded regions (flood from border).</li>
+  <li>Walls and gates / shortest distance to nearest gate (multi-source BFS).</li>
+  <li>Shortest path in binary matrix (BFS for unweighted; Dijkstra if weighted).</li>
+  <li>Word search (DFS + backtrack).</li>
+  <li>Pacific-Atlantic water flow (DFS from each ocean).</li>
+</ul>
+
+<hr>
+
+<div class="part-divider">
+  <h2>Part H — Interview Prep</h2>
+  <p>Modules 45–50: how to actually solve problems under pressure</p>
+</div>
+
+<!-- ============== MODULE 45 ============== -->
+<h2 id="m45"><span class="module-tag">Module 45</span><br>Solving Strategy — UMPIRE</h2>
+
+<p>A six-step framework. Use it on every problem, in interviews and practice both.</p>
+
+<table>
+  <thead><tr><th>Step</th><th>What to do</th><th>How long</th></tr></thead>
+  <tbody>
+    <tr><td><strong>U — Understand</strong></td><td>Read the problem. State it back. Ask about edge cases.</td><td>2–3 min</td></tr>
+    <tr><td><strong>M — Match</strong></td><td>What pattern? What's the shape? Have I seen this before?</td><td>1–2 min</td></tr>
+    <tr><td><strong>P — Plan</strong></td><td>Walk through the algorithm in plain English. Talk through small example.</td><td>3–5 min</td></tr>
+    <tr><td><strong>I — Implement</strong></td><td>Write the code. Don't optimize prematurely.</td><td>10–15 min</td></tr>
+    <tr><td><strong>R — Review</strong></td><td>Trace through your code on the example. Find off-by-ones, null checks.</td><td>2–3 min</td></tr>
+    <tr><td><strong>E — Evaluate</strong></td><td>State complexity. Discuss trade-offs and possible improvements.</td><td>2–3 min</td></tr>
+  </tbody>
+</table>
+
+<h3>What "Understand" actually means</h3>
+<ul>
+  <li>Restate the problem in your own words.</li>
+  <li>Confirm input format, output format, constraints (n size, value ranges).</li>
+  <li>Ask about edge cases: empty input, single element, negatives, duplicates, very large input.</li>
+  <li>Ask about ambiguities. ("Two Sum: can the same index be used twice? Are there always exactly two solutions?")</li>
+  <li>Walk through 2 examples on paper / whiteboard.</li>
+</ul>
+
+<h3>What "Match" actually means</h3>
+<p>Quickly run through pattern keywords:</p>
+<ul>
+  <li>"Sorted" → binary search, two pointers.</li>
+  <li>"Subarray", "substring" → sliding window or prefix sum.</li>
+  <li>"Top K", "K closest" → heap.</li>
+  <li>"Tree", "graph", "matrix" → BFS/DFS.</li>
+  <li>"Prerequisites", "dependencies" → topological sort.</li>
+  <li>"How many ways", "min cost" → DP.</li>
+  <li>"All combinations" → backtracking.</li>
+  <li>"Dynamic connectivity" → DSU.</li>
+</ul>
+
+<h3>The art of brute-force-first</h3>
+<p>Always state the brute force first. Why?</p>
+<ul>
+  <li>Proves you understand the problem.</li>
+  <li>Establishes correctness.</li>
+  <li>Gives you a reference to compare optimized solutions.</li>
+  <li>If you're stuck, brute force is fine — partial credit beats no code.</li>
+</ul>
+
+<p>Then optimize: <em>"now let me see if I can do better."</em></p>
+
+<hr>
+
+<!-- ============== MODULE 46 ============== -->
+<h2 id="m46"><span class="module-tag">Module 46</span><br>50 Top Interview Problems</h2>
+
+<p>Master these 50 — they cover ~80% of patterns. Marked by approximate difficulty.</p>
+
+<h3>Arrays &amp; Strings (1–10)</h3>
+<ol>
+  <li><strong>Two Sum</strong> [E] — hash map. O(n).</li>
+  <li><strong>Best Time to Buy and Sell Stock</strong> [E] — track min-so-far. O(n).</li>
+  <li><strong>Contains Duplicate</strong> [E] — hash set. O(n).</li>
+  <li><strong>Product of Array Except Self</strong> [M] — prefix &amp; suffix products, no division. O(n).</li>
+  <li><strong>Maximum Subarray</strong> [M] — Kadane. O(n).</li>
+  <li><strong>Maximum Product Subarray</strong> [M] — track max &amp; min so far (negatives flip).</li>
+  <li><strong>Find Min in Rotated Sorted Array</strong> [M] — modified binary search.</li>
+  <li><strong>Search in Rotated Sorted Array</strong> [M] — modified binary search.</li>
+  <li><strong>3Sum</strong> [M] — sort + two pointers. O(n²).</li>
+  <li><strong>Container With Most Water</strong> [M] — two pointers from ends.</li>
+</ol>
+
+<h3>Strings (11–15)</h3>
+<ol start="11">
+  <li><strong>Longest Substring Without Repeating Characters</strong> [M] — sliding window.</li>
+  <li><strong>Longest Repeating Character Replacement</strong> [M] — sliding window with frequency.</li>
+  <li><strong>Minimum Window Substring</strong> [H] — sliding window with two counters.</li>
+  <li><strong>Valid Anagram</strong> [E] — frequency count.</li>
+  <li><strong>Group Anagrams</strong> [M] — hash by sorted-key or count signature.</li>
+</ol>
+
+<h3>Linked Lists (16–20)</h3>
+<ol start="16">
+  <li><strong>Reverse Linked List</strong> [E] — iterative, three pointers.</li>
+  <li><strong>Linked List Cycle</strong> [E] — Floyd's tortoise &amp; hare.</li>
+  <li><strong>Merge Two Sorted Lists</strong> [E] — dummy head + walk.</li>
+  <li><strong>Remove Nth Node from End</strong> [M] — two pointers with N gap.</li>
+  <li><strong>Reorder List</strong> [M] — find middle + reverse + merge.</li>
+</ol>
+
+<h3>Trees (21–28)</h3>
+<ol start="21">
+  <li><strong>Maximum Depth of Binary Tree</strong> [E] — recursion.</li>
+  <li><strong>Same Tree</strong> [E] — recurse both.</li>
+  <li><strong>Invert Binary Tree</strong> [E] — swap children, recurse.</li>
+  <li><strong>Binary Tree Level Order Traversal</strong> [M] — BFS with size tracking.</li>
+  <li><strong>Validate BST</strong> [M] — pass min/max bounds.</li>
+  <li><strong>Lowest Common Ancestor</strong> [M] — recurse left+right.</li>
+  <li><strong>Kth Smallest Element in a BST</strong> [M] — inorder, count.</li>
+  <li><strong>Serialize and Deserialize Binary Tree</strong> [H] — preorder + null markers.</li>
+</ol>
+
+<h3>Graphs (29–34)</h3>
+<ol start="29">
+  <li><strong>Number of Islands</strong> [M] — BFS/DFS on grid.</li>
+  <li><strong>Clone Graph</strong> [M] — BFS/DFS + hash map old → new.</li>
+  <li><strong>Course Schedule</strong> [M] — cycle detection / topo sort.</li>
+  <li><strong>Course Schedule II</strong> [M] — topological sort returns the order.</li>
+  <li><strong>Pacific Atlantic Water Flow</strong> [M] — DFS from each ocean.</li>
+  <li><strong>Word Ladder</strong> [H] — BFS over word graph.</li>
+</ol>
+
+<h3>Heap / Top-K (35–37)</h3>
+<ol start="35">
+  <li><strong>Top K Frequent Elements</strong> [M] — heap or bucket sort. O(n log k).</li>
+  <li><strong>Find Median from Data Stream</strong> [H] — two heaps.</li>
+  <li><strong>Merge K Sorted Lists</strong> [H] — heap of heads.</li>
+</ol>
+
+<h3>DP (38–45)</h3>
+<ol start="38">
+  <li><strong>Climbing Stairs</strong> [E] — Fibonacci.</li>
+  <li><strong>House Robber</strong> [M] — dp[i] = max(dp[i-1], dp[i-2]+a[i]).</li>
+  <li><strong>House Robber II</strong> [M] — circular: try with/without first.</li>
+  <li><strong>Coin Change</strong> [M] — min coins. O(amount × coins).</li>
+  <li><strong>Longest Increasing Subsequence</strong> [M] — O(n log n) with patience sort.</li>
+  <li><strong>Word Break</strong> [M] — dp[i] = any j with dp[j] &amp;&amp; s[j..i] in dict.</li>
+  <li><strong>Combination Sum IV</strong> [M] — count ways with order.</li>
+  <li><strong>Edit Distance</strong> [H] — 2D DP.</li>
+</ol>
+
+<h3>Backtracking (46–48)</h3>
+<ol start="46">
+  <li><strong>Subsets</strong> [M] — choose/skip recursion.</li>
+  <li><strong>Permutations</strong> [M] — used array.</li>
+  <li><strong>N-Queens</strong> [H] — col + diag tracking.</li>
+</ol>
+
+<h3>Bit / misc (49–50)</h3>
+<ol start="49">
+  <li><strong>Single Number</strong> [E] — XOR all.</li>
+  <li><strong>Counting Bits</strong> [E] — dp[i] = dp[i &gt;&gt; 1] + (i &amp; 1).</li>
+</ol>
+
+<p>Solve each. After getting them right, redo without looking. After that, redo timed.</p>
+
+<hr>
+
+<!-- ============== MODULE 47 ============== -->
+<h2 id="m47"><span class="module-tag">Module 47</span><br>System Design + DSA</h2>
+
+<p>System design interviews use DSA differently — you don't write code, you describe data structures and their costs at scale. The same fundamentals apply.</p>
+
+<h3>Common building blocks</h3>
+<table>
+  <thead><tr><th>Need</th><th>Structure</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td>O(1) lookups by ID</td><td>Hash table / KV store</td><td>Redis, Memcached</td></tr>
+    <tr><td>Ordered iteration / range queries</td><td>B-tree</td><td>SQL indexes</td></tr>
+    <tr><td>Top-K / leaderboards</td><td>Sorted set / heap</td><td>Redis ZSET, priority queues</td></tr>
+    <tr><td>Approximate count of distinct</td><td>HyperLogLog</td><td>Daily uniques</td></tr>
+    <tr><td>Membership test, large N</td><td>Bloom filter</td><td>Cache before DB</td></tr>
+    <tr><td>Time-series, append-only</td><td>Log (segments)</td><td>Kafka, WAL</td></tr>
+    <tr><td>Full-text search</td><td>Inverted index</td><td>Elasticsearch, Lucene</td></tr>
+    <tr><td>Geographic search</td><td>Geohash / R-tree</td><td>Maps</td></tr>
+    <tr><td>Graph traversals</td><td>Adjacency list</td><td>Social, dependencies</td></tr>
+    <tr><td>Routing</td><td>Trie</td><td>URL routing, IP routing</td></tr>
+    <tr><td>Rate limiting</td><td>Token bucket / sliding window</td><td>API gateways</td></tr>
+    <tr><td>Distributed cache eviction</td><td>LRU/LFU</td><td>Redis maxmemory-policy</td></tr>
+    <tr><td>Distributed locks</td><td>Lease + heartbeat</td><td>Redis SET NX PX</td></tr>
+    <tr><td>Consistent hashing</td><td>Hash ring</td><td>Cassandra, sharding</td></tr>
+  </tbody>
+</table>
+
+<h3>Common large-scale problems</h3>
+<ul>
+  <li><strong>URL shortener</strong> — base62 encoding + DB; lookup by hash.</li>
+  <li><strong>Newsfeed</strong> — fan-out write or fan-out read; heap to merge timelines.</li>
+  <li><strong>Rate limiter</strong> — token bucket / sliding window; Redis sorted sets.</li>
+  <li><strong>Search autocomplete</strong> — trie of prefixes; top-K with frequencies.</li>
+  <li><strong>Top-K trending</strong> — count-min sketch + min-heap of size K.</li>
+  <li><strong>Distributed cache</strong> — consistent hashing + LRU per node.</li>
+  <li><strong>Recommendation</strong> — similarity, ANN search.</li>
+  <li><strong>Notification system</strong> — fan-out queue; idempotency with Redis.</li>
+</ul>
+
+<p>You don't need to implement these. You need to know which structures power them and what their costs are at scale.</p>
+
+<hr>
+
+<!-- ============== MODULE 48 ============== -->
+<h2 id="m48"><span class="module-tag">Module 48</span><br>Common Mistakes</h2>
+
+<table>
+  <thead><tr><th>Mistake</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td>Jumping to code without understanding</td><td>Restate, ask, walk through example first</td></tr>
+    <tr><td>Not stating brute force</td><td>Always start there; then optimize</td></tr>
+    <tr><td>Off-by-one in binary search</td><td>Pick one loop invariant and stick with it</td></tr>
+    <tr><td>Forgetting empty / single-element / null cases</td><td>Always handle these explicitly</td></tr>
+    <tr><td>Mutating while iterating</td><td>Iterate a copy or build new structure</td></tr>
+    <tr><td>Index <code>i</code> as key in dynamic problems</td><td>Use stable IDs</td></tr>
+    <tr><td>Not stating complexity</td><td>Always state both time AND space</td></tr>
+    <tr><td>Premature optimization</td><td>Get correct first; optimize after</td></tr>
+    <tr><td>Premature abstraction</td><td>Solve concretely; refactor if time permits</td></tr>
+    <tr><td>Recursion that overflows the stack</td><td>Convert to iteration if depth ≥ ~10⁴</td></tr>
+    <tr><td>Integer overflow</td><td>Use <code>long</code> when sums exceed 2³¹</td></tr>
+    <tr><td>Double comparison with ==</td><td>Use epsilon: <code>Math.Abs(a-b) &lt; 1e-9</code></td></tr>
+    <tr><td>Using <code>Substring</code>/<code>concat</code> in loops</td><td>StringBuilder</td></tr>
+    <tr><td>Sorting when not needed</td><td>Hash table or counting often O(n) instead of O(n log n)</td></tr>
+    <tr><td>Quitting after one pattern fails</td><td>Try a different angle — sort? hash? two pointers?</td></tr>
+    <tr><td>Silent in interview</td><td>Narrate your thinking. Interviewers can't read minds.</td></tr>
+    <tr><td>Defensive about hints</td><td>Hints are signals — take them gracefully</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 49 ============== -->
+<h2 id="m49"><span class="module-tag">Module 49</span><br>How to Practice</h2>
+
+<h3>The wrong way</h3>
+<ul>
+  <li>Grinding hundreds of random problems with no structure.</li>
+  <li>Reading solutions before trying.</li>
+  <li>Solving once and never revisiting.</li>
+  <li>Skipping problems you got wrong.</li>
+</ul>
+
+<h3>The right way</h3>
+
+<h4>Phase 1: Foundations (4–6 weeks)</h4>
+<ul>
+  <li>Master Modules 1–13 of this course (foundations + linear structures).</li>
+  <li>Solve 30 easy problems across arrays, strings, linked lists, hash tables. Aim for 1 per day.</li>
+  <li>For each: brute force first, then optimized. Write both.</li>
+  <li>State complexity out loud.</li>
+</ul>
+
+<h4>Phase 2: Patterns (6–8 weeks)</h4>
+<ul>
+  <li>Master Modules 14–37 (trees/graphs/sorting/DP/backtracking).</li>
+  <li>For each pattern (Modules 38–44), solve 5–10 medium problems.</li>
+  <li>Use NeetCode 150 or Blind 75 lists as a curated set.</li>
+  <li>Time yourself: 30 min per medium, 45 min per hard.</li>
+  <li>If you can't solve in time, look at the approach (not the code), then close the page and try again.</li>
+</ul>
+
+<h4>Phase 3: Polish (2–4 weeks)</h4>
+<ul>
+  <li>Mock interviews — Pramp, Interviewing.io, or with peers.</li>
+  <li>Re-solve your hardest problems without notes.</li>
+  <li>Practice explaining solutions out loud while coding.</li>
+  <li>Solve company-tagged questions for your target companies.</li>
+</ul>
+
+<h3>Daily ritual (45 min)</h3>
+<ol>
+  <li>5 min — review yesterday's problem mentally.</li>
+  <li>30 min — solve one new problem (UMPIRE).</li>
+  <li>10 min — read the optimal solution; note what you missed.</li>
+</ol>
+
+<h3>Spaced repetition</h3>
+<p>Tag every problem you solved as "easy/medium/hard" and "got it / struggled / failed". Re-solve the "struggled / failed" ones after 1 day, 1 week, 1 month. Anki-style.</p>
+
+<h3>Keep a journal</h3>
+<p>For each non-trivial problem, write down:</p>
+<ul>
+  <li>Problem in one line.</li>
+  <li>Pattern recognized.</li>
+  <li>Brute force complexity.</li>
+  <li>Optimized approach + complexity.</li>
+  <li>What tripped you up.</li>
+</ul>
+
+<p>Re-read the journal weekly. You'll start seeing your blind spots cluster.</p>
+
+<hr>
+
+<!-- ============== MODULE 50 ============== -->
+<h2 id="m50"><span class="module-tag">Module 50</span><br>Mock Interview Tips</h2>
+
+<h3>Before the interview</h3>
+<ul>
+  <li>Sleep enough. Tired solving = bad solving.</li>
+  <li>Test your dev environment if it's a coding round.</li>
+  <li>Have water nearby.</li>
+  <li>5-minute warm-up: do an easy problem you know cold.</li>
+</ul>
+
+<h3>During the interview</h3>
+
+<h4>Talk continuously</h4>
+<p>Silence is the enemy. Even if you're stuck, narrate: "I'm thinking this might be a sliding window problem because... but I'm not sure how to handle this case..." The interviewer will hint or steer.</p>
+
+<h4>Pace</h4>
+<p>For a 45-minute interview:</p>
+<ul>
+  <li>Minutes 0–5: clarify the problem.</li>
+  <li>Minutes 5–10: discuss approaches; pick one.</li>
+  <li>Minutes 10–30: code.</li>
+  <li>Minutes 30–40: trace, fix bugs.</li>
+  <li>Minutes 40–45: complexity, edge cases, follow-ups.</li>
+</ul>
+
+<h4>If stuck</h4>
+<ol>
+  <li>Re-read the problem.</li>
+  <li>Try a smaller example.</li>
+  <li>State the brute force.</li>
+  <li>Ask: "what kind of problem feels like this?"</li>
+  <li>Ask the interviewer: "I'm considering X but not sure — does it sound right?"</li>
+</ol>
+
+<h4>If you finish early</h4>
+<p>Discuss:</p>
+<ul>
+  <li>"Is there a way to reduce space?"</li>
+  <li>"What if the input were streaming?"</li>
+  <li>"How would I scale this to 10⁹ items?"</li>
+  <li>"What if duplicates were allowed?"</li>
+</ul>
+
+<h3>Common scoring criteria</h3>
+<ul>
+  <li><strong>Communication</strong> — did you explain your thinking?</li>
+  <li><strong>Problem-solving</strong> — did you make progress on your own?</li>
+  <li><strong>Coding</strong> — clean, idiomatic, working code?</li>
+  <li><strong>Verification</strong> — did you test / trace / find bugs?</li>
+  <li><strong>Complexity</strong> — could you analyze it?</li>
+</ul>
+
+<p>You don't need a perfect solution to do well — strong communication often beats a perfect-but-silent answer.</p>
+
+<hr>
+
+<!-- ============== MODULE 51 ============== -->
+<h2 id="m51"><span class="module-tag">Module 51</span><br>Big-O Cheat Sheet</h2>
+
+<h3>Data structures</h3>
+<table class="complexity-table">
+  <thead>
+    <tr>
+      <th rowspan="2">Structure</th>
+      <th colspan="3">Time (avg)</th>
+      <th rowspan="2">Space</th>
+    </tr>
+    <tr><th>Access</th><th>Search</th><th>Insert/Delete</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Array</td><td class="good">O(1)</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td>O(n)</td></tr>
+    <tr><td>Stack</td><td class="good">O(1)</td><td class="bad">O(n)</td><td class="good">O(1)</td><td>O(n)</td></tr>
+    <tr><td>Queue</td><td class="good">O(1)</td><td class="bad">O(n)</td><td class="good">O(1)</td><td>O(n)</td></tr>
+    <tr><td>Singly linked list</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td class="good">O(1)*</td><td>O(n)</td></tr>
+    <tr><td>Doubly linked list</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td class="good">O(1)*</td><td>O(n)</td></tr>
+    <tr><td>Hash table</td><td>—</td><td class="good">O(1)</td><td class="good">O(1)</td><td>O(n)</td></tr>
+    <tr><td>BST (balanced)</td><td class="ok">O(log n)</td><td class="ok">O(log n)</td><td class="ok">O(log n)</td><td>O(n)</td></tr>
+    <tr><td>BST (unbalanced)</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td>O(n)</td></tr>
+    <tr><td>Heap</td><td class="bad">O(n)</td><td class="bad">O(n)</td><td class="ok">O(log n)</td><td>O(n)</td></tr>
+    <tr><td>Trie (string of length k)</td><td>—</td><td>O(k)</td><td>O(k)</td><td>O(n·k)</td></tr>
+  </tbody>
+</table>
+<p>* given the node reference</p>
+
+<h3>Sorting</h3>
+<table class="complexity-table">
+  <thead><tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr></thead>
+  <tbody>
+    <tr><td>Bubble</td><td class="good">O(n)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+    <tr><td>Insertion</td><td class="good">O(n)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+    <tr><td>Selection</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td class="bad">O(n²)</td><td>O(1)</td><td>No</td></tr>
+    <tr><td>Merge</td><td class="ok">O(n log n)</td><td class="ok">O(n log n)</td><td class="ok">O(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+    <tr><td>Quick</td><td class="ok">O(n log n)</td><td class="ok">O(n log n)</td><td class="bad">O(n²)</td><td>O(log n)</td><td>No</td></tr>
+    <tr><td>Heap</td><td class="ok">O(n log n)</td><td class="ok">O(n log n)</td><td class="ok">O(n log n)</td><td>O(1)</td><td>No</td></tr>
+    <tr><td>Counting</td><td class="good">O(n+k)</td><td class="good">O(n+k)</td><td class="good">O(n+k)</td><td>O(n+k)</td><td>Yes</td></tr>
+    <tr><td>Radix</td><td>O(d(n+b))</td><td>O(d(n+b))</td><td>O(d(n+b))</td><td>O(n+b)</td><td>Yes</td></tr>
+  </tbody>
+</table>
+
+<h3>Graph algorithms</h3>
+<table class="complexity-table">
+  <thead><tr><th>Algorithm</th><th>Time</th><th>Space</th></tr></thead>
+  <tbody>
+    <tr><td>BFS / DFS</td><td>O(V+E)</td><td>O(V)</td></tr>
+    <tr><td>Topological sort</td><td>O(V+E)</td><td>O(V)</td></tr>
+    <tr><td>Dijkstra (heap)</td><td>O((V+E) log V)</td><td>O(V)</td></tr>
+    <tr><td>Bellman-Ford</td><td>O(VE)</td><td>O(V)</td></tr>
+    <tr><td>Floyd-Warshall</td><td>O(V³)</td><td>O(V²)</td></tr>
+    <tr><td>Kruskal MST</td><td>O(E log E)</td><td>O(V)</td></tr>
+    <tr><td>Prim MST (heap)</td><td>O((V+E) log V)</td><td>O(V)</td></tr>
+    <tr><td>Tarjan SCC</td><td>O(V+E)</td><td>O(V)</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- ============== MODULE 52 ============== -->
+<h2 id="m52"><span class="module-tag">Module 52</span><br>Glossary</h2>
+
+<dl class="glossary">
+  <dt>Algorithm</dt><dd>Step-by-step procedure to solve a problem.</dd>
+  <dt>Amortized</dt><dd>Average cost over many operations, even if some individual ones are slow.</dd>
+  <dt>Adjacency list / matrix</dt><dd>Two ways to represent a graph.</dd>
+  <dt>Backtracking</dt><dd>Brute force with pruning; build candidate, abandon if no solution possible.</dd>
+  <dt>Big-O</dt><dd>Asymptotic upper bound on growth.</dd>
+  <dt>Binary search</dt><dd>Halving search on sorted data; O(log n).</dd>
+  <dt>BST</dt><dd>Binary Search Tree — left &lt; root &lt; right.</dd>
+  <dt>BFS</dt><dd>Breadth-First Search — explore level by level with a queue.</dd>
+  <dt>Bit manipulation</dt><dd>Operating on individual bits with &amp;, |, ^, ~, &lt;&lt;, &gt;&gt;.</dd>
+  <dt>Bottom-up DP</dt><dd>Iterative DP, fill from base cases up.</dd>
+  <dt>Brute force</dt><dd>Try every possibility; usually slow but correct.</dd>
+  <dt>BIT (Fenwick tree)</dt><dd>O(log n) prefix sums + point updates.</dd>
+  <dt>Cycle</dt><dd>A path that returns to its start vertex.</dd>
+  <dt>DAG</dt><dd>Directed Acyclic Graph.</dd>
+  <dt>DFS</dt><dd>Depth-First Search — go deep, then backtrack.</dd>
+  <dt>Divide &amp; conquer</dt><dd>Split, solve subproblems, combine.</dd>
+  <dt>DP</dt><dd>Dynamic programming — overlapping subproblems + optimal substructure.</dd>
+  <dt>DSU / Union-Find</dt><dd>Track partition into disjoint sets; near-constant ops.</dd>
+  <dt>Greedy</dt><dd>Locally optimal choice at each step.</dd>
+  <dt>Hash collision</dt><dd>Two keys mapping to the same bucket.</dd>
+  <dt>Heap</dt><dd>Complete binary tree with parent ≤ (or ≥) children.</dd>
+  <dt>Heuristic</dt><dd>An approximation that helps guide search.</dd>
+  <dt>In-place</dt><dd>Uses O(1) extra space.</dd>
+  <dt>Inorder/Preorder/Postorder</dt><dd>Tree traversal orders.</dd>
+  <dt>Linked list</dt><dd>Nodes with pointer to next; non-contiguous.</dd>
+  <dt>LCA</dt><dd>Lowest Common Ancestor in a tree.</dd>
+  <dt>LIS / LCS</dt><dd>Longest Increasing/Common Subsequence.</dd>
+  <dt>Master theorem</dt><dd>Solves recurrences of form T(n) = aT(n/b) + f(n).</dd>
+  <dt>Memoization</dt><dd>Cache results of pure function calls.</dd>
+  <dt>Monotonic stack</dt><dd>Stack maintaining increasing or decreasing order; for "next greater element" patterns.</dd>
+  <dt>MST</dt><dd>Minimum Spanning Tree.</dd>
+  <dt>Path compression</dt><dd>DSU optimization — flatten parent links during Find.</dd>
+  <dt>Pivot</dt><dd>The chosen separator in quicksort.</dd>
+  <dt>Prefix sum</dt><dd>Cumulative sum array for O(1) range sums.</dd>
+  <dt>Priority queue</dt><dd>Returns smallest/largest in O(log n); usually heap-backed.</dd>
+  <dt>Quicksort</dt><dd>Partition + recurse on each side; avg O(n log n).</dd>
+  <dt>Recurrence</dt><dd>Equation relating T(n) to T of smaller inputs.</dd>
+  <dt>Recursion</dt><dd>Function calling itself with smaller input.</dd>
+  <dt>Reduction</dt><dd>Solving problem A by transforming it into problem B.</dd>
+  <dt>SCC</dt><dd>Strongly Connected Component in a directed graph.</dd>
+  <dt>Segment tree</dt><dd>Range queries + point updates in O(log n).</dd>
+  <dt>Sliding window</dt><dd>Two pointers maintaining a contiguous range with O(1) updates.</dd>
+  <dt>Stable sort</dt><dd>Preserves order of equal-keyed elements.</dd>
+  <dt>Topological sort</dt><dd>Linear ordering of DAG vertices respecting edges.</dd>
+  <dt>Top-down DP</dt><dd>Recursion + memoization.</dd>
+  <dt>Trie</dt><dd>Prefix tree, useful for string lookup.</dd>
+  <dt>Two pointers</dt><dd>Two indices walk through input with related conditions.</dd>
+  <dt>Visited set</dt><dd>Tracks already-explored nodes during traversal.</dd>
+</dl>
+
+<hr>
+
+<!-- ============== MODULE 53 ============== -->
+<h2 id="m53"><span class="module-tag">Module 53</span><br>30/60/90 Practice Plan</h2>
+
+<h3>Days 1–30 — Foundations &amp; easy problems</h3>
+<ul>
+  <li>Read Modules 1–13 of this course thoroughly.</li>
+  <li>Solve <strong>30 easy problems</strong> — at least 5 from each: arrays, strings, linked lists, hash tables, stacks/queues.</li>
+  <li>For each, write brute force first. State complexity.</li>
+  <li>Time: 20–30 min per problem. If stuck, look at hints not solutions.</li>
+  <li>Tools: LeetCode + your favorite IDE. Use C# or whatever language you'll interview in.</li>
+</ul>
+
+<h3>Days 31–60 — Patterns &amp; mediums</h3>
+<ul>
+  <li>Read Modules 14–37 (trees, graphs, sorting, paradigms).</li>
+  <li>Solve <strong>50 medium problems</strong> across all the patterns from Module 38.</li>
+  <li>Tag each by pattern. Aim for 5+ problems per pattern.</li>
+  <li>Time: 30–45 min per problem.</li>
+  <li>Lists to follow: <strong>Blind 75</strong>, <strong>NeetCode 150</strong>.</li>
+</ul>
+
+<h3>Days 61–90 — Hard &amp; mock</h3>
+<ul>
+  <li>Read Modules 38–50 of this course (patterns + interview prep).</li>
+  <li>Solve <strong>20 hard problems</strong> — emphasize DP, graphs, intervals.</li>
+  <li>2 mock interviews per week (Pramp / peers).</li>
+  <li>Re-solve any problem you got wrong, without notes, until automatic.</li>
+  <li>Read 10 system-design problems (Module 47).</li>
+</ul>
+
+<h3>Tracking</h3>
+<ul>
+  <li>Spreadsheet or Notion: problem name, pattern, status (got it / struggled / failed), date.</li>
+  <li>Re-solve "struggled" problems after 1 week. "Failed" after 3 days.</li>
+  <li>Weekly retro: what patterns are weakest? Spend the next week's bias there.</li>
+</ul>
+
+<h3>Curated resources</h3>
+<ul>
+  <li><strong>LeetCode</strong> — primary platform.</li>
+  <li><strong>NeetCode.io</strong> — curated lists, video solutions.</li>
+  <li><strong>Cracking the Coding Interview</strong> (Gayle Laakmann McDowell) — book.</li>
+  <li><strong>Algorithm Design Manual</strong> (Skiena) — deeper reference.</li>
+  <li><strong>CLRS</strong> — encyclopedic; read selectively.</li>
+  <li><strong>Pramp / Interviewing.io</strong> — free mock interviews.</li>
+</ul>
+
+<hr>
+
+<!-- ============== MODULE 54 ============== -->
+<div class="project-section">
+<h2 id="m54" style="margin-top:0; border:none;"><span class="module-tag project">Module 54 — Project</span><br>EasyAudit Real-World DSA Applications</h2>
+
+<p>DSA isn't just for interviews. Once you see the patterns, you'll spot them in your own code. Here's where they already live or could improve EasyAudit's stack.</p>
+
+<h3>Where DSA already powers EasyAudit</h3>
+
+<table>
+  <thead><tr><th>Where</th><th>Structure / Algorithm</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><code>Dictionary&lt;K,V&gt;</code> caches everywhere</td>
+      <td>Hash table</td>
+      <td>O(1) lookups for user permissions, master data, active sessions</td>
+    </tr>
+    <tr>
+      <td>EF Core's change tracker</td>
+      <td>Graph traversal + topological sort</td>
+      <td>Knows which entities to insert before others (FK dependencies)</td>
+    </tr>
+    <tr>
+      <td>SQL Server clustered indexes</td>
+      <td>B-tree</td>
+      <td>O(log n) disk reads for queries by primary key</td>
+    </tr>
+    <tr>
+      <td>SQL non-clustered indexes</td>
+      <td>B+ tree</td>
+      <td>Same idea, secondary lookup</td>
+    </tr>
+    <tr>
+      <td>SortedDictionary in central-backend</td>
+      <td>Red-black tree</td>
+      <td>Ordered iteration over master data</td>
+    </tr>
+    <tr>
+      <td>JWT validation pipeline</td>
+      <td>Hash table for blocklist (Redis)</td>
+      <td>O(1) revocation check on every request</td>
+    </tr>
+    <tr>
+      <td>Quartz scheduler</td>
+      <td>Priority queue (heap)</td>
+      <td>Next-job-to-fire is always at the top</td>
+    </tr>
+    <tr>
+      <td>React Router's matcher</td>
+      <td>Trie / radix tree</td>
+      <td>Fast URL → handler lookup</td>
+    </tr>
+    <tr>
+      <td>React Query's cache key tree</td>
+      <td>Trie (per-key hierarchical cache)</td>
+      <td>Invalidate <code>['user', 42]</code> nests under <code>['user']</code></td>
+    </tr>
+    <tr>
+      <td>TanStack Table sorting/filtering</td>
+      <td>Comparison sort + linear filter</td>
+      <td>Multi-column sort with stable order</td>
+    </tr>
+    <tr>
+      <td>EF Core LINQ → SQL translation</td>
+      <td>Expression tree</td>
+      <td>Walk and emit SQL</td>
+    </tr>
+    <tr>
+      <td>SignalR group routing</td>
+      <td>Hash map of group → connections</td>
+      <td>Broadcast to a tenant or org in O(group size)</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Where DSA can improve specific EasyAudit features</h3>
+
+<h4>1. Master-data cascading deletes</h4>
+<p><code>DeleteValidationService</code> + <code>CatalogReferenceChecker</code> in central-backend check whether a master record is used. The check is naturally a graph problem — entity → tables that reference it → tables that reference those.</p>
+<ul>
+  <li>Build the reference dependency graph once at startup.</li>
+  <li>BFS from the candidate-for-deletion to surface every blocking reference.</li>
+  <li>Topological sort if the user wants to delete a whole subtree in one go.</li>
+</ul>
+
+<h4>2. User-rights tree</h4>
+<p>Permissions in EasyAudit follow a hierarchy: Module → MenuItem → Action. Storing as a tree (parent + children) and computing "effective rights" with DFS is the natural model.</p>
+<ul>
+  <li>Cache the precomputed flattened set per (user, organization, year) in Redis.</li>
+  <li>Invalidate on role change.</li>
+  <li>Lookup is O(1) for "can user do X" via a HashSet.</li>
+</ul>
+
+<h4>3. Multi-tenant org/year switching</h4>
+<p><code>useUserOrganizations</code> + <code>useYearsByOrganization</code> on the frontend produce nested combos. If org count grows large, compute the (org → years) map once and serve it from a sorted structure for fast lookup. Trie-of-strings is overkill; a Dictionary&lt;orgId, List&lt;Year&gt;&gt; ordered by year suffices.</p>
+
+<h4>4. Document folder hierarchy</h4>
+<p><code>FolderService</code>, <code>DocumentService</code> manage a tree. Common operations:</p>
+<ul>
+  <li>"All documents under this folder" — DFS.</li>
+  <li>"Path from root to current folder" — climb parent pointers.</li>
+  <li>"Move a folder" — detach + attach (cycle check via DFS).</li>
+  <li>"Rename schedule" — appears to be a tree-of-renames; ordered application is a topological sort.</li>
+</ul>
+
+<h4>5. Notification fan-out</h4>
+<p>When a system event happens, fanning out to all tenants/users is a graph traversal. Add per-user idempotency key (HashSet in Redis) to prevent duplicates.</p>
+
+<h4>6. Report generation (accounting backend)</h4>
+<p><code>BalanceSheetService</code>, <code>ProfitAndLossService</code>, <code>TrialBalanceService</code>, <code>LedgerReportService</code> traverse the chart of accounts. Account hierarchy = tree.</p>
+<ul>
+  <li>Compute leaf totals once.</li>
+  <li>Roll up to parents via post-order traversal.</li>
+  <li>Cache the rolled-up tree in Redis for the duration of a year (invalidate on JV post).</li>
+</ul>
+
+<h4>7. Excel import duplicate detection</h4>
+<p>Importing journal vouchers, items, parties — checking for duplicates against existing rows. HashSet of natural keys → O(n) instead of N×M lookups against the DB.</p>
+
+<h4>8. Search-as-you-type</h4>
+<p><code>page-search</code>, <code>settings-search</code>, master-data autocomplete. A trie of indexed strings + top-K heap of matches gives sub-millisecond response. For now you likely use string-Contains on a small list — when the data grows, swap in a trie.</p>
+
+<h4>9. Recent-activity ring buffer</h4>
+<p><code>ActivityLogService</code> writes events. For "show last 100 actions per user", use a Redis List with LTRIM — O(1) per write, O(100) per read.</p>
+
+<h4>10. Rate limiting OTP requests</h4>
+<p>"User can request OTP at most N times per hour" = sliding window over a Sorted Set in Redis (Redis course Module 32).</p>
+
+<h3>The DSA mindset for production code</h3>
+<p>Before writing a loop, ask:</p>
+<ul>
+  <li>What's the input size today? In 1 year? In 5?</li>
+  <li>What's my current complexity? Is it safe at projected size?</li>
+  <li>Is the data already in a structure that makes this fast?</li>
+  <li>Could a Dictionary turn this O(n²) into O(n)?</li>
+  <li>Could an index in SQL turn this O(n) full-scan into O(log n) seek?</li>
+</ul>
+
+<p>You don't need clever code. You need code that won't suddenly become slow when usage doubles.</p>
+</div>
+
+<hr>
+
+<!-- ============== MODULE 55 ============== -->
+<h2 id="m55"><span class="module-tag">Module 55</span><br>Resources &amp; Roadmap</h2>
+
+<h3>Books</h3>
+<ul>
+  <li><em>Cracking the Coding Interview</em> — Gayle Laakmann McDowell. The classic interview prep book.</li>
+  <li><em>Elements of Programming Interviews</em> (in C++/Java/Python). Heavier than CTCI; great for senior roles.</li>
+  <li><em>The Algorithm Design Manual</em> — Steven Skiena. Practical, war stories.</li>
+  <li><em>Introduction to Algorithms (CLRS)</em> — Cormen et al. Encyclopedic reference; read selectively.</li>
+  <li><em>Algorithms</em> — Robert Sedgewick. Beautiful Java implementations.</li>
+  <li><em>Grokking Algorithms</em> — Aditya Bhargava. Visual, beginner-friendly.</li>
+  <li><em>Designing Data-Intensive Applications</em> — Kleppmann. Where DSA meets distributed systems.</li>
+</ul>
+
+<h3>Online platforms</h3>
+<ul>
+  <li><strong>LeetCode</strong> — primary; tagged problems by company &amp; pattern.</li>
+  <li><strong>NeetCode.io</strong> — curated lists (NeetCode 150, Blind 75) with video solutions.</li>
+  <li><strong>HackerRank</strong> — broader topics, including SQL.</li>
+  <li><strong>Codeforces</strong> — competitive programming; for sharper algorithmic skill.</li>
+  <li><strong>AtCoder</strong> — clean, well-translated competitive contests.</li>
+  <li><strong>Educative.io</strong> — "Grokking the Coding Interview" course (origin of the 16 patterns).</li>
+  <li><strong>InterviewBit</strong> — structured interview prep tracks.</li>
+</ul>
+
+<h3>YouTube channels</h3>
+<ul>
+  <li><strong>NeetCode</strong> — clear pattern-based explanations.</li>
+  <li><strong>Errichto</strong> — competitive programming tutorials.</li>
+  <li><strong>Abdul Bari</strong> — algorithms course videos.</li>
+  <li><strong>WilliamFiset</strong> — graph algorithms deep dives.</li>
+  <li><strong>Kevin Naughton Jr.</strong> — interview problem walkthroughs.</li>
+  <li><strong>Tushar Roy</strong> — DP problems explained on whiteboard.</li>
+</ul>
+
+<h3>Mock interviews</h3>
+<ul>
+  <li><strong>Pramp</strong> — free peer-to-peer.</li>
+  <li><strong>Interviewing.io</strong> — anonymous with engineers from FAANG.</li>
+  <li><strong>HackerRank Interview</strong> — practice in the actual interview UI.</li>
+  <li>Friends/coworkers — surprisingly effective.</li>
+</ul>
+
+<h3>Final advice</h3>
+<ul>
+  <li><strong>Consistency &gt; intensity.</strong> 30 minutes daily beats 4 hours on Saturday.</li>
+  <li><strong>Quality &gt; quantity.</strong> 100 problems solved deeply &gt; 500 skimmed.</li>
+  <li><strong>Patterns &gt; problems.</strong> Recognize the shape; the algorithm follows.</li>
+  <li><strong>Brute force first, always.</strong> It's your safety net.</li>
+  <li><strong>Talk while solving.</strong> Even alone — narrate to yourself.</li>
+  <li><strong>Don't peek at solutions too soon.</strong> The struggle is the learning.</li>
+  <li><strong>But do peek eventually.</strong> Banging your head for 2 hours teaches less than understanding the trick.</li>
+  <li><strong>Re-solve.</strong> Spaced repetition turns "I solved that once" into "I can solve it cold."</li>
+</ul>
+
+<p>DSA is a skill you build over months, not days. Every day you spend with it, you'll see your own production code differently — and you'll catch performance bugs years before they would have hit you.</p>
+
+<hr>
+
+<footer style="text-align:center; color: var(--muted); font-size: 0.9em; margin-top: 64px;">
+  The Complete DSA Course — including real-world applications inside EasyAudit (Module 54).
+</footer>
+
+</main>
+
+</div>
+</body>
+</html>
