@@ -1,0 +1,2377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Complete Redis Course — From Zero to Production</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #57606a;
+    --accent: #d82c20;
+    --accent-soft: #ffe2e0;
+    --border: #d0d7de;
+    --code-bg: #1e1e1e;
+    --code-fg: #e6e6e6;
+    --inline-code-bg: #eef2f5;
+    --inline-code-fg: #d6336c;
+    --table-head: #f6f8fa;
+    --callout-bg: #fff8e1;
+    --callout-border: #f9c74f;
+    --tip-bg: #e3fcec;
+    --tip-border: #2da44e;
+    --warn-bg: #ffeef0;
+    --warn-border: #cf222e;
+    --info-bg: #ddf4ff;
+    --info-border: #0969da;
+    --sidebar-bg: #f6f8fa;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.65;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0;
+    padding: 0;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 0;
+    min-height: 100vh;
+  }
+  aside.sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 24px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    font-size: 0.9em;
+  }
+  aside.sidebar h2 {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    margin: 24px 0 8px;
+    padding: 0;
+    border: none;
+  }
+  aside.sidebar h2:first-of-type { margin-top: 0; }
+  aside.sidebar a {
+    display: block;
+    padding: 4px 8px;
+    color: var(--fg);
+    text-decoration: none;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    line-height: 1.35;
+  }
+  aside.sidebar a:hover { background: var(--accent-soft); color: var(--accent); }
+  aside.sidebar .brand {
+    font-weight: 700;
+    font-size: 1.05em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  aside.sidebar .brand-sub {
+    font-size: 0.8em;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  main {
+    max-width: 920px;
+    padding: 48px 48px 96px;
+  }
+  header.title {
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  header.title h1 {
+    margin: 0 0 8px 0;
+    font-size: 2.2em;
+    line-height: 1.2;
+  }
+  header.title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1.05em;
+  }
+  .module-tag {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .module-tag.project { background: #6f42c1; }
+  h2 {
+    margin-top: 64px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 1.6em;
+  }
+  h3 {
+    margin-top: 36px;
+    font-size: 1.25em;
+  }
+  h4 {
+    margin-top: 24px;
+    font-size: 1.05em;
+    color: var(--accent);
+  }
+  p, li { font-size: 1em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code {
+    font-family: "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    background: var(--inline-code-bg);
+    color: var(--inline-code-fg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 18px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    line-height: 1.5;
+    font-size: 0.9em;
+  }
+  pre code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 16px 0;
+    font-size: 0.93em;
+  }
+  th, td {
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--table-head);
+    font-weight: 600;
+  }
+  tr:nth-child(even) td { background: #fafbfc; }
+  .callout {
+    border-left: 4px solid var(--callout-border);
+    background: var(--callout-bg);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .callout.tip { border-color: var(--tip-border); background: var(--tip-bg); }
+  .callout.warn { border-color: var(--warn-border); background: var(--warn-bg); }
+  .callout.info { border-color: var(--info-border); background: var(--info-bg); }
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 48px 0;
+  }
+  ul, ol { padding-left: 24px; }
+  li { margin-bottom: 6px; }
+  pre.diagram {
+    background: #f6f8fa;
+    color: #24292f;
+    border: 1px solid var(--border);
+    font-size: 0.82em;
+  }
+  details {
+    background: #f6f8fa;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+  }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 8px; }
+  .exercise {
+    background: #fff5f5;
+    border: 1px solid #f5c2c0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .exercise h4 { margin-top: 0; color: var(--accent); }
+  .qa {
+    margin: 12px 0;
+    padding: 12px 16px;
+    border-left: 3px solid var(--accent);
+    background: #f6f8fa;
+    border-radius: 4px;
+  }
+  .qa .q { font-weight: 600; margin-bottom: 4px; }
+  .glossary dt { font-weight: 700; color: var(--accent); margin-top: 14px; }
+  .glossary dd { margin: 4px 0 0 0; padding-left: 16px; }
+  .project-section {
+    background: linear-gradient(180deg, #f9f5ff 0%, #ffffff 100%);
+    border-left: 4px solid #6f42c1;
+    padding: 20px 28px;
+    margin: 24px 0;
+    border-radius: 6px;
+  }
+  @media (max-width: 1024px) {
+    .layout { grid-template-columns: 1fr; }
+    aside.sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 32px 24px 80px; max-width: none; }
+  }
+  @media print {
+    aside.sidebar { display: none; }
+    .layout { grid-template-columns: 1fr; }
+    main { max-width: none; padding: 0; }
+    pre, .callout, details, .exercise, .qa, .project-section { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+<!-- VS Code-style syntax highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/vs2015.min.css">
+<style>
+  /* Keep our pre layout; hljs only colorizes tokens */
+  pre code.hljs { padding: 0; background: transparent; }
+</style>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.hljs) {
+      hljs.configure({ cssSelector: 'pre code', ignoreUnescapedHTML: true });
+      hljs.highlightAll();
+    }
+  });
+</script>
+</head>
+<body>
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">Redis</div>
+  <div class="brand-sub">The Complete Course</div>
+
+  <h2>Foundations</h2>
+  <a href="#m1">1. What &amp; Why of Redis</a>
+  <a href="#m2">2. When (Not) to Use Redis</a>
+  <a href="#m3">3. Mental Model</a>
+  <a href="#m4">4. Core Vocabulary</a>
+  <a href="#m5">5. Client-Server Flow</a>
+
+  <h2>Data Structures</h2>
+  <a href="#m6">6. Strings</a>
+  <a href="#m7">7. Lists</a>
+  <a href="#m8">8. Hashes</a>
+  <a href="#m9">9. Sets</a>
+  <a href="#m10">10. Sorted Sets (ZSET)</a>
+  <a href="#m11">11. Bitmaps, HyperLogLog, Geo</a>
+  <a href="#m12">12. Streams</a>
+  <a href="#m13">13. Modules: JSON, Search, etc.</a>
+
+  <h2>Internals</h2>
+  <a href="#m14">14. Single-Threaded Engine</a>
+  <a href="#m15">15. Memory &amp; Encoding</a>
+  <a href="#m16">16. Persistence: RDB &amp; AOF</a>
+  <a href="#m17">17. Eviction Policies</a>
+  <a href="#m18">18. Expiration &amp; TTL</a>
+  <a href="#m19">19. Pub/Sub &amp; Notifications</a>
+
+  <h2>Replication &amp; HA</h2>
+  <a href="#m20">20. Replication</a>
+  <a href="#m21">21. Sentinel</a>
+  <a href="#m22">22. Cluster</a>
+
+  <h2>Operations</h2>
+  <a href="#m23">23. Configuration Reference</a>
+  <a href="#m24">24. CLI Reference</a>
+  <a href="#m25">25. Docker Setup</a>
+  <a href="#m26">26. Code: Java, Python, Node, .NET</a>
+  <a href="#m27">27. Security (ACL, TLS)</a>
+  <a href="#m28">28. Monitoring</a>
+  <a href="#m29">29. Performance Tuning</a>
+
+  <h2>Patterns</h2>
+  <a href="#m30">30. Caching Patterns</a>
+  <a href="#m31">31. Distributed Locking</a>
+  <a href="#m32">32. Rate Limiting</a>
+  <a href="#m33">33. Session Storage</a>
+  <a href="#m34">34. Leaderboards &amp; Counters</a>
+  <a href="#m35">35. Job Queues</a>
+  <a href="#m36">36. Common Mistakes</a>
+
+  <h2>Reference</h2>
+  <a href="#m37">37. Redis vs Alternatives</a>
+  <a href="#m38">38. Glossary</a>
+  <a href="#m39">39. Practice Exercises</a>
+  <a href="#m40">40. Interview Questions</a>
+
+  <h2>EasyAudit Project</h2>
+  <a href="#m41">41. Multi-Instance Architecture</a>
+  <a href="#m42">42. Memory Sizing &amp; Capacity</a>
+  <a href="#m43">43. .NET Integration Plan</a>
+  <a href="#m44">44. Operations Plan</a>
+  <a href="#m45">45. Resources &amp; Roadmap</a>
+</aside>
+
+<main>
+
+<header class="title">
+  <h1>The Complete Redis Course</h1>
+  <p>From "What is Redis?" to data structures, persistence, replication, clusters, security, and operations — ending with a concrete multi-instance plan for the EasyAudit backends.</p>
+</header>
+
+<!-- =================== MODULE 1 =================== -->
+<h2 id="m1"><span class="module-tag">Module 1</span><br>What &amp; Why of Redis</h2>
+
+<h3>What is Redis?</h3>
+<p><strong>Redis</strong> ("REmote DIctionary Server") is an open-source, in-memory <strong>data structure server</strong>. It's not a generic database — it's a server that exposes rich data structures (strings, lists, hashes, sets, sorted sets, streams, bitmaps, geo) over a network protocol.</p>
+<p>It was created by Salvatore Sanfilippo in 2009. The license changed in 2024 to a dual-license model (RSALv2 / SSPLv1), which led to a community fork called <strong>Valkey</strong> (Linux Foundation, BSD-licensed). For learning purposes, Redis and Valkey are essentially identical — pick whichever fits your licensing needs.</p>
+
+<h3>Why is it so popular?</h3>
+<ul>
+  <li><strong>Sub-millisecond latency</strong> — everything is in RAM.</li>
+  <li><strong>Rich data structures</strong> — not just key/value; you get atomic operations on lists, sets, sorted sets, etc.</li>
+  <li><strong>Simplicity</strong> — single binary, simple text protocol (RESP), small config file.</li>
+  <li><strong>Huge throughput</strong> — 100k–1M ops/sec on a single core.</li>
+  <li><strong>Versatile</strong> — cache, session store, queue, pub/sub, rate limiter, leaderboard, lock service.</li>
+  <li><strong>Battle-tested</strong> — used by Twitter, Stack Overflow, GitHub, Pinterest, Snapchat, and millions of smaller apps.</li>
+</ul>
+
+<h3>What problem does Redis solve?</h3>
+<p>Most apps spend a lot of time fetching small things repeatedly — user sessions, configuration, rate counters, "is this user logged in?" checks. Hitting a SQL database for these is overkill: it costs disk I/O, locks, query parsing, network round-trips. Redis answers in microseconds.</p>
+
+<h3>Common use cases</h3>
+<ul>
+  <li><strong>Caching</strong> — DB query results, API responses, computed values.</li>
+  <li><strong>Session store</strong> — replace sticky sessions with shared state.</li>
+  <li><strong>Rate limiting</strong> — atomic counters with TTL.</li>
+  <li><strong>Distributed locks</strong> — coordinate work across instances.</li>
+  <li><strong>Job queues</strong> — using Lists or Streams.</li>
+  <li><strong>Leaderboards</strong> — Sorted Sets are made for this.</li>
+  <li><strong>Pub/Sub messaging</strong> — light real-time fanout.</li>
+  <li><strong>Real-time analytics</strong> — counters, HyperLogLog cardinality estimates.</li>
+  <li><strong>Geo queries</strong> — "find restaurants within 5km".</li>
+  <li><strong>Token / OTP storage</strong> — short-lived keys with TTL.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 2 =================== -->
+<h2 id="m2"><span class="module-tag">Module 2</span><br>When (Not) to Use Redis</h2>
+
+<h3>Redis is a great fit when…</h3>
+<ul>
+  <li>You need <strong>extremely low latency</strong> (&lt;1ms).</li>
+  <li>The dataset fits in RAM (or you're OK with sharding across nodes).</li>
+  <li>You need atomic operations on data structures (counters, sets, lists).</li>
+  <li>You can tolerate eventual durability (or use AOF for stronger durability).</li>
+  <li>You want a simple operational footprint.</li>
+</ul>
+
+<h3>Redis is the wrong choice when…</h3>
+<ul>
+  <li>Your dataset is far larger than affordable RAM (use a disk-based DB).</li>
+  <li>You need strong ACID transactions across many keys.</li>
+  <li>You need complex queries (joins, full-text search at scale, analytical SQL).</li>
+  <li>You need long-term durable storage with strict guarantees (Redis can lose seconds of data on crash with default settings).</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Reality check:</strong> Redis is not your primary database. It's a high-speed companion. Always treat Redis data as <em>regenerable</em> from your source of truth (SQL, Kafka, etc.) — even if you enable persistence.
+</div>
+
+<hr>
+
+<!-- =================== MODULE 3 =================== -->
+<h2 id="m3"><span class="module-tag">Module 3</span><br>The Mental Model</h2>
+
+<p>Picture a giant in-memory <strong>dictionary</strong> on a server you can talk to over TCP. The keys are strings. The <em>values</em> can be one of about a dozen rich types, and Redis exposes operations on those types as commands.</p>
+
+<pre class="diagram">┌────────────────────── Redis (one process) ──────────────────────┐
+│                                                                 │
+│  Keyspace (database 0):                                         │
+│    "user:42"        → Hash    {name: alice, age: 30}            │
+│    "leaderboard"    → SortedSet { (alice,500),(bob,300) }       │
+│    "queue:emails"   → List     [msg1, msg2, msg3]               │
+│    "session:abc..." → String   "...JSON..." (TTL: 30 min)       │
+│    "rate:ip:1.2.3"  → String   "127" (TTL: 60s)                 │
+│    "tags:42"        → Set      {kafka, redis, devops}           │
+│                                                                 │
+│  Single-threaded event loop processes one command at a time.    │
+│  Persistence (optional): RDB snapshots + AOF log to disk.       │
+└─────────────────────────────────────────────────────────────────┘</pre>
+
+<p>The crucial things to internalize:</p>
+<ul>
+  <li><strong>Everything fits in RAM.</strong> Plan capacity around RAM, not disk.</li>
+  <li><strong>Single-threaded for command execution.</strong> Each command is atomic — no other client can interleave inside one command.</li>
+  <li><strong>Operations are O(complexity) per command.</strong> Most commands are O(1) or O(log N). Some are O(N) and dangerous on big keys.</li>
+  <li><strong>Keys can have TTL.</strong> They auto-delete when expired.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 4 =================== -->
+<h2 id="m4"><span class="module-tag">Module 4</span><br>Core Vocabulary</h2>
+
+<h3>Key</h3>
+<p>A binary-safe string identifying a value. Convention: colon-separated hierarchies — <code>user:42:profile</code>, <code>session:abc-123</code>, <code>rate:ip:10.0.0.1</code>.</p>
+
+<h3>Value</h3>
+<p>One of: String, List, Hash, Set, Sorted Set, Stream, Bitmap, HyperLogLog, Geo (geo is a sorted set with special encoding). Optional modules add JSON, BloomFilter, TimeSeries, Search.</p>
+
+<h3>Database (DB)</h3>
+<p>A logical namespace inside one Redis instance. Numbered 0–15 by default. <code>SELECT 2</code> switches. Different DBs share the same RAM and process — so they're not real isolation, just a quick partition.</p>
+
+<h3>Instance</h3>
+<p>One <code>redis-server</code> process. Listens on a port (default 6379), serves clients, holds RAM, has its own persistence files.</p>
+
+<h3>RESP</h3>
+<p>REdis Serialization Protocol. Simple text-line protocol over TCP. Easy to debug with telnet. Latest is RESP3.</p>
+
+<h3>Pipeline</h3>
+<p>A way to send many commands without waiting for each reply, drastically cutting round-trip overhead.</p>
+
+<h3>Transaction (MULTI/EXEC)</h3>
+<p>A batch of commands queued and executed atomically. Note: not isolation in the SQL sense — see Module 14.</p>
+
+<h3>Lua scripting</h3>
+<p>You can ship Lua scripts to Redis with <code>EVAL</code>. They run server-side, atomically, in the single thread.</p>
+
+<h3>Pub/Sub</h3>
+<p>Lightweight publish/subscribe channels. Fire-and-forget — no persistence.</p>
+
+<h3>Replication</h3>
+<p>One master, N replicas asynchronously copying writes.</p>
+
+<h3>Sentinel</h3>
+<p>Daemon set that monitors master/replicas and automates failover.</p>
+
+<h3>Cluster</h3>
+<p>Built-in horizontal sharding across multiple Redis nodes.</p>
+
+<hr>
+
+<!-- =================== MODULE 5 =================== -->
+<h2 id="m5"><span class="module-tag">Module 5</span><br>Client-Server Flow</h2>
+
+<pre class="diagram">┌────────────┐                              ┌─────────────────────┐
+│   Client   │                              │  Redis Server       │
+└─────┬──────┘                              └────────┬────────────┘
+      │ 1. TCP connect to host:6379                  │
+      │ 2. AUTH (if password)                        │
+      │ 3. SELECT db (optional)                      │
+      │ 4. Send command (RESP encoded)               │
+      │      e.g. SET user:42 alice EX 60            │
+      │─────────────────────────────────────────────►│
+      │                                              │ 5. Parse, execute
+      │                                              │    in event loop
+      │                                              │    (atomic for
+      │                                              │     this command)
+      │ 6. Reply (RESP)                              │
+      │   "+OK\r\n"                                  │
+      │◄─────────────────────────────────────────────│
+      │                                              │
+      │ 7. Reuse connection for next command         │
+      ▼                                              ▼</pre>
+
+<p>Key observations:</p>
+<ul>
+  <li>Connections are long-lived. Reuse via a <strong>connection pool</strong> in your client.</li>
+  <li>Each command is a small request/response. Network round-trip dominates if you don't batch.</li>
+  <li>The <strong>pipeline</strong> sends N commands, then reads N replies — eliminates per-command latency.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 6 =================== -->
+<h2 id="m6"><span class="module-tag">Module 6</span><br>Strings</h2>
+
+<p>The simplest type. A string can hold any binary data up to <strong>512 MB</strong>. Used for cached values, counters, session blobs.</p>
+
+<pre><code>SET name "alice"               # set
+GET name                       # → "alice"
+SET counter 100
+INCR counter                   # → 101  (atomic increment)
+INCRBY counter 5               # → 106
+DECR counter                   # → 105
+APPEND name " smith"           # → "alice smith"
+STRLEN name                    # → 11
+SET token "xyz" EX 60          # auto-expire in 60s
+SET key val NX                 # only if not exists ("Not eXists")
+SET key val XX                 # only if exists
+GETSET key newval              # set and return old
+MGET k1 k2 k3                  # multi-get</code></pre>
+
+<p><strong>Common uses:</strong></p>
+<ul>
+  <li>Cache for expensive computations.</li>
+  <li>Counters (page views, API hits).</li>
+  <li>Distributed flags / feature toggles.</li>
+  <li>OTP storage with TTL.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 7 =================== -->
+<h2 id="m7"><span class="module-tag">Module 7</span><br>Lists</h2>
+
+<p>Doubly linked lists of strings. Push/pop at either end is O(1). Up to ~4 billion elements.</p>
+
+<pre><code>LPUSH queue "job1"               # push to head
+RPUSH queue "job2"               # push to tail
+LRANGE queue 0 -1                # all elements
+LLEN queue                       # length
+LPOP queue                       # pop from head
+RPOP queue                       # pop from tail
+BLPOP queue 5                    # blocking pop, wait up to 5s
+LMOVE src dst LEFT RIGHT         # atomic move (good for reliable queue)
+LTRIM mylist 0 99                # keep only first 100 elements</code></pre>
+
+<p><strong>Common uses:</strong></p>
+<ul>
+  <li>Producer/consumer queues (with <code>LPUSH</code> + <code>BRPOP</code>).</li>
+  <li>Recent activity feeds (<code>LPUSH</code> + <code>LTRIM</code>).</li>
+  <li>Simple chat history.</li>
+</ul>
+
+<div class="callout warn">
+  <strong>Watch out:</strong> for reliable queues prefer <strong>Streams</strong> (Module 12) over Lists. Lists lose messages if a consumer crashes mid-process.
+</div>
+
+<hr>
+
+<!-- =================== MODULE 8 =================== -->
+<h2 id="m8"><span class="module-tag">Module 8</span><br>Hashes</h2>
+
+<p>A hash is a map of field → string value, all under one Redis key. Perfect for representing objects compactly.</p>
+
+<pre><code>HSET user:42 name "alice" age "30" email "a@x.com"
+HGET user:42 name                # → "alice"
+HGETALL user:42                  # → all fields
+HMGET user:42 name age           # multi-field get
+HINCRBY user:42 age 1            # → 31  (atomic)
+HEXISTS user:42 phone            # → 0
+HDEL user:42 email
+HLEN user:42                     # → 2</code></pre>
+
+<p><strong>Why use a hash instead of N strings?</strong></p>
+<ul>
+  <li>One key holds many fields → far less memory overhead per "object".</li>
+  <li>Atomic per-field updates (<code>HINCRBY</code>).</li>
+  <li>Small hashes use a compact <em>listpack</em> encoding — &lt; 100 bytes for a small object.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 9 =================== -->
+<h2 id="m9"><span class="module-tag">Module 9</span><br>Sets</h2>
+
+<p>Unordered collections of unique strings. O(1) add/remove/contains.</p>
+
+<pre><code>SADD tags:post:42 "redis" "kafka" "devops"
+SMEMBERS tags:post:42            # all members
+SISMEMBER tags:post:42 "redis"   # → 1
+SCARD tags:post:42               # → 3
+SREM tags:post:42 "kafka"
+
+# Set algebra
+SADD a 1 2 3
+SADD b 2 3 4
+SINTER a b                       # intersection → {2,3}
+SUNION a b                       # union → {1,2,3,4}
+SDIFF  a b                       # difference → {1}</code></pre>
+
+<p><strong>Common uses:</strong></p>
+<ul>
+  <li>Tags / labels.</li>
+  <li>"Who liked this post" → store user IDs.</li>
+  <li>Unique visitors (rough — for precise dedupe over huge sets, use HyperLogLog).</li>
+  <li>Friend graph operations (mutual friends = SINTER).</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 10 =================== -->
+<h2 id="m10"><span class="module-tag">Module 10</span><br>Sorted Sets (ZSET)</h2>
+
+<p>The most powerful data structure in Redis. A set where each member has a <strong>score</strong> (a double). Members are kept ordered by score.</p>
+
+<pre><code>ZADD leaderboard 500 "alice"
+ZADD leaderboard 300 "bob"
+ZADD leaderboard 750 "carol"
+
+ZRANGE leaderboard 0 -1 WITHSCORES                # ascending
+ZREVRANGE leaderboard 0 9 WITHSCORES              # top 10 descending
+ZSCORE leaderboard "alice"                        # → 500
+ZRANK leaderboard "alice"                         # → 1 (asc)
+ZREVRANK leaderboard "alice"                      # → 1 (desc)
+ZINCRBY leaderboard 50 "alice"                    # alice now 550
+ZRANGEBYSCORE leaderboard 400 600                 # range query
+ZREMRANGEBYRANK leaderboard 0 -101                # keep top 100
+ZCARD leaderboard                                 # member count</code></pre>
+
+<p><strong>Common uses:</strong></p>
+<ul>
+  <li>Leaderboards (game scores).</li>
+  <li>Priority queues (score = priority).</li>
+  <li>Time-series indexing (score = timestamp).</li>
+  <li>Rate-limited sliding windows (score = timestamp).</li>
+  <li>Geospatial indexes (Redis builds GEO on top of ZSET).</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 11 =================== -->
+<h2 id="m11"><span class="module-tag">Module 11</span><br>Bitmaps, HyperLogLog, Geo</h2>
+
+<h3>Bitmaps</h3>
+<p>Strings treated as a bit array. Compact way to track on/off facts per ID.</p>
+<pre><code>SETBIT user:active:2026-05-07 42 1     # mark user 42 active today
+GETBIT user:active:2026-05-07 42       # → 1
+BITCOUNT user:active:2026-05-07        # how many active users
+BITOP AND dest k1 k2                   # AND across day-bitmaps</code></pre>
+<p>Use case: "daily active users" — 1 bit per user, ~125 KB for 1M users per day.</p>
+
+<h3>HyperLogLog</h3>
+<p>Probabilistic counter for <em>distinct</em> elements. Constant 12 KB regardless of input size, with 0.81% error.</p>
+<pre><code>PFADD visitors:2026-05-07 "user-1" "user-2" "user-3"
+PFCOUNT visitors:2026-05-07            # ≈ 3
+PFMERGE total visitors:2026-05-07 visitors:2026-05-08</code></pre>
+
+<h3>Geo</h3>
+<p>Stored as a Sorted Set with a special geohash score. Range queries by distance.</p>
+<pre><code>GEOADD shops 72.8777 19.0760 "shop-mumbai" \
+              77.5946 12.9716 "shop-bangalore"
+GEODIST shops shop-mumbai shop-bangalore km     # → 837.36
+GEOSEARCH shops FROMLONLAT 72.88 19.07 BYRADIUS 100 km</code></pre>
+
+<hr>
+
+<!-- =================== MODULE 12 =================== -->
+<h2 id="m12"><span class="module-tag">Module 12</span><br>Streams</h2>
+
+<p>An append-only log similar to Kafka, built into Redis (since 5.0). Records have IDs (auto-generated as <code>ms-seq</code>) and field-value maps. Supports consumer groups, acknowledgements, persistent state.</p>
+
+<pre><code>XADD events * action "login" user "42"           # * = auto-id
+XLEN events                                       # length
+XRANGE events - +                                 # all
+XREAD COUNT 100 STREAMS events 0                  # read from start
+
+# Consumer groups
+XGROUP CREATE events processors $ MKSTREAM
+XREADGROUP GROUP processors worker-1 COUNT 10 STREAMS events &gt;
+XACK events processors 1700000000000-0
+XPENDING events processors                        # see unacked</code></pre>
+
+<p><strong>Streams vs Lists</strong>: streams have IDs, consumer groups, acknowledgements, persistence. Use streams for reliable async work; lists for simple queues.</p>
+
+<p><strong>Streams vs Kafka</strong>: Redis Streams is great for ~100K msg/sec, in-memory, low latency. Kafka scales to millions/sec on disk. Streams is simpler to operate; Kafka is the durable backbone.</p>
+
+<hr>
+
+<!-- =================== MODULE 13 =================== -->
+<h2 id="m13"><span class="module-tag">Module 13</span><br>Modules: JSON, Search, etc.</h2>
+
+<p>Redis can be extended with modules. The most popular are part of the "Redis Stack" bundle:</p>
+
+<table>
+  <thead><tr><th>Module</th><th>What it adds</th></tr></thead>
+  <tbody>
+    <tr><td><strong>RedisJSON</strong></td><td>Native JSON values. <code>JSON.SET</code>, <code>JSON.GET</code>, JSONPath queries.</td></tr>
+    <tr><td><strong>RediSearch</strong></td><td>Secondary indexes, full-text search, vector search.</td></tr>
+    <tr><td><strong>RedisBloom</strong></td><td>Bloom filters, Cuckoo filters, Top-K, Count-Min Sketch.</td></tr>
+    <tr><td><strong>RedisTimeSeries</strong></td><td>Time-series data with downsampling and retention.</td></tr>
+    <tr><td><strong>RedisGraph</strong></td><td>(Discontinued in 2024 — use other graph DBs.)</td></tr>
+  </tbody>
+</table>
+
+<p>Quick JSON example:</p>
+<pre><code>JSON.SET user:42 $ '{"name":"alice","age":30,"tags":["a","b"]}'
+JSON.GET user:42 $.name                           # → "alice"
+JSON.ARRAPPEND user:42 $.tags '"c"'</code></pre>
+
+<p>Quick search example:</p>
+<pre><code>FT.CREATE idx:users ON JSON PREFIX 1 user: \
+   SCHEMA $.name AS name TEXT $.age AS age NUMERIC
+FT.SEARCH idx:users "@name:alice"</code></pre>
+
+<hr>
+
+<!-- =================== MODULE 14 =================== -->
+<h2 id="m14"><span class="module-tag">Module 14</span><br>Single-Threaded Engine</h2>
+
+<p>Redis runs commands in a single thread (the "main thread"). This is a deliberate design choice:</p>
+<ul>
+  <li><strong>No locks</strong> on data structures — atomicity is free.</li>
+  <li><strong>Cache-friendly</strong> — the entire keyspace lives near one CPU.</li>
+  <li><strong>Simple to reason about</strong> — execution order is the order of arrival.</li>
+</ul>
+
+<h3>What about modern CPUs with many cores?</h3>
+<ul>
+  <li>Redis 6+ uses <strong>I/O threads</strong> for reading/writing socket data — but command execution is still serial.</li>
+  <li>To use more cores, run multiple Redis instances on the same machine (each is a process pinned to one core).</li>
+  <li>Or use <strong>Redis Cluster</strong> to spread keys across nodes.</li>
+</ul>
+
+<h3>The big consequence — slow commands hurt everyone</h3>
+<p>If one client runs <code>KEYS *</code> on a 50M-key keyspace, every other client waits. The <code>SLOWLOG</code> tracks these. Avoid:</p>
+<ul>
+  <li><code>KEYS *</code> in production — use <code>SCAN</code> instead.</li>
+  <li><code>SMEMBERS</code> on a huge set.</li>
+  <li><code>HGETALL</code> on a 1M-field hash.</li>
+  <li>Big <code>LRANGE</code> spans.</li>
+  <li>Long Lua scripts.</li>
+</ul>
+
+<h3>Transactions: MULTI/EXEC</h3>
+<pre><code>MULTI
+INCR counter
+INCR counter
+EXEC</code></pre>
+<p>Queues commands then runs them atomically. <em>No rollback</em> if a command errors mid-transaction (Redis is not SQL).</p>
+
+<h3>Optimistic locking with WATCH</h3>
+<pre><code>WATCH balance
+val = GET balance
+MULTI
+SET balance (val - 10)
+EXEC                              # nil if balance changed since WATCH</code></pre>
+
+<hr>
+
+<!-- =================== MODULE 15 =================== -->
+<h2 id="m15"><span class="module-tag">Module 15</span><br>Memory &amp; Encoding</h2>
+
+<p>Redis automatically picks compact encodings for small data structures, and switches to standard encodings when they grow.</p>
+
+<table>
+  <thead><tr><th>Type</th><th>Small encoding</th><th>Threshold (default)</th><th>Big encoding</th></tr></thead>
+  <tbody>
+    <tr><td>String</td><td>embstr</td><td>≤ 44 bytes</td><td>raw</td></tr>
+    <tr><td>Hash</td><td>listpack</td><td>≤ 128 fields, each ≤ 64 bytes</td><td>hashtable</td></tr>
+    <tr><td>List</td><td>listpack (small) / quicklist</td><td>≤ 128 elements</td><td>quicklist</td></tr>
+    <tr><td>Set (integers)</td><td>intset</td><td>≤ 512 integers</td><td>hashtable</td></tr>
+    <tr><td>Set (strings)</td><td>listpack</td><td>≤ 128 elements</td><td>hashtable</td></tr>
+    <tr><td>Sorted Set</td><td>listpack</td><td>≤ 128 elements</td><td>skiplist+hashtable</td></tr>
+  </tbody>
+</table>
+
+<h3>Memory overhead per key</h3>
+<p>Every key has fixed overhead (~50–90 bytes for key metadata + dictionary entry + expire slot). Then add value size.</p>
+
+<p>Rough rules of thumb:</p>
+<ul>
+  <li>1 million empty/short strings ≈ 80–100 MB.</li>
+  <li>1 million small hashes (5 fields each) ≈ 200–300 MB.</li>
+  <li>Large blobs: dominated by their actual size.</li>
+</ul>
+
+<h3>Inspect memory usage</h3>
+<pre><code>INFO memory                       # process-wide
+MEMORY USAGE user:42              # specific key (in bytes)
+MEMORY DOCTOR                     # heuristic advice
+MEMORY STATS                      # detailed breakdown
+DEBUG OBJECT user:42              # encoding, refcount, etc.</code></pre>
+
+<h3>Tips to reduce memory</h3>
+<ul>
+  <li>Use Hashes instead of many keys for "objects".</li>
+  <li>Stay under listpack thresholds for small structures.</li>
+  <li>Keep keys short: <code>u:42</code> beats <code>users:profile:identifier:42</code> at scale.</li>
+  <li>Use integers as values where possible (cheaper than strings).</li>
+  <li>Enable <code>activedefrag yes</code> to reduce fragmentation.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 16 =================== -->
+<h2 id="m16"><span class="module-tag">Module 16</span><br>Persistence: RDB &amp; AOF</h2>
+
+<p>Redis offers two persistence modes (and a hybrid). They write in the background, so the main thread isn't blocked.</p>
+
+<h3>RDB (Redis Database snapshots)</h3>
+<p>Periodic point-in-time snapshots of the entire dataset to a binary <code>dump.rdb</code> file.</p>
+<pre><code># redis.conf
+save 3600 1                       # save if &gt;=1 key changed in 1h
+save 300 100                      # or 100 keys in 5m
+save 60 10000                     # or 10000 keys in 1m
+dbfilename dump.rdb
+dir /var/lib/redis</code></pre>
+<p><strong>Pros</strong>: compact file, fast to restart from, low overhead at runtime.<br>
+<strong>Cons</strong>: between snapshots you can lose minutes of data.</p>
+
+<h3>AOF (Append-Only File)</h3>
+<p>Logs every write command to <code>appendonly.aof</code>. On restart, replays the log.</p>
+<pre><code>appendonly yes
+appendfsync everysec              # fsync once per second (default)
+                                  # always = each command (slow, durable)
+                                  # no    = OS decides (fast, lossy)</code></pre>
+<p><strong>Pros</strong>: at most ~1 sec data loss with <code>everysec</code>.<br>
+<strong>Cons</strong>: bigger file, slower restart on huge AOFs.</p>
+
+<h3>Hybrid (recommended)</h3>
+<pre><code>appendonly yes
+aof-use-rdb-preamble yes</code></pre>
+<p>The AOF starts with an RDB snapshot, then appends post-snapshot commands. Best of both: fast restart + minimal data loss.</p>
+
+<h3>AOF rewrite</h3>
+<p>Without compaction the AOF grows forever. Redis runs <code>BGREWRITEAOF</code> automatically when the file doubles in size, replacing it with a minimal one that produces the same final state.</p>
+
+<h3>What to pick?</h3>
+<ul>
+  <li>Pure cache (data is regenerable): <strong>no persistence</strong> (set <code>save ""</code>, AOF off).</li>
+  <li>Important state (sessions, business data): <strong>hybrid</strong>.</li>
+  <li>Strict durability needed: AOF with <code>appendfsync always</code> (slow).</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 17 =================== -->
+<h2 id="m17"><span class="module-tag">Module 17</span><br>Eviction Policies</h2>
+
+<p>When Redis hits <code>maxmemory</code>, it has to drop something. The eviction policy decides what.</p>
+
+<table>
+  <thead><tr><th>Policy</th><th>What it drops</th><th>Use when</th></tr></thead>
+  <tbody>
+    <tr><td><code>noeviction</code></td><td>Nothing — writes start failing</td><td>You don't want silent data loss; not for pure caches</td></tr>
+    <tr><td><code>allkeys-lru</code></td><td>Least-recently-used among all keys</td><td>General-purpose cache</td></tr>
+    <tr><td><code>allkeys-lfu</code></td><td>Least-frequently-used among all keys</td><td>Cache where access frequency matters more than recency</td></tr>
+    <tr><td><code>allkeys-random</code></td><td>Random key</td><td>Uniform access patterns</td></tr>
+    <tr><td><code>volatile-lru</code></td><td>LRU among keys with TTL</td><td>Mixed: keep TTL-less keys forever</td></tr>
+    <tr><td><code>volatile-lfu</code></td><td>LFU among keys with TTL</td><td>Same idea, freq-based</td></tr>
+    <tr><td><code>volatile-random</code></td><td>Random TTL key</td><td>Rare</td></tr>
+    <tr><td><code>volatile-ttl</code></td><td>Key with shortest TTL</td><td>You want to expire soon-to-die keys first</td></tr>
+  </tbody>
+</table>
+
+<p>Set in config:</p>
+<pre><code>maxmemory 512mb
+maxmemory-policy allkeys-lru</code></pre>
+
+<div class="callout tip">
+  <strong>Default is <code>noeviction</code>.</strong> If you intend Redis as a cache, change it — otherwise writes will start failing the moment RAM fills up.
+</div>
+
+<hr>
+
+<!-- =================== MODULE 18 =================== -->
+<h2 id="m18"><span class="module-tag">Module 18</span><br>Expiration &amp; TTL</h2>
+
+<p>Any key can have a TTL — it auto-deletes when expired.</p>
+
+<pre><code>SET token "xyz" EX 60               # expire in 60s
+SET token "xyz" PX 5000             # expire in 5000 ms
+EXPIRE existing_key 30              # set TTL on an existing key
+PEXPIRE existing_key 30000          # ms version
+EXPIREAT existing_key 1735689600    # Unix timestamp
+TTL key                             # → seconds left, -1 if no TTL, -2 if not exists
+PTTL key                            # ms version
+PERSIST key                         # remove TTL</code></pre>
+
+<h3>How does Redis actually delete expired keys?</h3>
+<ol>
+  <li><strong>Lazy expiration</strong>: when a key is accessed, if expired, delete it.</li>
+  <li><strong>Active expiration</strong>: every 100ms a sampler picks 20 random keys with TTL; deletes expired ones; if &gt;25% were expired, repeats. Caps at 25% CPU time.</li>
+</ol>
+
+<p>Practical implication: a key with TTL that's never read might stay in RAM for a while past expiry. Generally fine for caches; if you must reclaim memory faster, use shorter active expiration.</p>
+
+<h3>Use cases for TTL</h3>
+<ul>
+  <li>Sessions (e.g., 30 min).</li>
+  <li>OTPs (5 min).</li>
+  <li>Cached query results (1 min – 1 hour).</li>
+  <li>Rate limiter buckets (1 min).</li>
+  <li>Lock ownership (auto-release if holder crashes).</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 19 =================== -->
+<h2 id="m19"><span class="module-tag">Module 19</span><br>Pub/Sub &amp; Notifications</h2>
+
+<h3>Pub/Sub</h3>
+<p>A simple fanout channel. Subscribers receive every message published while subscribed. No persistence — late subscribers miss everything.</p>
+<pre><code># Subscriber
+SUBSCRIBE news
+
+# Publisher
+PUBLISH news "hello world"
+
+# Pattern matching
+PSUBSCRIBE news.*</code></pre>
+
+<p><strong>Use it for</strong>: real-time UI updates, cache invalidation broadcasts, light chat.<br>
+<strong>Don't use it for</strong>: reliable messaging, queues — use Streams instead.</p>
+
+<h3>Keyspace notifications</h3>
+<p>Redis can publish events when keys change (set, delete, expire, etc.). Off by default; enable with config:</p>
+<pre><code>CONFIG SET notify-keyspace-events "KEA"
+
+# Then subscribe:
+PSUBSCRIBE "__keyevent@0__:expired"
+PSUBSCRIBE "__keyspace@0__:user:42"</code></pre>
+<p>Useful for "do something when this key expires" — but be careful, it's fire-and-forget.</p>
+
+<hr>
+
+<!-- =================== MODULE 20 =================== -->
+<h2 id="m20"><span class="module-tag">Module 20</span><br>Replication</h2>
+
+<p>Redis supports asynchronous master → replica replication out of the box.</p>
+
+<pre class="diagram">┌──────────────┐  writes  ┌──────────────┐
+│   Client     │─────────►│   Master     │
+└──────────────┘          └──────┬───────┘
+                                 │ async replication
+                  ┌──────────────┼──────────────┐
+                  ▼              ▼              ▼
+           ┌──────────┐   ┌──────────┐   ┌──────────┐
+           │ Replica1 │   │ Replica2 │   │ Replica3 │  (read-only by default)
+           └──────────┘   └──────────┘   └──────────┘</pre>
+
+<h3>How it works</h3>
+<ol>
+  <li>Replica connects to master with <code>REPLICAOF host port</code>.</li>
+  <li>Master sends a snapshot (RDB) for initial sync.</li>
+  <li>Replica loads it.</li>
+  <li>Master streams ongoing writes via a replication backlog.</li>
+  <li>If a replica drops and reconnects within the backlog window, partial sync resumes; otherwise full resync.</li>
+</ol>
+
+<h3>Reads from replicas</h3>
+<p>Replicas are read-only by default. You can run reads against them to scale read traffic, but reads may be slightly stale (eventual consistency).</p>
+
+<h3>Failover</h3>
+<p>Replication alone doesn't do failover — if master dies, replicas just sit there. Failover automation needs <strong>Sentinel</strong> (Module 21) or <strong>Cluster</strong> (Module 22).</p>
+
+<hr>
+
+<!-- =================== MODULE 21 =================== -->
+<h2 id="m21"><span class="module-tag">Module 21</span><br>Sentinel</h2>
+
+<p>Sentinel is a separate process that watches a master and its replicas, and orchestrates failover.</p>
+
+<pre class="diagram">      ┌─────────────┐ monitor  ┌──────────┐
+      │ Sentinel #1 │─────────►│  Master  │
+      ├─────────────┤          └────┬─────┘
+      │ Sentinel #2 │               │ replication
+      ├─────────────┤          ┌────▼─────┐
+      │ Sentinel #3 │──monitor►│ Replica  │
+      └─────────────┘          └──────────┘</pre>
+
+<h3>Responsibilities</h3>
+<ul>
+  <li><strong>Monitoring</strong>: pings master/replicas and checks if they're up.</li>
+  <li><strong>Notification</strong>: alerts admins when something changes.</li>
+  <li><strong>Automatic failover</strong>: if master is down per a quorum of Sentinels, promotes a replica.</li>
+  <li><strong>Configuration provider</strong>: clients ask Sentinel "who's the master right now?" and reconnect.</li>
+</ul>
+
+<h3>Why ≥ 3 Sentinels?</h3>
+<p>To avoid split-brain — failover needs majority quorum. With 3 Sentinels, 2 must agree.</p>
+
+<h3>Minimal sentinel.conf</h3>
+<pre><code>port 26379
+sentinel monitor mymaster 192.168.1.10 6379 2
+sentinel down-after-milliseconds mymaster 5000
+sentinel failover-timeout mymaster 60000</code></pre>
+
+<p>Use Sentinel when you need HA but don't need horizontal sharding. Otherwise, jump to Cluster.</p>
+
+<hr>
+
+<!-- =================== MODULE 22 =================== -->
+<h2 id="m22"><span class="module-tag">Module 22</span><br>Cluster</h2>
+
+<p>Redis Cluster is built-in horizontal sharding. Data is split across <strong>16384 hash slots</strong>, each owned by one master node.</p>
+
+<pre class="diagram">           Client (cluster-aware)
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+  ┌────────┐  ┌────────┐  ┌────────┐
+  │Master A│  │Master B│  │Master C│   slots: 0–5460 / 5461–10922 / 10923–16383
+  └───┬────┘  └───┬────┘  └───┬────┘
+      │           │           │
+  ┌───▼────┐  ┌───▼────┐  ┌───▼────┐
+  │ Repl A │  │ Repl B │  │ Repl C │   replication for HA
+  └────────┘  └────────┘  └────────┘</pre>
+
+<h3>How keys are placed</h3>
+<p><code>slot = CRC16(key) % 16384</code>. The cluster tells the client which node owns each slot. The client caches the map and goes directly to the right node.</p>
+
+<h3>Multi-key operations</h3>
+<p>Multi-key commands (e.g., <code>MSET</code>, <code>SUNION</code>) only work if all keys hash to the same slot. Use a <strong>hash tag</strong> in <code>{...}</code> to force colocation:</p>
+<pre><code>SET {user:42}:name alice
+SET {user:42}:email a@x.com
+# Both keys go to the same slot, both can be in one transaction.</code></pre>
+
+<h3>When to use Cluster</h3>
+<ul>
+  <li>Dataset bigger than one machine's RAM.</li>
+  <li>Need both HA and horizontal write scaling.</li>
+  <li>You're prepared to deal with: hash tags, no SELECT (only DB 0), some commands restricted.</li>
+</ul>
+
+<h3>Min size</h3>
+<p>3 master nodes + 3 replicas (one replica per master). 6 processes total. Smaller setups don't have proper quorum.</p>
+
+<hr>
+
+<!-- =================== MODULE 23 =================== -->
+<h2 id="m23"><span class="module-tag">Module 23</span><br>Configuration Reference</h2>
+
+<p>The default config file is <code>redis.conf</code>. The most common settings:</p>
+
+<pre><code># Network
+bind 0.0.0.0
+port 6379
+protected-mode yes
+tcp-keepalive 300
+
+# General
+daemonize no
+loglevel notice
+logfile ""
+databases 16
+
+# Memory
+maxmemory 512mb
+maxmemory-policy allkeys-lru
+
+# Persistence
+save 3600 1
+save 300 100
+save 60 10000
+dbfilename dump.rdb
+dir /var/lib/redis
+appendonly yes
+appendfsync everysec
+aof-use-rdb-preamble yes
+
+# Replication
+replicaof &lt;masterip&gt; &lt;masterport&gt;     # uncomment on replicas
+masterauth somepassword
+replica-read-only yes
+
+# Security
+requirepass mySecretPassword
+# user default on +@read ~cached:* &gt;readonlypass
+
+# Slow log
+slowlog-log-slower-than 10000          # microseconds
+slowlog-max-len 128
+
+# Latency monitor
+latency-monitor-threshold 100
+
+# Cluster (if used)
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 15000</code></pre>
+
+<p>Live tweaks without restart:</p>
+<pre><code>CONFIG GET maxmemory
+CONFIG SET maxmemory 1gb
+CONFIG REWRITE                    # persist current runtime config to file</code></pre>
+
+<hr>
+
+<!-- =================== MODULE 24 =================== -->
+<h2 id="m24"><span class="module-tag">Module 24</span><br>CLI Reference</h2>
+
+<h3>redis-cli basics</h3>
+<pre><code>redis-cli                                # connect to localhost:6379
+redis-cli -h host -p 6380 -a password    # remote with auth
+redis-cli -n 2                           # select DB 2
+redis-cli --scan --pattern 'session:*'   # safe key listing (uses SCAN)
+redis-cli --bigkeys                      # find largest keys per type
+redis-cli --memkeys                      # memory usage per key sample
+redis-cli --latency                      # measure live latency
+redis-cli --latency-history              # over time
+redis-cli --stat                         # ops/sec, memory, clients
+redis-cli MONITOR                        # stream every command (debug only!)</code></pre>
+
+<h3>Common commands by goal</h3>
+<table>
+  <thead><tr><th>Goal</th><th>Command</th></tr></thead>
+  <tbody>
+    <tr><td>Inspect a key</td><td><code>TYPE k</code>, <code>TTL k</code>, <code>OBJECT ENCODING k</code>, <code>MEMORY USAGE k</code></td></tr>
+    <tr><td>List keys</td><td><code>SCAN 0 MATCH 'pat:*' COUNT 100</code> (never <code>KEYS *</code> in prod)</td></tr>
+    <tr><td>Delete</td><td><code>DEL k</code> (sync), <code>UNLINK k</code> (async, non-blocking)</td></tr>
+    <tr><td>Flush DB</td><td><code>FLUSHDB</code> (current), <code>FLUSHALL</code> (all DBs)</td></tr>
+    <tr><td>Server info</td><td><code>INFO</code>, <code>INFO memory</code>, <code>INFO clients</code></td></tr>
+    <tr><td>Live stats</td><td><code>INFO commandstats</code>, <code>SLOWLOG GET 10</code></td></tr>
+    <tr><td>Backup</td><td><code>BGSAVE</code> (async RDB), <code>BGREWRITEAOF</code></td></tr>
+    <tr><td>Replication status</td><td><code>INFO replication</code>, <code>ROLE</code></td></tr>
+    <tr><td>Cluster status</td><td><code>CLUSTER INFO</code>, <code>CLUSTER NODES</code>, <code>CLUSTER SLOTS</code></td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =================== MODULE 25 =================== -->
+<h2 id="m25"><span class="module-tag">Module 25</span><br>Docker Setup</h2>
+
+<h3>Single-instance docker-compose.yml</h3>
+<pre><code>version: '3.8'
+services:
+  redis:
+    image: redis:7.4-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server",
+              "--appendonly", "yes",
+              "--maxmemory", "512mb",
+              "--maxmemory-policy", "allkeys-lru",
+              "--requirepass", "changeme"]
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    ports:
+      - "5540:5540"
+
+volumes:
+  redis-data:</code></pre>
+
+<p>Bring it up: <code>docker compose up -d</code>. Connect via <code>redis-cli -h localhost -a changeme</code>. RedisInsight web UI at <code>http://localhost:5540</code>.</p>
+
+<h3>Master + replica + sentinel</h3>
+<details>
+<summary>Click to expand</summary>
+<pre><code>version: '3.8'
+services:
+  master:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--port", "6379", "--requirepass", "pw", "--masterauth", "pw"]
+    ports: ["6379:6379"]
+
+  replica:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--port", "6379",
+              "--replicaof", "master", "6379",
+              "--requirepass", "pw", "--masterauth", "pw"]
+    depends_on: [master]
+    ports: ["6380:6379"]
+
+  sentinel:
+    image: redis:7.4-alpine
+    entrypoint: |
+      sh -c 'cat &gt; /tmp/sentinel.conf &lt;&lt;EOF
+      port 26379
+      sentinel monitor mymaster master 6379 1
+      sentinel auth-pass mymaster pw
+      sentinel down-after-milliseconds mymaster 5000
+      sentinel failover-timeout mymaster 10000
+      EOF
+      redis-sentinel /tmp/sentinel.conf'
+    depends_on: [master, replica]
+    ports: ["26379:26379"]</code></pre>
+</details>
+
+<hr>
+
+<!-- =================== MODULE 26 =================== -->
+<h2 id="m26"><span class="module-tag">Module 26</span><br>Code: Java, Python, Node, .NET</h2>
+
+<h3>Java (Jedis)</h3>
+<pre><code>// pom.xml: redis.clients:jedis:5.1.0
+import redis.clients.jedis.*;
+
+try (JedisPool pool = new JedisPool("localhost", 6379)) {
+    try (Jedis jedis = pool.getResource()) {
+        jedis.auth("changeme");
+        jedis.set("name", "alice");
+        System.out.println(jedis.get("name"));
+        jedis.hset("user:42", "email", "a@x.com");
+        Map&lt;String,String&gt; u = jedis.hgetAll("user:42");
+    }
+}</code></pre>
+
+<h3>Python (redis-py)</h3>
+<pre><code># pip install redis
+import redis
+r = redis.Redis(host='localhost', port=6379, password='changeme', decode_responses=True)
+r.set('name', 'alice', ex=60)
+print(r.get('name'))
+r.hset('user:42', mapping={'name':'alice','age':30})
+print(r.hgetall('user:42'))
+
+# Pipeline
+with r.pipeline() as p:
+    for i in range(1000): p.incr('counter')
+    p.execute()</code></pre>
+
+<h3>Node.js (ioredis)</h3>
+<pre><code>// npm install ioredis
+const Redis = require('ioredis');
+const redis = new Redis({ host:'localhost', port:6379, password:'changeme' });
+
+await redis.set('name', 'alice', 'EX', 60);
+console.log(await redis.get('name'));
+await redis.hset('user:42', 'name','alice','age',30);
+console.log(await redis.hgetall('user:42'));</code></pre>
+
+<h3>.NET (StackExchange.Redis)</h3>
+<pre><code>// dotnet add package StackExchange.Redis --version 2.7.33
+using StackExchange.Redis;
+
+var mux = await ConnectionMultiplexer.ConnectAsync("localhost:6379,password=changeme");
+var db = mux.GetDatabase();
+
+await db.StringSetAsync("name", "alice", TimeSpan.FromSeconds(60));
+string? name = await db.StringGetAsync("name");
+
+await db.HashSetAsync("user:42", new HashEntry[]
+{
+    new("name","alice"),
+    new("age","30")
+});
+HashEntry[] hash = await db.HashGetAllAsync("user:42");</code></pre>
+
+<div class="callout info">
+  <strong>StackExchange.Redis tip:</strong> reuse one <code>ConnectionMultiplexer</code> for the whole app — it's thread-safe and pools internally. Don't <code>using</code>-dispose it per request.
+</div>
+
+<hr>
+
+<!-- =================== MODULE 27 =================== -->
+<h2 id="m27"><span class="module-tag">Module 27</span><br>Security (ACL, TLS)</h2>
+
+<h3>Basic password</h3>
+<p>Pre-Redis-6, the only auth was <code>requirepass</code> — a single shared password. Still works:</p>
+<pre><code>requirepass strongPassword</code></pre>
+
+<h3>ACL (Access Control Lists, Redis 6+)</h3>
+<p>Multiple users with fine-grained permissions on commands and keys.</p>
+<pre><code># Allow user "reader" only read commands on cache:* keys
+ACL SETUSER reader on &gt;readPass ~cache:* +@read
+
+# Allow user "writer" all commands on session:*
+ACL SETUSER writer on &gt;writePass ~session:* +@all
+
+# Default user — disable to force everyone to log in
+ACL SETUSER default off</code></pre>
+<p>Inspect: <code>ACL LIST</code>, <code>ACL WHOAMI</code>, <code>ACL CAT</code> (categories).</p>
+
+<h3>TLS</h3>
+<pre><code># redis.conf
+port 0                              # disable plaintext
+tls-port 6379
+tls-cert-file /path/redis.crt
+tls-key-file /path/redis.key
+tls-ca-cert-file /path/ca.crt
+tls-auth-clients yes                # require client certs (mTLS)</code></pre>
+
+<h3>Best practices</h3>
+<ul>
+  <li>Bind to private interfaces only (<code>bind 10.0.0.5</code>) — never expose 6379 publicly.</li>
+  <li>Enable TLS for everything off-host.</li>
+  <li>Use ACLs, one per app, not the default user.</li>
+  <li>Keep <code>protected-mode yes</code>.</li>
+  <li>Disable dangerous commands in shared environments via <code>rename-command FLUSHALL ""</code>.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 28 =================== -->
+<h2 id="m28"><span class="module-tag">Module 28</span><br>Monitoring</h2>
+
+<h3>The INFO command</h3>
+<p>Sectioned dump of process state. Sections: <code>server</code>, <code>clients</code>, <code>memory</code>, <code>persistence</code>, <code>stats</code>, <code>replication</code>, <code>cpu</code>, <code>commandstats</code>, <code>latencystats</code>, <code>cluster</code>, <code>keyspace</code>.</p>
+
+<pre><code>INFO memory                       # most useful section
+# Key fields:
+#   used_memory_human         current dataset size
+#   used_memory_rss_human     OS-level RSS (includes overhead)
+#   mem_fragmentation_ratio   1.0 ideal; &gt;1.5 = fragmented
+#   evicted_keys              count since boot
+#   expired_keys              count since boot
+
+INFO stats
+# instantaneous_ops_per_sec    live throughput
+# keyspace_hits / keyspace_misses
+# total_connections_received
+
+INFO replication                  # role, master_link_status, lag
+
+INFO commandstats
+# per-command call count + total/avg microseconds — find slow commands</code></pre>
+
+<h3>Slow log</h3>
+<pre><code>SLOWLOG GET 10                    # last 10 slow commands
+CONFIG SET slowlog-log-slower-than 10000   # microseconds threshold
+SLOWLOG RESET</code></pre>
+
+<h3>Latency monitor</h3>
+<pre><code>CONFIG SET latency-monitor-threshold 100
+LATENCY DOCTOR                    # human-readable advice
+LATENCY HISTORY event-name
+LATENCY GRAPH event-name</code></pre>
+
+<h3>External tools</h3>
+<ul>
+  <li><strong>RedisInsight</strong> — official GUI (browse keys, run commands, slow log, profiler).</li>
+  <li><strong>redis_exporter</strong> + Prometheus + Grafana — production dashboards.</li>
+  <li><strong>redis-cli --latency / --latency-history</strong> — quick health checks.</li>
+</ul>
+
+<h3>Alerts you should set</h3>
+<ul>
+  <li><code>used_memory_rss</code> &gt; 80% of <code>maxmemory</code></li>
+  <li><code>mem_fragmentation_ratio</code> &gt; 1.5 sustained</li>
+  <li>Eviction rate &gt; 0 if you're storing important state</li>
+  <li>Replication lag &gt; threshold</li>
+  <li>Slow log entries above N/sec</li>
+  <li>Connected clients near <code>maxclients</code></li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 29 =================== -->
+<h2 id="m29"><span class="module-tag">Module 29</span><br>Performance Tuning</h2>
+
+<h3>Eliminate round-trips</h3>
+<ul>
+  <li><strong>Pipeline</strong> when sending many commands.</li>
+  <li><strong>MGET / MSET / HMGET</strong> for batch reads/writes.</li>
+  <li><strong>Lua scripts</strong> for multi-step atomic operations.</li>
+</ul>
+
+<h3>Pipeline example (Python)</h3>
+<pre><code># Without pipeline: 10000 round-trips
+for i in range(10000): r.set(f'k{i}', i)
+
+# With pipeline: 1 round-trip
+with r.pipeline(transaction=False) as p:
+    for i in range(10000): p.set(f'k{i}', i)
+    p.execute()
+# 50–100× faster on the wire.</code></pre>
+
+<h3>Avoid O(N) commands on big collections</h3>
+<ul>
+  <li>Use <code>SCAN</code> instead of <code>KEYS</code>.</li>
+  <li>Use <code>HSCAN/SSCAN/ZSCAN</code> for cursors over hashes/sets/zsets.</li>
+  <li>Page through large lists with <code>LRANGE k 0 99</code>, <code>LRANGE k 100 199</code>, …</li>
+</ul>
+
+<h3>Avoid huge keys</h3>
+<p>Find them: <code>redis-cli --bigkeys</code>. Split them — partition a 10M-element set into 100 sets of 100k each.</p>
+
+<h3>Connection pooling</h3>
+<p>Establishing TCP per command kills performance. All major clients ship pools; use them.</p>
+
+<h3>Persistence trade-offs</h3>
+<ul>
+  <li>Pure cache → disable persistence entirely (<code>save ""</code>, <code>appendonly no</code>).</li>
+  <li>Need state? → AOF + hybrid mode.</li>
+  <li>Don't run <code>BGSAVE</code> on a tiny-RAM machine — fork copies page tables.</li>
+</ul>
+
+<h3>Linux tuning</h3>
+<ul>
+  <li><code>vm.overcommit_memory=1</code> — required for safe BGSAVE forks.</li>
+  <li>Disable Transparent Huge Pages (<code>echo never &gt; /sys/kernel/mm/transparent_hugepage/enabled</code>).</li>
+  <li><code>net.core.somaxconn=1024</code> for high connection rates.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 30 =================== -->
+<h2 id="m30"><span class="module-tag">Module 30</span><br>Caching Patterns</h2>
+
+<h3>Cache-aside (lazy loading)</h3>
+<p>App checks cache first; on miss, loads from DB and populates cache. Most common pattern.</p>
+<pre><code>v = redis.get(key)
+if v is None:
+    v = db.query(key)
+    redis.set(key, v, ex=300)
+return v</code></pre>
+
+<h3>Write-through</h3>
+<p>App writes to both cache and DB on every update. Cache is always fresh; DB latency added on writes.</p>
+
+<h3>Write-behind (write-back)</h3>
+<p>Write to cache only; an async job flushes to DB. Fast writes, but data loss possible on cache crash.</p>
+
+<h3>Read-through</h3>
+<p>Cache layer (e.g., a sidecar) handles DB load on miss. App only talks to cache.</p>
+
+<h3>Cache invalidation</h3>
+<p>Hardest problem in computer science. Approaches:</p>
+<ul>
+  <li><strong>TTL-based</strong> — entries expire automatically. Simplest. Eventual consistency.</li>
+  <li><strong>Explicit DEL on write</strong> — invalidate the key when DB changes.</li>
+  <li><strong>Pub/Sub broadcast</strong> — other instances flush their local caches.</li>
+  <li><strong>Versioned keys</strong> — change the key prefix to invalidate everything (e.g., <code>cache:v3:*</code>).</li>
+</ul>
+
+<h3>Stampede / dogpile protection</h3>
+<p>When a hot key expires, every concurrent request rebuilds it. Mitigations:</p>
+<ul>
+  <li><strong>Probabilistic early refresh</strong> — refresh before expiry, randomly.</li>
+  <li><strong>Lock around rebuild</strong> — use SET NX as a mutex.</li>
+  <li><strong>Stale-while-revalidate</strong> — serve stale, refresh in background.</li>
+</ul>
+
+<hr>
+
+<!-- =================== MODULE 31 =================== -->
+<h2 id="m31"><span class="module-tag">Module 31</span><br>Distributed Locking</h2>
+
+<h3>Simple lock with SET NX</h3>
+<pre><code># Acquire
+SET lock:resource:42 myUuid NX EX 30
+
+# Release (must check ownership!)
+EVAL "if redis.call('GET',KEYS[1])==ARGV[1] then
+        return redis.call('DEL',KEYS[1])
+      else return 0 end" 1 lock:resource:42 myUuid</code></pre>
+<p>Why the Lua script? To make GET-and-DEL atomic. Without it, you might delete someone else's lock.</p>
+
+<h3>Redlock (multi-master)</h3>
+<p>For higher safety guarantees, Redlock acquires the lock on a majority of N independent Redis masters. Most language clients have a Redlock implementation. Trade-off: more complex, debated correctness under clock drift — many use single-master locks for practical workloads.</p>
+
+<h3>What can go wrong</h3>
+<ul>
+  <li><strong>Lock holder GC pause</strong> — a process holding a lock pauses, lock expires, two holders. Mitigate with fencing tokens.</li>
+  <li><strong>Network partition</strong> — split-brain. Redlock helps but is debated.</li>
+</ul>
+
+<div class="callout">
+  <strong>Practical advice:</strong> for non-critical coordination (cache rebuilds, scheduled jobs), single-Redis SET NX with TTL is fine. For correctness-critical work (financial), use a real consensus system (etcd, ZooKeeper).
+</div>
+
+<hr>
+
+<!-- =================== MODULE 32 =================== -->
+<h2 id="m32"><span class="module-tag">Module 32</span><br>Rate Limiting</h2>
+
+<h3>Fixed window counter</h3>
+<pre><code>key = f"rate:{user}:{minute}"
+n = redis.incr(key)
+if n == 1: redis.expire(key, 60)
+if n &gt; 100: deny()</code></pre>
+<p>Simple, but suffers from "burst at boundary" (200 requests in 2 seconds spanning the minute mark).</p>
+
+<h3>Sliding window with sorted set</h3>
+<pre><code># Lua to keep it atomic
+EVAL "
+  local now = tonumber(ARGV[1])
+  local window = tonumber(ARGV[2])
+  redis.call('ZREMRANGEBYSCORE', KEYS[1], 0, now - window)
+  local count = redis.call('ZCARD', KEYS[1])
+  if count &lt; tonumber(ARGV[3]) then
+    redis.call('ZADD', KEYS[1], now, now)
+    redis.call('EXPIRE', KEYS[1], math.ceil(window/1000))
+    return 1
+  else return 0 end
+" 1 "rate:user:42" 1700000000000 60000 100</code></pre>
+
+<h3>Token bucket</h3>
+<p>Tokens added at a fixed rate; each request consumes one. Allows bursts up to bucket capacity. Implementable in Redis with a hash + Lua.</p>
+
+<hr>
+
+<!-- =================== MODULE 33 =================== -->
+<h2 id="m33"><span class="module-tag">Module 33</span><br>Session Storage</h2>
+
+<p>Session data is the canonical Redis use case: small, hot, ephemeral.</p>
+
+<pre><code># Store
+HSET session:abc-123 user_id 42 csrf x9a role admin
+EXPIRE session:abc-123 1800            # 30 min sliding
+
+# Refresh on each request
+EXPIRE session:abc-123 1800
+
+# Logout
+DEL session:abc-123</code></pre>
+
+<p>In .NET, ASP.NET Core has <code>AddStackExchangeRedisCache</code> + distributed session — wires it up in 3 lines.</p>
+
+<hr>
+
+<!-- =================== MODULE 34 =================== -->
+<h2 id="m34"><span class="module-tag">Module 34</span><br>Leaderboards &amp; Counters</h2>
+
+<h3>Leaderboard with Sorted Set</h3>
+<pre><code>ZINCRBY leaderboard:weekly 100 "alice"   # +100 to alice's score
+ZREVRANGE leaderboard:weekly 0 9 WITHSCORES   # top 10
+ZREVRANK leaderboard:weekly "alice"      # alice's rank (0-indexed)
+ZSCORE leaderboard:weekly "alice"        # her score</code></pre>
+
+<h3>Counters</h3>
+<pre><code>INCR pageviews:home
+HINCRBY pageviews:by_country IN 1
+INCRBY orders:revenue:2026-05 9999       # in cents</code></pre>
+
+<h3>HyperLogLog for unique counts</h3>
+<pre><code>PFADD uniques:2026-05-07 user-1 user-2 user-2
+PFCOUNT uniques:2026-05-07               # ≈ 2 (with 0.81% error)</code></pre>
+
+<hr>
+
+<!-- =================== MODULE 35 =================== -->
+<h2 id="m35"><span class="module-tag">Module 35</span><br>Job Queues</h2>
+
+<h3>Simple list-based queue</h3>
+<pre><code># Enqueue
+LPUSH jobs:email "{...json...}"
+
+# Worker
+job = BRPOP jobs:email 0       # blocks until a job arrives
+process(job)</code></pre>
+
+<h3>Reliable queue with LMOVE</h3>
+<pre><code>LMOVE jobs:email jobs:email:processing LEFT RIGHT
+# work...
+LREM jobs:email:processing 1 thatJob</code></pre>
+<p>If the worker crashes, the job sits in <code>processing</code> for inspection/retry.</p>
+
+<h3>Delayed jobs with Sorted Set</h3>
+<pre><code># Schedule for run-at timestamp
+ZADD jobs:scheduled &lt;runAtMs&gt; "{...json...}"
+
+# Poller (every second)
+ZRANGEBYSCORE jobs:scheduled 0 &lt;nowMs&gt; LIMIT 0 10
+# move ready jobs to ready queue, remove from scheduled</code></pre>
+
+<h3>Redis Streams as queue</h3>
+<p>For real reliability with consumer groups, ack, retries — use Streams (Module 12). Libraries: BullMQ (Node), Sidekiq (Ruby), RQ (Python), Hangfire (with Redis storage in .NET).</p>
+
+<hr>
+
+<!-- =================== MODULE 36 =================== -->
+<h2 id="m36"><span class="module-tag">Module 36</span><br>Common Mistakes</h2>
+
+<table>
+  <thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead>
+  <tbody>
+    <tr><td><code>KEYS *</code> in production</td><td>Server stalls</td><td>Use <code>SCAN</code></td></tr>
+    <tr><td>Default <code>noeviction</code> with cache use</td><td>Writes start failing when full</td><td>Set <code>allkeys-lru</code></td></tr>
+    <tr><td>One key holding millions of fields</td><td>Slow ops, big GC</td><td>Shard the data</td></tr>
+    <tr><td>Long-running Lua / blocked main thread</td><td>All clients freeze</td><td>Keep scripts short</td></tr>
+    <tr><td>No TTL on session keys</td><td>Keys leak forever</td><td>Always set EXPIRE</td></tr>
+    <tr><td>Storing PII without TLS</td><td>Sniffing risk</td><td>Enable TLS</td></tr>
+    <tr><td>Trusting Pub/Sub for reliability</td><td>Lost messages</td><td>Use Streams</td></tr>
+    <tr><td>One ConnectionMultiplexer per request (.NET)</td><td>Connection storms</td><td>Singleton</td></tr>
+    <tr><td>Hot key (everyone writes the same key)</td><td>Lopsided cluster</td><td>Shard logically (sharded counters)</td></tr>
+    <tr><td>Treating Redis as system of record</td><td>Data loss on crash</td><td>SQL/Kafka source of truth</td></tr>
+    <tr><td>Forgetting to close pipelines</td><td>Memory leak</td><td>Use language idiom (with/using)</td></tr>
+    <tr><td>Different DBs in cluster mode</td><td>Errors</td><td>Cluster supports DB 0 only</td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =================== MODULE 37 =================== -->
+<h2 id="m37"><span class="module-tag">Module 37</span><br>Redis vs Alternatives</h2>
+
+<table>
+  <thead><tr><th>System</th><th>Strengths</th><th>Weaknesses vs Redis</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>Memcached</strong></td>
+      <td>Multi-threaded, very simple, slightly cheaper RAM</td>
+      <td>Only strings, no persistence, no replication, no data structures</td>
+    </tr>
+    <tr>
+      <td><strong>Valkey</strong></td>
+      <td>BSD-licensed Redis fork, drop-in</td>
+      <td>Same as Redis (it <em>is</em> Redis 7.2 forked)</td>
+    </tr>
+    <tr>
+      <td><strong>KeyDB</strong></td>
+      <td>Multi-threaded Redis fork</td>
+      <td>Less active development</td>
+    </tr>
+    <tr>
+      <td><strong>Hazelcast</strong></td>
+      <td>Distributed JVM data grid, complex queries</td>
+      <td>Much heavier, JVM-only</td>
+    </tr>
+    <tr>
+      <td><strong>Apache Ignite</strong></td>
+      <td>SQL on cache, ACID transactions, persistence</td>
+      <td>Complex, JVM, much more ops</td>
+    </tr>
+    <tr>
+      <td><strong>DynamoDB DAX</strong></td>
+      <td>Managed cache for DynamoDB</td>
+      <td>AWS-locked, only fronts DynamoDB</td>
+    </tr>
+    <tr>
+      <td><strong>AWS ElastiCache for Redis</strong></td>
+      <td>Managed Redis on AWS</td>
+      <td>Cost, AWS-locked</td>
+    </tr>
+    <tr>
+      <td><strong>Azure Cache for Redis</strong></td>
+      <td>Managed Redis on Azure</td>
+      <td>Cost, Azure-locked</td>
+    </tr>
+    <tr>
+      <td><strong>SQL Server In-Memory OLTP</strong></td>
+      <td>Already have it; ACID</td>
+      <td>Not designed for cache patterns; slower for k/v</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<!-- =================== MODULE 38 =================== -->
+<h2 id="m38"><span class="module-tag">Module 38</span><br>Glossary</h2>
+
+<dl class="glossary">
+  <dt>AOF (Append-Only File)</dt><dd>Persistence log of every write command, replayed on restart.</dd>
+  <dt>BGSAVE</dt><dd>Background RDB snapshot — fork + write to disk without blocking.</dd>
+  <dt>Cluster</dt><dd>Built-in horizontal sharding across multiple Redis nodes (16384 hash slots).</dd>
+  <dt>Eviction</dt><dd>Dropping keys when memory is full, governed by <code>maxmemory-policy</code>.</dd>
+  <dt>Hash slot</dt><dd>One of 16384 buckets keys map to in a cluster, via CRC16(key) % 16384.</dd>
+  <dt>Hash tag</dt><dd>The substring in <code>{...}</code> in a key, used to force colocation in cluster.</dd>
+  <dt>HyperLogLog</dt><dd>Probabilistic distinct-count structure (12 KB, 0.81% error).</dd>
+  <dt>Keyspace</dt><dd>The set of all keys in one database.</dd>
+  <dt>Lazy expiration</dt><dd>Key expiry checked at access time.</dd>
+  <dt>maxmemory</dt><dd>Hard cap on memory; triggers eviction when reached.</dd>
+  <dt>Pipeline</dt><dd>Sending multiple commands without waiting for individual replies.</dd>
+  <dt>RDB</dt><dd>Periodic binary snapshot file (dump.rdb).</dd>
+  <dt>RESP</dt><dd>Redis serialization protocol — simple text-line wire format.</dd>
+  <dt>Replica</dt><dd>Asynchronous read-only copy of a master.</dd>
+  <dt>Sentinel</dt><dd>Daemon process that monitors and fails over master/replicas.</dd>
+  <dt>Slow log</dt><dd>Internal log of commands slower than a threshold.</dd>
+  <dt>Stream</dt><dd>Append-only log type with consumer groups, akin to Kafka.</dd>
+  <dt>TTL</dt><dd>Time-to-live in seconds; auto-deletes key on expiry.</dd>
+  <dt>Valkey</dt><dd>Linux Foundation BSD-licensed fork of Redis 7.2.</dd>
+  <dt>WATCH</dt><dd>Optimistic locking primitive paired with MULTI/EXEC.</dd>
+</dl>
+
+<hr>
+
+<!-- =================== MODULE 39 =================== -->
+<h2 id="m39"><span class="module-tag">Module 39</span><br>Practice Exercises</h2>
+
+<div class="exercise">
+  <h4>Exercise 1: First connection</h4>
+  <ol>
+    <li>Start the Docker setup from Module 25.</li>
+    <li>Connect with <code>redis-cli</code>; <code>SET name your-name</code>, <code>GET name</code>.</li>
+    <li>Inspect with <code>TYPE name</code>, <code>OBJECT ENCODING name</code>.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 2: Build a session store</h4>
+  <ol>
+    <li>On login, <code>HSET</code> a session ID with user_id and timestamps. <code>EXPIRE</code> 30 min.</li>
+    <li>On each authenticated request, refresh <code>EXPIRE</code> by 30 min.</li>
+    <li>On logout, <code>DEL</code> the key.</li>
+    <li>Confirm with <code>TTL</code>.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 3: Rate limit an API</h4>
+  <ol>
+    <li>Implement fixed-window counter (60 req/min per IP).</li>
+    <li>Now implement sliding window with a sorted set (see Module 32).</li>
+    <li>Compare behavior at the minute boundary.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 4: Build a leaderboard</h4>
+  <ol>
+    <li>Use <code>ZINCRBY</code> to add scores for 5 users.</li>
+    <li>Show top 3 with <code>ZREVRANGE 0 2 WITHSCORES</code>.</li>
+    <li>Show one user's rank with <code>ZREVRANK</code>.</li>
+    <li>Reset weekly: rename to a date-suffixed key.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 5: Cache-aside in your language</h4>
+  <ol>
+    <li>Wrap a slow function (e.g., 200 ms sleep) with cache-aside in Redis.</li>
+    <li>Measure first call vs cached call.</li>
+    <li>Add an explicit invalidation when source changes.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 6: Distributed lock</h4>
+  <ol>
+    <li>Two processes both try to claim <code>lock:report</code>.</li>
+    <li>Use SET NX EX. Confirm only one succeeds.</li>
+    <li>Release with the Lua check-and-delete.</li>
+    <li>Simulate one process crashing; show the other can acquire after TTL.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 7: Pipelining benchmark</h4>
+  <ol>
+    <li>Insert 10000 keys without pipeline; time it.</li>
+    <li>Insert 10000 keys with pipeline; time it.</li>
+    <li>Compute the speedup ratio.</li>
+  </ol>
+</div>
+
+<div class="exercise">
+  <h4>Exercise 8: Streams as a job queue</h4>
+  <ol>
+    <li><code>XADD</code> 100 jobs to <code>jobs</code>.</li>
+    <li>Create a consumer group; spawn 2 worker scripts that <code>XREADGROUP</code> + <code>XACK</code>.</li>
+    <li>Kill one mid-job; check <code>XPENDING</code>; reclaim with <code>XCLAIM</code>.</li>
+  </ol>
+</div>
+
+<hr>
+
+<!-- =================== MODULE 40 =================== -->
+<h2 id="m40"><span class="module-tag">Module 40</span><br>Interview Questions</h2>
+
+<div class="qa"><div class="q">Q: Why is Redis fast?</div>
+<div>It's in-memory (no disk in hot path), single-threaded for command execution (no locks), uses simple data structures with O(1)/O(log N) ops, and amortizes I/O via batching/pipelining and the RESP protocol.</div></div>
+
+<div class="qa"><div class="q">Q: How does Redis keep data after a crash?</div>
+<div>Two persistence options: RDB (periodic snapshots) and AOF (append-only log). Hybrid mode combines them — best of both.</div></div>
+
+<div class="qa"><div class="q">Q: What's the difference between Redis and Memcached?</div>
+<div>Memcached is multi-threaded but only does string K/V, no persistence, no replication. Redis adds rich data structures, persistence, replication, cluster, scripting.</div></div>
+
+<div class="qa"><div class="q">Q: When would you use Sorted Sets?</div>
+<div>Anywhere you need ordering by a numeric score: leaderboards, priority queues, time-indexed events, sliding-window rate limiters, geospatial indexes.</div></div>
+
+<div class="qa"><div class="q">Q: Explain Redis Cluster vs Sentinel.</div>
+<div>Sentinel = HA only: monitors a master and replicas, fails over automatically. Cluster = HA + horizontal sharding via 16384 hash slots distributed across master nodes (each with its own replicas).</div></div>
+
+<div class="qa"><div class="q">Q: What happens when Redis runs out of memory?</div>
+<div>Depends on <code>maxmemory-policy</code>. Default <code>noeviction</code> — writes start failing. <code>allkeys-lru</code> — evicts least-recently-used keys. Eight policies total.</div></div>
+
+<div class="qa"><div class="q">Q: How do you safely scan all keys?</div>
+<div>Never use <code>KEYS *</code> in production — it blocks. Use <code>SCAN cursor MATCH pattern COUNT n</code> to iterate non-blocking in chunks.</div></div>
+
+<div class="qa"><div class="q">Q: What is a hash slot?</div>
+<div>A bucket in Redis Cluster. Keys hash to one of 16384 slots via CRC16. Each slot belongs to one master. Distributes keys across nodes.</div></div>
+
+<div class="qa"><div class="q">Q: How do you do an atomic counter increment?</div>
+<div><code>INCR</code> or <code>INCRBY</code>. Single command, atomic by design.</div></div>
+
+<div class="qa"><div class="q">Q: Difference between <code>DEL</code> and <code>UNLINK</code>?</div>
+<div><code>DEL</code> deletes synchronously — for big keys this blocks. <code>UNLINK</code> removes the key from the keyspace immediately and frees memory in a background thread.</div></div>
+
+<div class="qa"><div class="q">Q: How does Redis pub/sub differ from streams?</div>
+<div>Pub/Sub is fire-and-forget — no persistence, no acks, late subscribers miss everything. Streams are durable append-only logs with consumer groups, acknowledgements, and pending lists.</div></div>
+
+<div class="qa"><div class="q">Q: Can Redis transactions roll back on error?</div>
+<div>No. Inside MULTI/EXEC, if a command errors at execution, others still run. Redis only aborts the whole transaction if a command fails to queue (syntax error). For consistency use Lua scripts (atomic) or WATCH-based optimistic locking.</div></div>
+
+<div class="qa"><div class="q">Q: How is replication consistency? Strong or eventual?</div>
+<div>Eventual. Master writes async to replicas. After a master crash, a few in-flight writes may be lost when a replica is promoted.</div></div>
+
+<div class="qa"><div class="q">Q: What's a hot key and how do you handle it?</div>
+<div>A single key getting disproportionate traffic; in cluster mode it overloads one node. Shard logically (e.g., counter:0..N), use local in-process caching with short TTL, or cache the result client-side.</div></div>
+
+<div class="qa"><div class="q">Q: How do you make Redis durable enough for important data?</div>
+<div>Hybrid persistence (AOF + RDB preamble) with <code>appendfsync everysec</code> for ~1s data loss bound, plus replication, plus a backup of the AOF/RDB to S3 or similar. For stricter, <code>appendfsync always</code> but expect a throughput hit.</div></div>
+
+<hr>
+
+<!-- ====================================================== -->
+<!-- EASYAUDIT PROJECT-SPECIFIC SECTION                     -->
+<!-- ====================================================== -->
+
+<div class="project-section">
+<h2 id="m41" style="margin-top:0; border:none;"><span class="module-tag project">Module 41 — Project</span><br>EasyAudit Multi-Instance Architecture</h2>
+
+<p>You have these existing/planned .NET 8 backends:</p>
+<ul>
+  <li><code>central-backend</code> — auth, OTP, sessions, master data, JWT</li>
+  <li><code>accounting-backend</code> — financial reporting</li>
+  <li><code>task-backend</code> — task workflows</li>
+  <li><code>hub-backend</code></li>
+  <li><code>notification-backend</code> (planned)</li>
+  <li><code>logging-backend</code> (planned)</li>
+</ul>
+
+<h3>Three options for separating Redis per backend</h3>
+
+<table>
+  <thead><tr><th>Approach</th><th>How</th><th>Pros</th><th>Cons</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>A. Separate Redis instances (recommended)</strong></td>
+      <td>One <code>redis-server</code> process per backend, on different ports (6379, 6380, …)</td>
+      <td>True isolation: separate failure domains, independent capacity tuning, separate config (eviction, persistence, password), independent backup</td>
+      <td>More containers/processes to operate (5–6); more total RAM</td>
+    </tr>
+    <tr>
+      <td><strong>B. Single Redis, multiple logical DBs</strong></td>
+      <td>One instance; each backend uses <code>SELECT 0</code>…<code>5</code></td>
+      <td>One process, one config, simpler ops</td>
+      <td>NOT real isolation — shared RAM, shared CPU, shared eviction; one backend OOMing affects all; doesn't work in Cluster mode</td>
+    </tr>
+    <tr>
+      <td><strong>C. Single Redis, key-prefixes</strong></td>
+      <td>One instance; each backend prefixes keys: <code>central:*</code>, <code>task:*</code>, …</td>
+      <td>Cluster-friendly, single ops surface</td>
+      <td>Same shared-resource problem as B; need discipline on prefixes</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout tip">
+  <strong>Recommended for EasyAudit:</strong> Approach A (separate instances) for production. The isolation is worth the slight ops overhead — if accounting reports flood Redis with cached aggregates, it shouldn't kick out your active sessions in central-backend. Use Approach B in dev/staging if you want lighter footprint.
+</div>
+
+<h3>Recommended layout</h3>
+<pre class="diagram">┌────────────────────────────────────────────────────────────────────┐
+│                       EasyAudit Redis Tier                         │
+│                                                                    │
+│  Port 6379 ── redis-central       (sessions, JWT blocklist, OTP)   │
+│  Port 6380 ── redis-accounting    (report cache, aggregates)       │
+│  Port 6381 ── redis-task          (locks, queues, task state)      │
+│  Port 6382 ── redis-hub           (caching)                        │
+│  Port 6383 ── redis-notification  (rate limits, idempotency keys)  │
+│  Port 6384 ── redis-logging       (counters, recent log buffer)    │
+│                                                                    │
+│  Each: own AOF, own maxmemory, own ACLs/password, own backup       │
+└────────────────────────────────────────────────────────────────────┘</pre>
+
+<h3>What goes in each instance</h3>
+
+<table>
+  <thead><tr><th>Instance</th><th>Use case</th><th>Persistence</th><th>Eviction</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><strong>redis-central</strong></td>
+      <td>OTP storage (TTL 5 min), refresh-token allowlist, JWT blocklist on logout, login sessions, last-login cache, password reset tokens</td>
+      <td>AOF + hybrid (data matters)</td>
+      <td><code>volatile-ttl</code></td>
+    </tr>
+    <tr>
+      <td><strong>redis-accounting</strong></td>
+      <td>Cached financial aggregates (balance sheets, P&amp;L), report results, slow query results</td>
+      <td>None or RDB only (regenerable)</td>
+      <td><code>allkeys-lru</code></td>
+    </tr>
+    <tr>
+      <td><strong>redis-task</strong></td>
+      <td>Distributed locks (SET NX), task scheduler queue, in-progress task hashes, cron locks</td>
+      <td>AOF (locks must survive restart briefly)</td>
+      <td><code>volatile-ttl</code></td>
+    </tr>
+    <tr>
+      <td><strong>redis-hub</strong></td>
+      <td>Lookup caches</td>
+      <td>None</td>
+      <td><code>allkeys-lru</code></td>
+    </tr>
+    <tr>
+      <td><strong>redis-notification</strong></td>
+      <td>Per-user OTP/email rate limits, idempotency keys for in-flight Kafka messages, template render cache</td>
+      <td>AOF (idempotency keys matter)</td>
+      <td><code>volatile-lru</code></td>
+    </tr>
+    <tr>
+      <td><strong>redis-logging</strong></td>
+      <td>Per-service counters (events/sec), recent-log ring buffers, top-N error keys</td>
+      <td>None</td>
+      <td><code>allkeys-lru</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Single docker-compose.yml for all six</h3>
+
+<pre><code>version: '3.8'
+services:
+  redis-central:
+    image: redis:7.4-alpine
+    ports: ["6379:6379"]
+    volumes: [ "central-data:/data" ]
+    command: ["redis-server",
+              "--appendonly","yes",
+              "--aof-use-rdb-preamble","yes",
+              "--maxmemory","512mb",
+              "--maxmemory-policy","volatile-ttl",
+              "--requirepass","centralPass"]
+
+  redis-accounting:
+    image: redis:7.4-alpine
+    ports: ["6380:6379"]
+    volumes: [ "accounting-data:/data" ]
+    command: ["redis-server",
+              "--save","",                        # no RDB
+              "--appendonly","no",                # pure cache
+              "--maxmemory","1gb",
+              "--maxmemory-policy","allkeys-lru",
+              "--requirepass","accountingPass"]
+
+  redis-task:
+    image: redis:7.4-alpine
+    ports: ["6381:6379"]
+    volumes: [ "task-data:/data" ]
+    command: ["redis-server",
+              "--appendonly","yes",
+              "--maxmemory","512mb",
+              "--maxmemory-policy","volatile-ttl",
+              "--requirepass","taskPass"]
+
+  redis-hub:
+    image: redis:7.4-alpine
+    ports: ["6382:6379"]
+    volumes: [ "hub-data:/data" ]
+    command: ["redis-server",
+              "--save","",
+              "--appendonly","no",
+              "--maxmemory","256mb",
+              "--maxmemory-policy","allkeys-lru",
+              "--requirepass","hubPass"]
+
+  redis-notification:
+    image: redis:7.4-alpine
+    ports: ["6383:6379"]
+    volumes: [ "notif-data:/data" ]
+    command: ["redis-server",
+              "--appendonly","yes",
+              "--maxmemory","256mb",
+              "--maxmemory-policy","volatile-lru",
+              "--requirepass","notifPass"]
+
+  redis-logging:
+    image: redis:7.4-alpine
+    ports: ["6384:6379"]
+    volumes: [ "log-data:/data" ]
+    command: ["redis-server",
+              "--save","",
+              "--appendonly","no",
+              "--maxmemory","256mb",
+              "--maxmemory-policy","allkeys-lru",
+              "--requirepass","logPass"]
+
+  redis-insight:
+    image: redis/redisinsight:latest
+    ports: ["5540:5540"]
+
+volumes:
+  central-data:
+  accounting-data:
+  task-data:
+  hub-data:
+  notif-data:
+  log-data:</code></pre>
+
+<p>Bring it up: <code>docker compose up -d</code>. RedisInsight at <code>http://localhost:5540</code> can connect to all six.</p>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m42" style="margin-top:0; border:none;"><span class="module-tag project">Module 42 — Project</span><br>Memory Sizing &amp; Capacity</h2>
+
+<h3>How much can Redis store?</h3>
+<p>Redis can address up to <strong>(2^63)−1 bytes</strong> of memory — effectively unlimited from a software perspective. The real limit is your machine's RAM (or RAM × number of nodes in Cluster mode). The largest production single Redis instances in the wild run with hundreds of GB of RAM. Beyond that, shard with Cluster.</p>
+
+<h3>Per-key memory math</h3>
+<table>
+  <thead><tr><th>Item</th><th>Approx bytes</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>Empty key entry overhead</td><td>~50–90</td><td>Dictionary entry + key string + expire slot</td></tr>
+    <tr><td>Short string value (≤44 bytes)</td><td>value size + ~16</td><td>embstr encoding</td></tr>
+    <tr><td>Long string value</td><td>value size + ~56</td><td>raw encoding</td></tr>
+    <tr><td>Hash with 5 small fields</td><td>~150–250</td><td>listpack — extremely compact</td></tr>
+    <tr><td>Sorted set member</td><td>~80–100</td><td>skiplist + dict</td></tr>
+    <tr><td>List element</td><td>~50–80</td><td>quicklist</td></tr>
+    <tr><td>Set member (string)</td><td>~70–100</td><td>hashtable</td></tr>
+  </tbody>
+</table>
+
+<h3>Worked estimates for EasyAudit</h3>
+
+<details open>
+<summary><strong>redis-central</strong> — sessions, OTP, JWT blocklist</summary>
+<ul>
+  <li>Active sessions: assume 10,000 concurrent users × ~500 bytes (hash with user_id, csrf, role, etc.) = <strong>5 MB</strong></li>
+  <li>JWT blocklist: 50,000 revoked tokens × ~120 bytes = <strong>6 MB</strong></li>
+  <li>OTP keys: 1,000 in-flight × ~150 bytes = <strong>0.15 MB</strong></li>
+  <li>Refresh-token allowlist: 20,000 × 200 bytes = <strong>4 MB</strong></li>
+  <li><strong>Total: ~15 MB working set</strong> — 256 MB allocation is plenty, leaving room for spikes.</li>
+</ul>
+<p>Recommendation: <code>maxmemory 256mb</code>, <code>volatile-ttl</code> eviction, AOF on.</p>
+</details>
+
+<details open>
+<summary><strong>redis-accounting</strong> — report &amp; aggregate cache</summary>
+<ul>
+  <li>Cached report responses: 5,000 × ~50 KB JSON = <strong>250 MB</strong></li>
+  <li>Computed aggregates (balance sheet snapshots): 2,000 × ~10 KB = <strong>20 MB</strong></li>
+  <li>Lookup caches (chart of accounts, currencies): ~10 MB</li>
+  <li><strong>Total: ~280 MB peak</strong></li>
+</ul>
+<p>Recommendation: <code>maxmemory 512mb-1gb</code> (give headroom; reports vary), <code>allkeys-lru</code>, no persistence.</p>
+</details>
+
+<details open>
+<summary><strong>redis-task</strong> — locks, queues, task state</summary>
+<ul>
+  <li>Active distributed locks: 1,000 × ~200 bytes = <strong>0.2 MB</strong></li>
+  <li>Pending task queue (List or Stream): 10,000 × ~2 KB = <strong>20 MB</strong></li>
+  <li>In-progress task state (hashes): 500 × ~5 KB = <strong>2.5 MB</strong></li>
+  <li>Cron job locks &amp; markers: trivial</li>
+  <li><strong>Total: ~25 MB working set</strong></li>
+</ul>
+<p>Recommendation: <code>maxmemory 256mb</code>, <code>volatile-ttl</code>, AOF on.</p>
+</details>
+
+<details open>
+<summary><strong>redis-hub</strong> — caching</summary>
+<ul>
+  <li>Pure cache, depends on usage. Start with <code>maxmemory 256mb</code>, <code>allkeys-lru</code>, no persistence. Watch <code>evicted_keys</code> in INFO; bump if eviction rate is high.</li>
+</ul>
+</details>
+
+<details open>
+<summary><strong>redis-notification</strong> — rate limits, idempotency</summary>
+<ul>
+  <li>Per-user/IP rate counters: 100,000 buckets × ~150 bytes = <strong>15 MB</strong></li>
+  <li>Idempotency key registry (Kafka message dedup): 7-day window × ~1 M msg × 100 bytes = <strong>~100 MB</strong></li>
+  <li>Template render cache: ~10 MB</li>
+  <li><strong>Total: ~125 MB</strong></li>
+</ul>
+<p>Recommendation: <code>maxmemory 256mb</code>, <code>volatile-lru</code>, AOF on.</p>
+</details>
+
+<details open>
+<summary><strong>redis-logging</strong> — counters &amp; recent buffer</summary>
+<ul>
+  <li>Per-service / per-level counters: trivial (~1 MB).</li>
+  <li>Recent log ring buffer (List, capped via LTRIM): 50 services × 1,000 lines × 500 bytes = <strong>~25 MB</strong></li>
+  <li>Top-N error sketches: ~5 MB</li>
+  <li><strong>Total: ~30 MB</strong></li>
+</ul>
+<p>Recommendation: <code>maxmemory 256mb</code>, <code>allkeys-lru</code>, no persistence.</p>
+</details>
+
+<h3>Total RAM budget for the Redis tier</h3>
+<table>
+  <thead><tr><th>Instance</th><th>Suggested maxmemory</th><th>Headroom for fragmentation/RSS</th></tr></thead>
+  <tbody>
+    <tr><td>redis-central</td><td>256 MB</td><td>~360 MB</td></tr>
+    <tr><td>redis-accounting</td><td>1 GB</td><td>~1.4 GB</td></tr>
+    <tr><td>redis-task</td><td>256 MB</td><td>~360 MB</td></tr>
+    <tr><td>redis-hub</td><td>256 MB</td><td>~360 MB</td></tr>
+    <tr><td>redis-notification</td><td>256 MB</td><td>~360 MB</td></tr>
+    <tr><td>redis-logging</td><td>256 MB</td><td>~360 MB</td></tr>
+    <tr style="font-weight:600;"><td>Total</td><td>2.25 GB configured</td><td>~3.2 GB peak RSS</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <strong>Plan for 1.4× headroom:</strong> Redis RSS (resident set size) is typically 1.2–1.5× the configured <code>maxmemory</code> due to fragmentation, fork-on-save, replication buffers, client buffers. Always size the host generously above the sum of <code>maxmemory</code> values.
+</div>
+
+<h3>How to know when to grow</h3>
+<p>Watch these per instance:</p>
+<ul>
+  <li><code>used_memory</code> approaching <code>maxmemory</code> → bump maxmemory.</li>
+  <li><code>evicted_keys</code> rising fast → cache is too small.</li>
+  <li><code>mem_fragmentation_ratio</code> &gt; 1.5 sustained → enable <code>activedefrag</code> or restart.</li>
+  <li><code>keyspace_misses / keyspace_hits</code> ratio rising → cache hit rate falling.</li>
+</ul>
+
+<h3>When to move from separate-instances to Cluster</h3>
+<p>If any single instance grows past ~30–50 GB or exceeds one core's CPU capacity (~100k ops/sec sustained), shard that instance via Redis Cluster. For EasyAudit at typical SMB scale, a single instance per backend on a beefy VM is the sweet spot.</p>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m43" style="margin-top:0; border:none;"><span class="module-tag project">Module 43 — Project</span><br>.NET Integration Plan</h2>
+
+<h3>Library</h3>
+<p>Use <code>StackExchange.Redis</code> — the de-facto .NET client. Add to each backend's csproj:</p>
+<pre><code>dotnet add package StackExchange.Redis --version 2.7.33</code></pre>
+
+<h3>Singleton ConnectionMultiplexer</h3>
+<p><code>ConnectionMultiplexer</code> is thread-safe and pools connections internally. Register as a singleton; do not create per-request.</p>
+
+<pre><code>// appsettings.json
+{
+  "Redis": {
+    "ConnectionString": "localhost:6379,password=centralPass,abortConnect=false"
+  }
+}
+
+// Program.cs
+builder.Services.AddSingleton&lt;IConnectionMultiplexer&gt;(sp =&gt;
+{
+    var cs = builder.Configuration["Redis:ConnectionString"];
+    return ConnectionMultiplexer.Connect(cs!);
+});
+
+builder.Services.AddScoped(sp =&gt;
+    sp.GetRequiredService&lt;IConnectionMultiplexer&gt;().GetDatabase());</code></pre>
+
+<h3>Each backend connects to its own port</h3>
+<table>
+  <thead><tr><th>Backend</th><th>Connection string</th></tr></thead>
+  <tbody>
+    <tr><td>central-backend</td><td><code>localhost:6379,password=centralPass,abortConnect=false</code></td></tr>
+    <tr><td>accounting-backend</td><td><code>localhost:6380,password=accountingPass,abortConnect=false</code></td></tr>
+    <tr><td>task-backend</td><td><code>localhost:6381,password=taskPass,abortConnect=false</code></td></tr>
+    <tr><td>hub-backend</td><td><code>localhost:6382,password=hubPass,abortConnect=false</code></td></tr>
+    <tr><td>notification-backend</td><td><code>localhost:6383,password=notifPass,abortConnect=false</code></td></tr>
+    <tr><td>logging-backend</td><td><code>localhost:6384,password=logPass,abortConnect=false</code></td></tr>
+  </tbody>
+</table>
+
+<h3>Concrete usage examples</h3>
+
+<h4>central-backend: OTP storage</h4>
+<pre><code>public class OtpStore
+{
+    private readonly IDatabase _db;
+    public OtpStore(IConnectionMultiplexer mux) =&gt; _db = mux.GetDatabase();
+
+    public Task SaveOtpAsync(string userId, string otpHash) =&gt;
+        _db.StringSetAsync($"otp:login:{userId}", otpHash, TimeSpan.FromMinutes(5));
+
+    public async Task&lt;string?&gt; PopOtpAsync(string userId)
+    {
+        var key = $"otp:login:{userId}";
+        var v = await _db.StringGetAsync(key);
+        if (v.HasValue) await _db.KeyDeleteAsync(key);
+        return v;
+    }
+}</code></pre>
+
+<h4>central-backend: JWT blocklist on logout</h4>
+<pre><code>public Task RevokeAsync(string jti, DateTime expUtc) =&gt;
+    _db.StringSetAsync($"jwt:revoked:{jti}", "1", expUtc - DateTime.UtcNow);
+
+public Task&lt;bool&gt; IsRevokedAsync(string jti) =&gt;
+    _db.KeyExistsAsync($"jwt:revoked:{jti}");</code></pre>
+
+<h4>task-backend: distributed lock via SET NX EX</h4>
+<pre><code>public async Task&lt;bool&gt; TryAcquireLockAsync(string resource, string ownerId, TimeSpan ttl)
+{
+    return await _db.StringSetAsync(
+        $"lock:{resource}", ownerId, ttl, When.NotExists);
+}
+
+public async Task ReleaseLockAsync(string resource, string ownerId)
+{
+    const string lua = @"
+        if redis.call('GET',KEYS[1])==ARGV[1] then
+            return redis.call('DEL',KEYS[1])
+        else return 0 end";
+    await _db.ScriptEvaluateAsync(lua,
+        new RedisKey[] { $"lock:{resource}" },
+        new RedisValue[] { ownerId });
+}</code></pre>
+
+<h4>accounting-backend: cache-aside for reports</h4>
+<pre><code>public async Task&lt;ReportDto&gt; GetReportAsync(int reportId)
+{
+    var key = $"report:{reportId}";
+    var cached = await _db.StringGetAsync(key);
+    if (cached.HasValue)
+        return JsonSerializer.Deserialize&lt;ReportDto&gt;(cached!)!;
+
+    var fresh = await _reportService.ComputeReportAsync(reportId);
+    await _db.StringSetAsync(key, JsonSerializer.Serialize(fresh),
+        TimeSpan.FromMinutes(15));
+    return fresh;
+}</code></pre>
+
+<h4>notification-backend: rate limiter (sliding window)</h4>
+<pre><code>public async Task&lt;bool&gt; AllowAsync(string user, int maxPerMinute)
+{
+    var key = $"rate:notif:{user}";
+    var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    var windowStart = now - 60_000;
+
+    var tx = _db.CreateTransaction();
+    _ = tx.SortedSetRemoveRangeByScoreAsync(key, 0, windowStart);
+    var countTask = tx.SortedSetLengthAsync(key);
+    _ = tx.SortedSetAddAsync(key, now.ToString(), now);
+    _ = tx.KeyExpireAsync(key, TimeSpan.FromMinutes(2));
+    await tx.ExecuteAsync();
+
+    return await countTask &lt; maxPerMinute;
+}</code></pre>
+
+<h4>notification-backend: idempotency check for Kafka</h4>
+<pre><code>public async Task&lt;bool&gt; TryClaimIdempotencyAsync(string messageId, TimeSpan ttl)
+{
+    // Returns true if this is the first time we've seen this messageId.
+    return await _db.StringSetAsync(
+        $"idem:{messageId}", "1", ttl, When.NotExists);
+}</code></pre>
+</div>
+
+<hr>
+
+<div class="project-section">
+<h2 id="m44" style="margin-top:0; border:none;"><span class="module-tag project">Module 44 — Project</span><br>Operations Plan</h2>
+
+<h3>Backups</h3>
+<ul>
+  <li>For instances with persistence (<code>central</code>, <code>task</code>, <code>notification</code>): nightly <code>BGSAVE</code>, copy <code>dump.rdb</code> + <code>appendonly.aof</code> to S3-compatible storage.</li>
+  <li>Pure caches (<code>accounting</code>, <code>hub</code>, <code>logging</code>): no backup needed; data is regenerable.</li>
+</ul>
+
+<h3>Monitoring per instance</h3>
+<p>Run a <code>redis_exporter</code> per Redis instance, scrape from Prometheus, dashboard in Grafana. Track:</p>
+<ul>
+  <li><code>used_memory</code> vs <code>maxmemory</code> (alert at 80%)</li>
+  <li><code>evicted_keys</code> rate</li>
+  <li><code>keyspace_hits / (keyspace_hits + keyspace_misses)</code> — hit rate</li>
+  <li><code>connected_clients</code></li>
+  <li><code>instantaneous_ops_per_sec</code></li>
+  <li>Slow log entries</li>
+</ul>
+
+<h3>Connection limits</h3>
+<p>Default <code>maxclients</code> is 10000. With 6 instances and several backends each opening pools, you're fine. Watch <code>connected_clients</code> in INFO; bump if needed.</p>
+
+<h3>Failure isolation in action</h3>
+<p>The win of separate instances: if <code>redis-accounting</code> crashes mid-day:</p>
+<ul>
+  <li>Reports become slow (cache miss → DB), but auth/login, tasks, notifications all keep working.</li>
+  <li>Restart redis-accounting; cache warms up over a few minutes.</li>
+  <li>If it had been one shared Redis, all backends would have stalled.</li>
+</ul>
+
+<h3>Going to HA later</h3>
+<p>When the project demands ≤30s of failover for critical instances:</p>
+<ol>
+  <li>Add a replica per critical instance (central, task, notification).</li>
+  <li>Add 3 Sentinels watching them.</li>
+  <li>Switch .NET clients to use the Sentinel-aware connection string format.</li>
+</ol>
+
+<h3>Going to managed Redis later</h3>
+<p>If/when you move to Azure or AWS, swap each docker instance for an equivalent managed cache:</p>
+<ul>
+  <li>Azure Cache for Redis — Basic/Standard/Premium tiers.</li>
+  <li>AWS ElastiCache (Redis) — Cluster mode disabled is the default, fine for these workloads.</li>
+</ul>
+<p>Connection strings change; everything else stays the same.</p>
+
+<h3>Security checklist</h3>
+<ul>
+  <li>Different passwords per instance (already in compose).</li>
+  <li>Bind to private network only — never expose 6379–6384 publicly.</li>
+  <li>Enable TLS for cross-host communication.</li>
+  <li>Use ACL users in Redis 6+ — give each backend a least-privilege user.</li>
+  <li>Rotate passwords periodically; secrets in environment variables, not config files.</li>
+  <li>Disable dangerous commands in shared envs: <code>rename-command FLUSHALL ""</code>.</li>
+</ul>
+
+<h3>Capacity growth signals</h3>
+<table>
+  <thead><tr><th>Signal</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td>Hit rate &lt; 80% on a cache instance</td><td>Increase TTL or maxmemory</td></tr>
+    <tr><td>Evictions &gt; 1000/sec sustained</td><td>Increase maxmemory or shorten cached object size</td></tr>
+    <tr><td>Single instance hits ~50% of one CPU core</td><td>Move that workload to its own host or shard</td></tr>
+    <tr><td>used_memory_rss &gt; 80% of host RAM</td><td>Migrate to bigger host or split workloads</td></tr>
+  </tbody>
+</table>
+</div>
+
+<hr>
+
+<!-- =================== MODULE 45 =================== -->
+<h2 id="m45"><span class="module-tag">Module 45</span><br>Resources &amp; Roadmap</h2>
+
+<h3>Free official resources</h3>
+<ul>
+  <li><strong>redis.io/docs</strong> — official documentation, complete command reference</li>
+  <li><strong>redis.io/learn</strong> — tutorials, courses</li>
+  <li><strong>Redis University</strong> — free online courses</li>
+  <li><strong>Try Redis</strong> — interactive in-browser tutorial</li>
+</ul>
+
+<h3>Books</h3>
+<ul>
+  <li><em>Redis in Action</em> — Josiah Carlson (free PDF on redis.io)</li>
+  <li><em>Mastering Redis</em> — Jeremy Nelson</li>
+  <li><em>Redis Cookbook</em> — Tiago Macedo &amp; Fred Oliveira</li>
+</ul>
+
+<h3>Tools</h3>
+<ul>
+  <li><strong>RedisInsight</strong> — official GUI</li>
+  <li><strong>redis-cli</strong> — built-in</li>
+  <li><strong>redis_exporter</strong> — Prometheus metrics</li>
+  <li><strong>redis-commander</strong> — older web UI alternative</li>
+</ul>
+
+<h3>30/60/90-day roadmap</h3>
+
+<h4>Days 1–30: fundamentals</h4>
+<ul>
+  <li>Run single-instance Docker locally.</li>
+  <li>Master the data types (Modules 6–11): set, get, hashes, lists, sets, sorted sets.</li>
+  <li>Use redis-cli for daily exploration.</li>
+  <li>Wire up StackExchange.Redis in one .NET backend.</li>
+  <li>Implement: a session store, a cache-aside, a distributed lock.</li>
+</ul>
+
+<h4>Days 31–60: production patterns</h4>
+<ul>
+  <li>Stand up the 6-instance EasyAudit Redis tier from Module 41.</li>
+  <li>Wire all backends; build OTP, JWT blocklist, rate limit, idempotency check.</li>
+  <li>Set up RedisInsight + redis_exporter + Prometheus + Grafana.</li>
+  <li>Tune <code>maxmemory</code>, eviction policy, persistence per instance.</li>
+  <li>Practice failure scenarios: stop redis-accounting; verify the rest survives.</li>
+</ul>
+
+<h4>Days 61–90: HA and depth</h4>
+<ul>
+  <li>Add replica + Sentinel for at least one critical instance.</li>
+  <li>Run failover drills.</li>
+  <li>Try Redis Streams as an alternative to Kafka for one local pipeline.</li>
+  <li>Explore Redis Stack: JSON, RediSearch.</li>
+  <li>Read <em>Redis in Action</em> end-to-end.</li>
+  <li>If/when scale demands, learn Cluster.</li>
+</ul>
+
+<hr>
+
+<footer style="text-align:center; color: var(--muted); font-size: 0.9em; margin-top: 64px;">
+  The Complete Redis Course — including the EasyAudit multi-instance architecture (Modules 41–44).
+</footer>
+
+</main>
+
+</div>
+</body>
+</html>
